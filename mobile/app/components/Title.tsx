@@ -14,7 +14,7 @@ const Title: React.FC<TitleProps> = ({ size = "medium", children, style }) => {
     });
 
     if (!fontsLoaded) {
-        return null; // Évite d'afficher le texte si la police n'est pas encore prête
+        return null;
     }
 
     const getFontSize = (): TextStyle => {
