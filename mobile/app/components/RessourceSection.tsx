@@ -5,15 +5,16 @@ import RessourceCard from "./RessourceCard";
 
 const RessourceSection = ({ itemCount }) => {
     const articles = [
-        { id: 1, title: "Article 1", image: require('../../assets/adaptive-icon.png'), description: 'Description courte d\'une ressource avec des infos...' },
-        { id: 2, title: "Article 2", image: require('../../assets/adaptive-icon.png'), description: 'Description courte d\'une ressource avec des infos...' },
-        { id: 3, title: "Article 3", image: require('../../assets/adaptive-icon.png'), description: 'Description courte d\'une ressource avec des infos...' },
-        { id: 4, title: "Article 4", image: require('../../assets/adaptive-icon.png'), description: 'Description courte d\'une ressource avec des infos...' },
-        { id: 5, title: "Article 5", image: require('../../assets/adaptive-icon.png'), description: 'Description courte d\'une ressource avec des infos...' },
-        { id: 6, title: "Article 6", image: require('../../assets/adaptive-icon.png'), description: 'Description courte d\'une ressource avec des infos...' },
-        { id: 7, title: "Article 7", image: require('../../assets/adaptive-icon.png'), description: 'Description courte d\'une ressource avec des infos...' },
-        { id: 8, title: "Article 8", image: require('../../assets/adaptive-icon.png'), description: 'Description courte d\'une ressource avec des infos...' },
-        { id: 9, title: "Article 9", image: require('../../assets/adaptive-icon.png'), description: 'Description courte d\'une ressource avec des infos...' },
+        { id: 1, title: "Article 1", image: { uri: 'https://www.adimeo.com/hubfs/rediger-des-articles-de-blog-qui-seront-lus.webp' }, description: 'Description courte d\'une ressource avec des infos...' },
+        { id: 2, title: "Article 1", image: { uri: 'https://www.redacteur.com/blog/wp-content/uploads/sites/6/2022/03/Image-a-la-une-design-blog.png' }, description: 'Description courte d\'une ressource avec des infos...' },
+        { id: 3, title: "Article 1", image: { uri: 'https://www.redacteur.com/blog/wp-content/uploads/sites/6/2022/01/structurer-article-blog-8-etapes.jpg.webp' }, description: 'Description courte d\'une ressource avec des infos...' },
+        { id: 4, title: "Article 3", image: require('../../assets/adaptive-icon.png'), description: 'Description courte d\'une ressource avec des infos...' },
+        { id: 5, title: "Article 4", image: require('../../assets/adaptive-icon.png'), description: 'Description courte d\'une ressource avec des infos...' },
+        { id: 6, title: "Article 5", image: require('../../assets/adaptive-icon.png'), description: 'Description courte d\'une ressource avec des infos...' },
+        { id: 7, title: "Article 6", image: require('../../assets/adaptive-icon.png'), description: 'Description courte d\'une ressource avec des infos...' },
+        { id: 8, title: "Article 7", image: require('../../assets/adaptive-icon.png'), description: 'Description courte d\'une ressource avec des infos...' },
+        { id: 9, title: "Article 8", image: require('../../assets/adaptive-icon.png'), description: 'Description courte d\'une ressource avec des infos...' },
+        { id: 10, title: "Article 9", image: require('../../assets/adaptive-icon.png'), description: 'Description courte d\'une ressource avec des infos...' },
     ];
 
     const displayedArticles = articles.slice(0, itemCount);
