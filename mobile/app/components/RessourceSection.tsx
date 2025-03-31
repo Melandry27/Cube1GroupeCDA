@@ -18,8 +18,6 @@ const RessourceSection = ({ itemCount }) => {
         { id: 10, title: "Article 9", image: require('../../assets/adaptive-icon.png'), description: 'Description courte d\'une ressource avec des infos...' },
     ];
 
-    const displayedArticles = articles.slice(0, itemCount);
-
     return (
         <View style={styles.blogContainer}>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
