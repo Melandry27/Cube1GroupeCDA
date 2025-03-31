@@ -12,6 +12,9 @@ export default function RessourceList() {
             <Header />
             <StatusBar style="auto" />
             <ScrollView contentContainerStyle={styles.scrollViewContent}>
+
+                {/*ajouter tag categorie ici pour filtrer sur le type de ressources voulues*/}
+
                 <Title size={"small"} style={styles.sectionTitle}>Vos ressources favorites</Title>
                 <RessourceSection itemCount={3} />
 
