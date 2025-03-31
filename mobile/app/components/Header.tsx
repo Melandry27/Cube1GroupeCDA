@@ -19,7 +19,7 @@ const Header = ({ props }) => {
                 </TouchableOpacity>
             </View>
             <View style={styles.grayBar} />
-            <Title style={styles.title} size={"medium"}>(Re)sources Relationnels</Title>
+            <Title style={styles.title} size={"medium"}>(Re)sources Relationnelle</Title>
 
             {searchVisible && (
                 <View style={styles.searchContainer}>
