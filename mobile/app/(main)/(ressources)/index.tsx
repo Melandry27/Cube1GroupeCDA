@@ -1,4 +1,3 @@
-// index.tsx
 import React from 'react';
 import { ScrollView, SafeAreaView, StyleSheet } from 'react-native';
 import Header from "../../components/Header";
