@@ -8,14 +8,14 @@ export default function Layout() {
                 options={{
                     title: "Ressources",
                     headerShown: false,
-            }}
+                }}
             />
             <Stack.Screen
                 name="[id]"
                 options={{
-                    title: "Ressources",
-                    headerShown: false,
-            }}
+                    title: "Ressource",
+                    // headerShown: false,
+                }}
             />
         </Stack>
     )
