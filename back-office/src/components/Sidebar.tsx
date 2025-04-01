@@ -5,6 +5,7 @@ const Sidebar = () => {
     <nav className="fr-sidemenu fr-col-2">
       <ul className="fr-sidemenu__list">
         {[
+          { path: "Dashboard", label: "Tableau de bord" },
           { path: "articles", label: "Articles" },
           { path: "categories", label: "Catégories" },
           { path: "commentaires", label: "Commentaires" },
