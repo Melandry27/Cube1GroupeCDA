@@ -1,9 +1,10 @@
-// RessourceSection.tsx
 import React from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
+import { View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { useRouter } from 'expo-router';
 import RessourceCard from "./RessourceCard";
 
 const RessourceSection = ({ itemCount }) => {
+    const router = useRouter();
     const articles = [
         { id: 1, title: "Article 1", image: { uri: 'https://www.adimeo.com/hubfs/rediger-des-articles-de-blog-qui-seront-lus.webp' }, description: 'Description courte d\'une ressource avec des infos...' },
         { id: 2, title: "Article 1", image: { uri: 'https://www.redacteur.com/blog/wp-content/uploads/sites/6/2022/03/Image-a-la-une-design-blog.png' }, description: 'Description courte d\'une ressource avec des infos...' },
@@ -23,13 +24,13 @@ const RessourceSection = ({ itemCount }) => {
         <View style={styles.blogContainer}>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 {displayedArticles.map(article => (
-                    <View key={article.id} style={styles.articleCard}>
+                    <TouchableOpacity key={article.id} style={styles.articleCard} onPress={() => router.push(`/${article.id}`)}>
                         <RessourceCard
                             image={article.image}
                             title={article.title}
                             description={article.description}
                         />
-                    </View>
+                    </TouchableOpacity>
                 ))}
             </ScrollView>
         </View>
