@@ -1,13 +1,34 @@
-import { Routes, Route } from 'react-router'
-import './App.css'
+import { BrowserRouter as Router, Routes, Route } from "react-router";
+import { AuthProvider } from "./context/AuthContext";
+import ProtectedRoute from "./components/ProtectedRoute";
+import Login from "./pages/Login";
+import Home from "./pages/Dashboard"; 
+import NotFound from "./pages/NotFound";
 
-function App() {
+const App = () => {
   return (
-    <>
-      <h1 style={{ fontFamily: 'Marianne, sans-serif'}}>Back Office</h1>
-      <p style={{ fontFamily: 'Spectral, sans-serif'}}>Bienvenue dans le backoffice</p>
-    </>
-  )
-}
+    <AuthProvider>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/ressources" element={<div>Ressources</div>} />
+            <Route path="/ressources/:id" element={<div>Ressource</div>} />
+            <Route path="/ressources/create" element={<div>Créer une ressource</div>} />
+            <Route path="/ressources/edit/:id" element={<div>Modifier une ressource</div>} />
+            <Route path="/category" element={<div>Catégorie</div>} />
+            <Route path="/comments" element={<div>Commentaires</div>} />
+            <Route path="/users" element={<div>Utilisateurs</div>} />
+            <Route path="/users/:id" element={<div>Utilisateur</div>} />
+            <Route path="/users/create" element={<div>Créer un utilisateur</div>} />
+            <Route path="/users/edit/:id" element={<div>Modifier un utilisateur</div>} />
+            <Route path="/roles" element={<div>Roles</div>} />
+            <Route path="/advenced-statistics" element={<div>Statistiques avancées</div>} />
+          </Route>
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+    </AuthProvider>
+  );
+};
 
-export default App
+export default App;
