@@ -8,8 +8,8 @@ const Sidebar = () => {
           { path: "dashboard", label: "Tableau de bord" },
           { path: "ressources", label: "Ressources" },
           { path: "categories", label: "Catégories" },
-          { path: "commentaires", label: "Commentaires" },
-          { path: "utilisateurs", label: "Utilisateurs" },
+          { path: "comments", label: "Commentaires" },
+          { path: "users", label: "Utilisateurs" },
           { path: "roles", label: "Rôles" },
           { path: "statistiques", label: "Statistiques avancées" },
         ].map(({ path, label }) => (
