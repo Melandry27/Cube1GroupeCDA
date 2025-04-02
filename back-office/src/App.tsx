@@ -8,6 +8,7 @@ import Dashboard from "./pages/Dashboard";
 import Ressources from "./pages/Ressources";
 import Categories from "./pages/Categories";
 import Comments from "./pages/Comments";
+import Users from "./pages/Users";
 
 const App = () => {
   return (
@@ -23,7 +24,7 @@ const App = () => {
               <Route path="/ressources/edit/:id" element={<div>Modifier une ressource</div>} />
               <Route path="/categories" element={<Categories />} />
               <Route path="/comments" element={<Comments />} />
-              <Route path="/users" element={<div>Utilisateurs</div>} />
+              <Route path="/users" element={<Users />} />
               <Route path="/users/:id" element={<div>Utilisateur</div>} />
               <Route path="/users/create" element={<div>Créer un utilisateur</div>} />
               <Route path="/users/edit/:id" element={<div>Modifier un utilisateur</div>} />
