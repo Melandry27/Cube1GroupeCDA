@@ -11,7 +11,7 @@ const Sidebar = () => {
           { path: "comments", label: "Commentaires" },
           { path: "users", label: "Utilisateurs" },
           { path: "roles", label: "Rôles" },
-          { path: "statistiques", label: "Statistiques avancées" },
+          { path: "statistics", label: "Statistiques avancées" },
         ].map(({ path, label }) => (
           <li key={path}>
             <NavLink
