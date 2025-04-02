@@ -4,6 +4,8 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./pages/Login";
 import Home from "./pages/Home"; 
 import NotFound from "./pages/NotFound";
+import Dashboard from "./pages/Dashboard";
+import Ressources from "./pages/Ressources";
 
 const App = () => {
   return (
@@ -12,8 +14,8 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/" element={<Home />}>
-              <Route path="/dashboard" element={<div>Tableau de bord</div>} />
-              <Route path="/ressources" element={<div>Ressources</div>} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/ressources" element={<Ressources/>} />
               <Route path="/ressources/:id" element={<div>Ressource</div>} />
               <Route path="/ressources/create" element={<div>Créer une ressource</div>} />
               <Route path="/ressources/edit/:id" element={<div>Modifier une ressource</div>} />

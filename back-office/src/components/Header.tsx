@@ -14,7 +14,7 @@ const Header: React.FC<HeaderProps> = ({ handleLogout }) => {
           className="fr-mr-2w"
           style={{ height: 50 }}
         />
-        <h1 className="fr-h4">Tableau de Bord de l'Administration</h1>
+        <h1 className="fr-h4"> Interface d'administration</h1>
         <button className="fr-btn fr-btn--secondary fr-ml-auto" onClick={handleLogout}>
           Déconnexion
         </button>
