@@ -15,9 +15,9 @@ const Home = () => {
   return (
     <div className="fr-container-fluid">
       <Header handleLogout={handleLogout} />
-      <div className="fr-grid-row">
+      <div className="fr-container fr-grid-row fr-py-4w">
         <Sidebar />
-        <main className="fr-col fr-py-4w">
+        <main className="fr-col">
           <Outlet />
         </main>
       </div>
