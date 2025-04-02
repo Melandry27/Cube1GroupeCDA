@@ -10,6 +10,7 @@ import Categories from "./pages/Categories";
 import Comments from "./pages/Comments";
 import Users from "./pages/Users";
 import Roles from "./pages/Roles";
+import StatsAvancees from "./pages/Statistics";
 
 const App = () => {
   return (
@@ -30,7 +31,7 @@ const App = () => {
               <Route path="/users/create" element={<div>Créer un utilisateur</div>} />
               <Route path="/users/edit/:id" element={<div>Modifier un utilisateur</div>} />
               <Route path="/roles" element={<Roles />} />
-              <Route path="/statistics" element={<div>Statistiques avancées</div>} />
+              <Route path="/statistics" element={<StatsAvancees />} />
             </Route>
           </Route>
           <Route path="*" element={<NotFound />} />
