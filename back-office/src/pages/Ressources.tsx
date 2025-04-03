@@ -1,9 +1,22 @@
+import { useNavigate, Link } from "react-router";
+
 const Ressources = () => {
+
+  const navigate = useNavigate();
+
+  const handleCreate = () => {
+    navigate("create");
+  };
+
+  const handleEdit = () => {
+    navigate("edit/${id}");
+  };
+
   return (
     <>
       <div className="fr-grid-row fr-grid-row--middle fr-grid-row--between fr-mb-4w">
         <h2 className="fr-h3 fr-mr-auto">Gestion des Ressources</h2>
-        <button className="fr-btn fr-btn--primary fr-ml-auto">Ajouter une Ressource</button>
+        <button className="fr-btn fr-btn--primary fr-ml-auto" onClick={handleCreate}>Ajouter une Ressource</button>
       </div>
       
       <div className="fr-table fr-table--full fr-mt-2w">
@@ -29,7 +42,7 @@ const Ressources = () => {
                 <td>01/04/2024</td>
                 <td>
                   <div className="fr-btns-group fr-btns-group--inline">
-                    <button className="fr-btn fr-btn--secondary fr-btn--sm fr-mr-2w">Modifier</button>
+                    <button className="fr-btn fr-btn--secondary fr-btn--sm fr-mr-2w" onClick={handleEdit}>Modifier</button>
                     <button className="fr-btn fr-btn--tertiary fr-btn--sm">Supprimer</button>
                   </div>
                 </td>
@@ -43,7 +56,7 @@ const Ressources = () => {
                 <td>30/03/2024</td>
                 <td>
                   <div className="fr-btns-group fr-btns-group--inline">
-                    <button className="fr-btn fr-btn--secondary fr-btn--sm fr-mr-2w">Modifier</button>
+                    <button className="fr-btn fr-btn--secondary fr-btn--sm fr-mr-2w" onClick={handleEdit}>Modifier</button>
                     <button className="fr-btn fr-btn--tertiary fr-btn--sm">Supprimer</button>
                   </div>
                 </td>
