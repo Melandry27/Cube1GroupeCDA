@@ -31,4 +31,6 @@ const RessourceSchema = new Schema<IRessource>(
   }
 );
 
+export { IRessource, RessourceType };
+
 export default mongoose.model<IRessource>("Ressource", RessourceSchema);

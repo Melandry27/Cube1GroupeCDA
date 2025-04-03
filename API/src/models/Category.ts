@@ -17,4 +17,6 @@ const CategorySchema = new Schema<ICategory>(
   }
 );
 
+export { ICategory };
+
 export default mongoose.model<ICategory>("Statistic", CategorySchema);

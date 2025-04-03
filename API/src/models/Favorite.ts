@@ -19,4 +19,6 @@ const FavoriteSchema = new Schema<IFavorite>(
   }
 );
 
+export { IFavorite };
+
 export default mongoose.model<IFavorite>("Favorite", FavoriteSchema);
