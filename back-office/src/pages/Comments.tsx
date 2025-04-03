@@ -24,7 +24,7 @@ const Comments = () => {
                   <td>02/04/2024</td>
                   <td>
                     <div className="fr-btns-group fr-btns-group--inline">
-                      <button className="fr-btn fr-btn--secondary fr-btn--sm fr-mr-2w">Modifier</button>
+                      <button className="fr-btn fr-btn--secondary fr-btn--sm fr-mr-2w">Voir</button>
                       <button className="fr-btn fr-btn--tertiary fr-btn--sm">Supprimer</button>
                     </div>
                   </td>
@@ -36,7 +36,7 @@ const Comments = () => {
                   <td>01/04/2024</td>
                   <td>
                     <div className="fr-btns-group fr-btns-group--inline">
-                      <button className="fr-btn fr-btn--secondary fr-btn--sm fr-mr-2w">Modifier</button>
+                      <button className="fr-btn fr-btn--secondary fr-btn--sm fr-mr-2w">Voir</button>
                       <button className="fr-btn fr-btn--tertiary fr-btn--sm">Supprimer</button>
                     </div>
                   </td>
