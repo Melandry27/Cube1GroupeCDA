@@ -1,33 +1,32 @@
 import { Request, Response } from "express";
-import Favorite from "../models/Favorite";
+import { IFavorite } from "../models/Favorite";
+import * as FavoriteService from "../services/FavoriteService";
 
-// Create a new favorite
-export const createFavorite = async (req: Request, res: Response) => {
+const createFavorite = async (req: Request, res: Response): Promise<void> => {
   try {
-    const favorite = new Favorite(req.body);
-    const savedFavorite = await favorite.save();
-    res.status(201).json(savedFavorite);
+    const favorite: IFavorite = await FavoriteService.createFavorite(req.body);
+    res.status(201).json(favorite);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
 
-// Get all favorites
-export const getFavorites = async (req: Request, res: Response) => {
+const getAllFavorites = async (req: Request, res: Response): Promise<void> => {
   try {
-    const favorites = await Favorite.find();
+    const favorites: IFavorite[] = await FavoriteService.getAllFavorites();
     res.status(200).json(favorites);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-// Get a single favorite by ID
-export const getFavoriteById = async (req: Request, res: Response) => {
+const getFavoriteById = async (req: Request, res: Response): Promise<void> => {
   try {
-    const favorite = await Favorite.findById(req.params.id);
+    const favorite: IFavorite | null = await FavoriteService.getFavoriteById(
+      req.params.id
+    );
     if (!favorite) {
-      return res.status(404).json({ message: "Favorite not found" });
+      res.status(404).json({ message: "Favorite not found" });
     }
     res.status(200).json(favorite);
   } catch (error) {
@@ -35,16 +34,12 @@ export const getFavoriteById = async (req: Request, res: Response) => {
   }
 };
 
-// Update a favorite by ID
-export const updateFavorite = async (req: Request, res: Response) => {
+const updateFavorite = async (req: Request, res: Response): Promise<void> => {
   try {
-    const updatedFavorite = await Favorite.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true, runValidators: true }
-    );
+    const updatedFavorite: IFavorite | null =
+      await FavoriteService.updateFavorite(req.params.id, req.body);
     if (!updatedFavorite) {
-      return res.status(404).json({ message: "Favorite not found" });
+      res.status(404).json({ message: "Favorite not found" });
     }
     res.status(200).json(updatedFavorite);
   } catch (error) {
@@ -52,15 +47,23 @@ export const updateFavorite = async (req: Request, res: Response) => {
   }
 };
 
-// Delete a favorite by ID
-export const deleteFavorite = async (req: Request, res: Response) => {
+const deleteFavorite = async (req: Request, res: Response): Promise<void> => {
   try {
-    const deletedFavorite = await Favorite.findByIdAndDelete(req.params.id);
+    const deletedFavorite: IFavorite | null =
+      await FavoriteService.deleteFavorite(req.params.id);
     if (!deletedFavorite) {
-      return res.status(404).json({ message: "Favorite not found" });
+      res.status(404).json({ message: "Favorite not found" });
     }
     res.status(200).json({ message: "Favorite deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
+};
+
+export {
+  createFavorite,
+  deleteFavorite,
+  getAllFavorites,
+  getFavoriteById,
+  updateFavorite,
 };

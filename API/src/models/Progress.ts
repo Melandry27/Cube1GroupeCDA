@@ -29,4 +29,6 @@ const ProgressSchema = new Schema<IProgress>(
   }
 );
 
+export { IProgress, ProgressStatus };
+
 export default mongoose.model<IProgress>("Progress", ProgressSchema);

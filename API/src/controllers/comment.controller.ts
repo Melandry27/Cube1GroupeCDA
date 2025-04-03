@@ -1,37 +1,30 @@
 import { Request, Response } from "express";
-import Comment from "../models/Comment";
+import { IComment } from "../models/Comment";
+import * as CommentService from "../services/CommentService";
 
-// Create a new comment
-export const createComment = async (req: Request, res: Response) => {
+const createComment = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id, userId, ressourceId, content } = req.body;
-    const newComment = await Comment.create({
-      id,
-      userId,
-      ressourceId,
-      content,
-    });
-    res.status(201).json(newComment);
+    const comment: IComment = await CommentService.createComment(req.body);
+    res.status(201).json(comment);
   } catch (error) {
     res.status(500).json({ message: "Error creating comment", error });
   }
 };
 
-// Get all comments
-export const getAllComments = async (req: Request, res: Response) => {
+const getAllComments = async (req: Request, res: Response): Promise<void> => {
   try {
-    const comments = await Comment.find();
+    const comments: IComment[] = await CommentService.getAllComments();
     res.status(200).json(comments);
   } catch (error) {
     res.status(500).json({ message: "Error fetching comments", error });
   }
 };
 
-// Get a single comment by ID
-export const getCommentById = async (req: Request, res: Response) => {
+const getCommentById = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
-    const comment = await Comment.findOne({ id });
+    const comment: IComment | null = await CommentService.getCommentById(
+      Number(req.params.id)
+    );
     if (!comment) {
       return res.status(404).json({ message: "Comment not found" });
     }
@@ -41,13 +34,12 @@ export const getCommentById = async (req: Request, res: Response) => {
   }
 };
 
-// Update a comment by ID
-export const updateComment = async (req: Request, res: Response) => {
+const updateComment = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
-    const updatedComment = await Comment.findOneAndUpdate({ id }, req.body, {
-      new: true,
-    });
+    const updatedComment: IComment | null = await CommentService.updateComment(
+      Number(req.params.id),
+      req.body
+    );
     if (!updatedComment) {
       return res.status(404).json({ message: "Comment not found" });
     }
@@ -57,11 +49,11 @@ export const updateComment = async (req: Request, res: Response) => {
   }
 };
 
-// Delete a comment by ID
-export const deleteComment = async (req: Request, res: Response) => {
+const deleteComment = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
-    const deletedComment = await Comment.findOneAndDelete({ id });
+    const deletedComment: IComment | null = await CommentService.deleteComment(
+      Number(req.params.id)
+    );
     if (!deletedComment) {
       return res.status(404).json({ message: "Comment not found" });
     }
@@ -69,4 +61,12 @@ export const deleteComment = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(500).json({ message: "Error deleting comment", error });
   }
+};
+
+export {
+  createComment,
+  deleteComment,
+  getAllComments,
+  getCommentById,
+  updateComment,
 };

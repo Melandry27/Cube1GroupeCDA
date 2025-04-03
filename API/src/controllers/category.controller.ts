@@ -1,35 +1,32 @@
 import { Request, Response } from "express";
-import Category from "../models/Category";
+import { ICategory } from "../models/Category";
+import * as CategoryService from "../services/CategoryService";
 
-// Create a new category
-export const createCategory = async (req: Request, res: Response) => {
+const createCategory = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id, name, description } = req.body;
-    const newCategory = new Category({ id, name, description });
-    await newCategory.save();
-    res.status(201).json(newCategory);
+    const category: ICategory = await CategoryService.createCategory(req.body);
+    res.status(201).json(category);
   } catch (error) {
     res.status(500).json({ message: "Error creating category", error });
   }
 };
 
-// Get all categories
-export const getCategories = async (req: Request, res: Response) => {
+const getCategories = async (req: Request, res: Response): Promise<void> => {
   try {
-    const categories = await Category.find();
+    const categories: ICategory[] = await CategoryService.getCategories();
     res.status(200).json(categories);
   } catch (error) {
     res.status(500).json({ message: "Error fetching categories", error });
   }
 };
 
-// Get a single category by ID
-export const getCategoryById = async (req: Request, res: Response) => {
+const getCategoryById = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
-    const category = await Category.findOne({ id: Number(id) });
+    const category: ICategory | null = await CategoryService.getCategoryById(
+      Number(req.params.id)
+    );
     if (!category) {
-      return res.status(404).json({ message: "Category not found" });
+      res.status(404).json({ message: "Category not found" });
     }
     res.status(200).json(category);
   } catch (error) {
@@ -37,18 +34,12 @@ export const getCategoryById = async (req: Request, res: Response) => {
   }
 };
 
-// Update a category by ID
-export const updateCategory = async (req: Request, res: Response) => {
+const updateCategory = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
-    const { name, description } = req.body;
-    const updatedCategory = await Category.findOneAndUpdate(
-      { id: Number(id) },
-      { name, description },
-      { new: true }
-    );
+    const updatedCategory: ICategory | null =
+      await CategoryService.updateCategory(Number(req.params.id), req.body);
     if (!updatedCategory) {
-      return res.status(404).json({ message: "Category not found" });
+      res.status(404).json({ message: "Category not found" });
     }
     res.status(200).json(updatedCategory);
   } catch (error) {
@@ -56,16 +47,23 @@ export const updateCategory = async (req: Request, res: Response) => {
   }
 };
 
-// Delete a category by ID
-export const deleteCategory = async (req: Request, res: Response) => {
+const deleteCategory = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
-    const deletedCategory = await Category.findOneAndDelete({ id: Number(id) });
+    const deletedCategory: ICategory | null =
+      await CategoryService.deleteCategory(Number(req.params.id));
     if (!deletedCategory) {
-      return res.status(404).json({ message: "Category not found" });
+      res.status(404).json({ message: "Category not found" });
     }
     res.status(200).json({ message: "Category deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: "Error deleting category", error });
   }
+};
+
+export {
+  createCategory,
+  deleteCategory,
+  getCategories,
+  getCategoryById,
+  updateCategory,
 };

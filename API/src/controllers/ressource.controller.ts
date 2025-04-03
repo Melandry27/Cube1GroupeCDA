@@ -1,35 +1,33 @@
 import { Request, Response } from "express";
-import Ressource from "../models/Ressource";
+import { IRessource } from "../models/Ressource";
+import * as RessourceService from "../services/RessourceService";
 
-// Create a new resource
-export const createRessource = async (req: Request, res: Response) => {
+const createRessource = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id, title, content, type, createdBy } = req.body;
-    const newRessource = new Ressource({ id, title, content, type, createdBy });
-    const savedRessource = await newRessource.save();
-    res.status(201).json(savedRessource);
+    const ressource: IRessource = await RessourceService.createRessource(
+      req.body
+    );
+    res.status(201).json(ressource);
   } catch (error) {
     res.status(500).json({ message: "Error creating resource", error });
   }
 };
 
-// Get all resources
-export const getAllRessources = async (req: Request, res: Response) => {
+const getAllRessources = async (req: Request, res: Response): Promise<void> => {
   try {
-    const ressources = await Ressource.find();
+    const ressources: IRessource[] = await RessourceService.getAllRessources();
     res.status(200).json(ressources);
   } catch (error) {
     res.status(500).json({ message: "Error fetching resources", error });
   }
 };
 
-// Get a single resource by ID
-export const getRessourceById = async (req: Request, res: Response) => {
+const getRessourceById = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
-    const ressource = await Ressource.findOne({ id: Number(id) });
+    const ressource: IRessource | null =
+      await RessourceService.getRessourceById(req.params.id);
     if (!ressource) {
-      return res.status(404).json({ message: "Resource not found" });
+      res.status(404).json({ message: "Resource not found" });
     }
     res.status(200).json(ressource);
   } catch (error) {
@@ -37,17 +35,12 @@ export const getRessourceById = async (req: Request, res: Response) => {
   }
 };
 
-// Update a resource by ID
-export const updateRessource = async (req: Request, res: Response) => {
+const updateRessource = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
-    const updatedRessource = await Ressource.findOneAndUpdate(
-      { id: Number(id) },
-      req.body,
-      { new: true }
-    );
+    const updatedRessource: IRessource | null =
+      await RessourceService.updateRessource(req.params.id, req.body);
     if (!updatedRessource) {
-      return res.status(404).json({ message: "Resource not found" });
+      res.status(404).json({ message: "Resource not found" });
     }
     res.status(200).json(updatedRessource);
   } catch (error) {
@@ -55,18 +48,23 @@ export const updateRessource = async (req: Request, res: Response) => {
   }
 };
 
-// Delete a resource by ID
-export const deleteRessource = async (req: Request, res: Response) => {
+const deleteRessource = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
-    const deletedRessource = await Ressource.findOneAndDelete({
-      id: Number(id),
-    });
+    const deletedRessource: IRessource | null =
+      await RessourceService.deleteRessource(req.params.id);
     if (!deletedRessource) {
-      return res.status(404).json({ message: "Resource not found" });
+      res.status(404).json({ message: "Resource not found" });
     }
     res.status(200).json({ message: "Resource deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: "Error deleting resource", error });
   }
+};
+
+export {
+  createRessource,
+  deleteRessource,
+  getAllRessources,
+  getRessourceById,
+  updateRessource,
 };

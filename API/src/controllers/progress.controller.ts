@@ -1,35 +1,32 @@
 import { Request, Response } from "express";
-import Progress from "../models/Progress";
+import { IProgress } from "../models/Progress";
+import * as ProgressService from "../services/ProgressService";
 
-// Create a new progress
-export const createProgress = async (req: Request, res: Response) => {
+const createProgress = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id, userId, ressourceId, status } = req.body;
-    const progress = new Progress({ id, userId, ressourceId, status });
-    await progress.save();
+    const progress: IProgress = await ProgressService.createProgress(req.body);
     res.status(201).json(progress);
   } catch (error) {
     res.status(500).json({ message: "Error creating progress", error });
   }
 };
 
-// Get all progress records
-export const getAllProgress = async (req: Request, res: Response) => {
+const getAllProgress = async (req: Request, res: Response): Promise<void> => {
   try {
-    const progressList = await Progress.find();
+    const progressList: IProgress[] = await ProgressService.getAllProgress();
     res.status(200).json(progressList);
   } catch (error) {
     res.status(500).json({ message: "Error fetching progress records", error });
   }
 };
 
-// Get a single progress record by ID
-export const getProgressById = async (req: Request, res: Response) => {
+const getProgressById = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
-    const progress = await Progress.findById(id);
+    const progress: IProgress | null = await ProgressService.getProgressById(
+      req.params.id
+    );
     if (!progress) {
-      return res.status(404).json({ message: "Progress not found" });
+      res.status(404).json({ message: "Progress not found" });
     }
     res.status(200).json(progress);
   } catch (error) {
@@ -37,35 +34,36 @@ export const getProgressById = async (req: Request, res: Response) => {
   }
 };
 
-// Update a progress record
-export const updateProgress = async (req: Request, res: Response) => {
+const updateProgress = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
-    const { userId, ressourceId, status } = req.body;
-    const progress = await Progress.findByIdAndUpdate(
-      id,
-      { userId, ressourceId, status },
-      { new: true }
-    );
-    if (!progress) {
-      return res.status(404).json({ message: "Progress not found" });
+    const updatedProgress: IProgress | null =
+      await ProgressService.updateProgress(req.params.id, req.body);
+    if (!updatedProgress) {
+      res.status(404).json({ message: "Progress not found" });
     }
-    res.status(200).json(progress);
+    res.status(200).json(updatedProgress);
   } catch (error) {
     res.status(500).json({ message: "Error updating progress record", error });
   }
 };
 
-// Delete a progress record
-export const deleteProgress = async (req: Request, res: Response) => {
+const deleteProgress = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
-    const progress = await Progress.findByIdAndDelete(id);
-    if (!progress) {
-      return res.status(404).json({ message: "Progress not found" });
+    const deletedProgress: IProgress | null =
+      await ProgressService.deleteProgress(req.params.id);
+    if (!deletedProgress) {
+      res.status(404).json({ message: "Progress not found" });
     }
     res.status(200).json({ message: "Progress deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: "Error deleting progress record", error });
   }
+};
+
+export {
+  createProgress,
+  deleteProgress,
+  getAllProgress,
+  getProgressById,
+  updateProgress,
 };
