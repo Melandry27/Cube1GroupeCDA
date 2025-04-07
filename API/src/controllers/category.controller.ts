@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { ICategory } from "../models/Category";
 import * as CategoryService from "../services/CategoryService";
 
-const createCategory = async (req: Request, res: Response): Promise<void> => {
+export const create = async (req: Request, res: Response): Promise<void> => {
   try {
     const category: ICategory = await CategoryService.createCategory(req.body);
     res.status(201).json(category);
@@ -11,7 +11,7 @@ const createCategory = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-const getCategories = async (req: Request, res: Response): Promise<void> => {
+export const getAll = async (req: Request, res: Response): Promise<void> => {
   try {
     const categories: ICategory[] = await CategoryService.getCategories();
     res.status(200).json(categories);
@@ -20,7 +20,7 @@ const getCategories = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-const getCategoryById = async (req: Request, res: Response): Promise<void> => {
+export const getById = async (req: Request, res: Response): Promise<void> => {
   try {
     const category: ICategory | null = await CategoryService.getCategoryById(
       Number(req.params.id)
@@ -34,7 +34,7 @@ const getCategoryById = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-const updateCategory = async (req: Request, res: Response): Promise<void> => {
+export const update = async (req: Request, res: Response): Promise<void> => {
   try {
     const updatedCategory: ICategory | null =
       await CategoryService.updateCategory(Number(req.params.id), req.body);
@@ -47,7 +47,7 @@ const updateCategory = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-const deleteCategory = async (req: Request, res: Response): Promise<void> => {
+export const remove = async (req: Request, res: Response): Promise<void> => {
   try {
     const deletedCategory: ICategory | null =
       await CategoryService.deleteCategory(Number(req.params.id));
@@ -58,12 +58,4 @@ const deleteCategory = async (req: Request, res: Response): Promise<void> => {
   } catch (error) {
     res.status(500).json({ message: "Error deleting category", error });
   }
-};
-
-export {
-  createCategory,
-  deleteCategory,
-  getCategories,
-  getCategoryById,
-  updateCategory,
 };

@@ -1,39 +1,28 @@
 import { Request, Response } from "express";
-import Role from "../models/Role";
+import { IRole } from "../models/Role";
+import * as RoleService from "../services/RoleService";
 
-// Create a new role
-export const createRole = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+export const create = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id, name } = req.body;
-    const newRole = new Role({ id, name });
-    const savedRole = await newRole.save();
-    res.status(201).json(savedRole);
+    const role: IRole = await RoleService.createNewRole(req.body);
+    res.status(201).json(role);
   } catch (error) {
     res.status(500).json({ message: "Error creating role", error });
   }
 };
 
-// Get all roles
-export const getRoles = async (_req: Request, res: Response): Promise<void> => {
+export const getAll = async (req: Request, res: Response): Promise<void> => {
   try {
-    const roles = await Role.find();
+    const roles: IRole[] = await RoleService.getRoles();
     res.status(200).json(roles);
   } catch (error) {
     res.status(500).json({ message: "Error fetching roles", error });
   }
 };
 
-// Get a single role by ID
-export const getRoleById = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+export const getById = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
-    const role = await Role.findOne({ id });
+    const role: IRole | null = await RoleService.getRole(req.params.id);
     if (!role) {
       res.status(404).json({ message: "Role not found" });
       return;
@@ -44,16 +33,12 @@ export const getRoleById = async (
   }
 };
 
-// Update a role by ID
-export const updateRole = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+export const update = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
-    const updatedRole = await Role.findOneAndUpdate({ id }, req.body, {
-      new: true,
-    });
+    const updatedRole: IRole | null = await RoleService.updateExistingRole(
+      req.params.id,
+      req.body
+    );
     if (!updatedRole) {
       res.status(404).json({ message: "Role not found" });
       return;
@@ -64,14 +49,11 @@ export const updateRole = async (
   }
 };
 
-// Delete a role by ID
-export const deleteRole = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+export const remove = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
-    const deletedRole = await Role.findOneAndDelete({ id });
+    const deletedRole: IRole | null = await RoleService.deleteRoleById(
+      req.params.id
+    );
     if (!deletedRole) {
       res.status(404).json({ message: "Role not found" });
       return;

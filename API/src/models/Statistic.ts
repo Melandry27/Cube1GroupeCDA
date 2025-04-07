@@ -21,4 +21,6 @@ const StatisticSchema = new Schema<IStatistic>(
   }
 );
 
+export { IStatistic };
+
 export default mongoose.model<IStatistic>("Statistic", StatisticSchema);

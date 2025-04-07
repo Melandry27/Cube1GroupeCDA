@@ -1,76 +1,63 @@
 import { Request, Response } from "express";
-import User from "../models/User";
+import { IUser } from "../models/User";
+import * as UserService from "../services/UserService";
 
-// Create a new user
-export const createUser = async (req: Request, res: Response) => {
+export const create = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { name, email, password, roleId, adress, phone } = req.body;
-    const newUser = new User({
-      name,
-      email,
-      password,
-      roleId,
-      adress,
-      phone,
-    });
-    await newUser.save();
-    res.status(201).json(newUser);
-  } catch (err) {
-    res.status(400).json({ error: (err as Error).message });
+    const user: IUser = await UserService.create(req.body);
+    res.status(201).json(user);
+  } catch (error) {
+    res.status(500).json({ message: "Error creating user", error });
   }
 };
 
-// Get all users
-export const getAllUsers = async (_req: Request, res: Response) => {
+export const getAll = async (req: Request, res: Response): Promise<void> => {
   try {
-    const users = await User.find();
+    const users: IUser[] = await UserService.getAll();
     res.status(200).json(users);
-  } catch (err) {
-    res.status(500).json({ error: (err as Error).message });
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching users", error });
   }
 };
 
-// Get a user by ID
-export const getUserById = async (req: Request, res: Response) => {
+export const getById = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
-    const user = await User.findById(id);
+    const user: IUser | null = await UserService.getById(req.params.id);
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      res.status(404).json({ message: "User not found" });
+      return;
     }
     res.status(200).json(user);
-  } catch (err) {
-    res.status(500).json({ error: (err as Error).message });
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching user", error });
   }
 };
 
-// Update a user by ID
-export const updateUser = async (req: Request, res: Response) => {
+export const update = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
-    const updatedUser = await User.findByIdAndUpdate(id, req.body, {
-      new: true,
-      runValidators: true,
-    });
+    const updatedUser: IUser | null = await UserService.update(
+      req.params.id,
+      req.body
+    );
     if (!updatedUser) {
-      return res.status(404).json({ error: "User not found" });
+      res.status(404).json({ message: "User not found" });
+      return;
     }
     res.status(200).json(updatedUser);
-  } catch (err) {
-    res.status(400).json({ error: (err as Error).message });
+  } catch (error) {
+    res.status(500).json({ message: "Error updating user", error });
   }
 };
 
-// Delete a user by ID
-export const deleteUser = async (req: Request, res: Response) => {
+export const remove = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id } = req.params;
-    const deletedUser = await User.findByIdAndDelete(id);
+    const deletedUser: IUser | null = await UserService.remove(req.params.id);
     if (!deletedUser) {
-      return res.status(404).json({ error: "User not found" });
+      res.status(404).json({ message: "User not found" });
+      return;
     }
     res.status(200).json({ message: "User deleted successfully" });
-  } catch (err) {
-    res.status(500).json({ error: (err as Error).message });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting user", error });
   }
 };

@@ -1,21 +1,23 @@
 import * as RessourceDatabase from "../database/RessourceDatabase";
 import { IRessource } from "../models/Ressource";
 
-const createRessource = async (
+export const createRessource = async (
   ressourceData: IRessource
 ): Promise<IRessource> => {
   return await RessourceDatabase.create(ressourceData);
 };
 
-const getAllRessources = async (): Promise<IRessource[]> => {
+export const getAllRessources = async (): Promise<IRessource[]> => {
   return await RessourceDatabase.findAll();
 };
 
-const getRessourceById = async (id: string): Promise<IRessource | null> => {
+export const getRessourceById = async (
+  id: string
+): Promise<IRessource | null> => {
   return await RessourceDatabase.findById(id);
 };
 
-const updateRessource = async (
+export const updateRessource = async (
   id: string,
   updateData: Partial<IRessource>
 ): Promise<IRessource | null> => {
@@ -24,12 +26,4 @@ const updateRessource = async (
 
 const deleteRessource = async (id: string): Promise<IRessource | null> => {
   return await RessourceDatabase.remove(id);
-};
-
-export {
-  createRessource,
-  deleteRessource,
-  getAllRessources,
-  getRessourceById,
-  updateRessource,
 };
