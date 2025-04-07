@@ -23,4 +23,6 @@ const RoleSchema = new Schema<IRole>(
   }
 );
 
-export default mongoose.model<IRole>("User", RoleSchema);
+export { IRole, RoleName };
+
+export default mongoose.model<IRole>("Role", RoleSchema);

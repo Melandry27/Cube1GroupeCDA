@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { IFavorite } from "../models/Favorite";
 import * as FavoriteService from "../services/FavoriteService";
 
-const createFavorite = async (req: Request, res: Response): Promise<void> => {
+export const create = async (req: Request, res: Response): Promise<void> => {
   try {
     const favorite: IFavorite = await FavoriteService.createFavorite(req.body);
     res.status(201).json(favorite);
@@ -11,7 +11,7 @@ const createFavorite = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-const getAllFavorites = async (req: Request, res: Response): Promise<void> => {
+export const getAll = async (req: Request, res: Response): Promise<void> => {
   try {
     const favorites: IFavorite[] = await FavoriteService.getAllFavorites();
     res.status(200).json(favorites);
@@ -20,7 +20,7 @@ const getAllFavorites = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-const getFavoriteById = async (req: Request, res: Response): Promise<void> => {
+export const getById = async (req: Request, res: Response): Promise<void> => {
   try {
     const favorite: IFavorite | null = await FavoriteService.getFavoriteById(
       req.params.id
@@ -34,7 +34,7 @@ const getFavoriteById = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-const updateFavorite = async (req: Request, res: Response): Promise<void> => {
+export const update = async (req: Request, res: Response): Promise<void> => {
   try {
     const updatedFavorite: IFavorite | null =
       await FavoriteService.updateFavorite(req.params.id, req.body);
@@ -47,7 +47,7 @@ const updateFavorite = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-const deleteFavorite = async (req: Request, res: Response): Promise<void> => {
+export const remove = async (req: Request, res: Response): Promise<void> => {
   try {
     const deletedFavorite: IFavorite | null =
       await FavoriteService.deleteFavorite(req.params.id);
@@ -58,12 +58,4 @@ const deleteFavorite = async (req: Request, res: Response): Promise<void> => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-};
-
-export {
-  createFavorite,
-  deleteFavorite,
-  getAllFavorites,
-  getFavoriteById,
-  updateFavorite,
 };

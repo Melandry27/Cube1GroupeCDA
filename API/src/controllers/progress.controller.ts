@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { IProgress } from "../models/Progress";
 import * as ProgressService from "../services/ProgressService";
 
-const createProgress = async (req: Request, res: Response): Promise<void> => {
+export const create = async (req: Request, res: Response): Promise<void> => {
   try {
     const progress: IProgress = await ProgressService.createProgress(req.body);
     res.status(201).json(progress);
@@ -11,7 +11,7 @@ const createProgress = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-const getAllProgress = async (req: Request, res: Response): Promise<void> => {
+export const getAll = async (req: Request, res: Response): Promise<void> => {
   try {
     const progressList: IProgress[] = await ProgressService.getAllProgress();
     res.status(200).json(progressList);
@@ -20,7 +20,7 @@ const getAllProgress = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-const getProgressById = async (req: Request, res: Response): Promise<void> => {
+export const getById = async (req: Request, res: Response): Promise<void> => {
   try {
     const progress: IProgress | null = await ProgressService.getProgressById(
       req.params.id
@@ -34,7 +34,7 @@ const getProgressById = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-const updateProgress = async (req: Request, res: Response): Promise<void> => {
+export const update = async (req: Request, res: Response): Promise<void> => {
   try {
     const updatedProgress: IProgress | null =
       await ProgressService.updateProgress(req.params.id, req.body);
@@ -47,7 +47,7 @@ const updateProgress = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-const deleteProgress = async (req: Request, res: Response): Promise<void> => {
+export const remove = async (req: Request, res: Response): Promise<void> => {
   try {
     const deletedProgress: IProgress | null =
       await ProgressService.deleteProgress(req.params.id);
@@ -58,12 +58,4 @@ const deleteProgress = async (req: Request, res: Response): Promise<void> => {
   } catch (error) {
     res.status(500).json({ message: "Error deleting progress record", error });
   }
-};
-
-export {
-  createProgress,
-  deleteProgress,
-  getAllProgress,
-  getProgressById,
-  updateProgress,
 };

@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { IComment } from "../models/Comment";
 import * as CommentService from "../services/CommentService";
 
-const createComment = async (req: Request, res: Response): Promise<void> => {
+export const create = async (req: Request, res: Response): Promise<void> => {
   try {
     const comment: IComment = await CommentService.createComment(req.body);
     res.status(201).json(comment);
@@ -11,7 +11,7 @@ const createComment = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-const getAllComments = async (req: Request, res: Response): Promise<void> => {
+export const getAll = async (req: Request, res: Response): Promise<void> => {
   try {
     const comments: IComment[] = await CommentService.getAllComments();
     res.status(200).json(comments);
@@ -20,7 +20,7 @@ const getAllComments = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-const getCommentById = async (req: Request, res: Response): Promise<void> => {
+export const getById = async (req: Request, res: Response): Promise<void> => {
   try {
     const comment: IComment | null = await CommentService.getCommentById(
       Number(req.params.id)
@@ -34,7 +34,7 @@ const getCommentById = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-const updateComment = async (req: Request, res: Response): Promise<void> => {
+export const update = async (req: Request, res: Response): Promise<void> => {
   try {
     const updatedComment: IComment | null = await CommentService.updateComment(
       Number(req.params.id),
@@ -49,7 +49,7 @@ const updateComment = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-const deleteComment = async (req: Request, res: Response): Promise<void> => {
+export const remove = async (req: Request, res: Response): Promise<void> => {
   try {
     const deletedComment: IComment | null = await CommentService.deleteComment(
       Number(req.params.id)
@@ -61,12 +61,4 @@ const deleteComment = async (req: Request, res: Response): Promise<void> => {
   } catch (error) {
     res.status(500).json({ message: "Error deleting comment", error });
   }
-};
-
-export {
-  createComment,
-  deleteComment,
-  getAllComments,
-  getCommentById,
-  updateComment,
 };

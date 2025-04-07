@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { IRessource } from "../models/Ressource";
 import * as RessourceService from "../services/RessourceService";
 
-const createRessource = async (req: Request, res: Response): Promise<void> => {
+export const create = async (req: Request, res: Response): Promise<void> => {
   try {
     const ressource: IRessource = await RessourceService.createRessource(
       req.body
@@ -13,7 +13,7 @@ const createRessource = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-const getAllRessources = async (req: Request, res: Response): Promise<void> => {
+export const getAll = async (req: Request, res: Response): Promise<void> => {
   try {
     const ressources: IRessource[] = await RessourceService.getAllRessources();
     res.status(200).json(ressources);
@@ -22,7 +22,7 @@ const getAllRessources = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-const getRessourceById = async (req: Request, res: Response): Promise<void> => {
+export const getById = async (req: Request, res: Response): Promise<void> => {
   try {
     const ressource: IRessource | null =
       await RessourceService.getRessourceById(req.params.id);
@@ -35,7 +35,7 @@ const getRessourceById = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-const updateRessource = async (req: Request, res: Response): Promise<void> => {
+export const update = async (req: Request, res: Response): Promise<void> => {
   try {
     const updatedRessource: IRessource | null =
       await RessourceService.updateRessource(req.params.id, req.body);
@@ -48,7 +48,7 @@ const updateRessource = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-const deleteRessource = async (req: Request, res: Response): Promise<void> => {
+export const remove = async (req: Request, res: Response): Promise<void> => {
   try {
     const deletedRessource: IRessource | null =
       await RessourceService.deleteRessource(req.params.id);
@@ -59,12 +59,4 @@ const deleteRessource = async (req: Request, res: Response): Promise<void> => {
   } catch (error) {
     res.status(500).json({ message: "Error deleting resource", error });
   }
-};
-
-export {
-  createRessource,
-  deleteRessource,
-  getAllRessources,
-  getRessourceById,
-  updateRessource,
 };
