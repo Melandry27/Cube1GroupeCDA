@@ -24,6 +24,8 @@ export const updateRessource = async (
   return await RessourceDatabase.update(id, updateData);
 };
 
-const deleteRessource = async (id: string): Promise<IRessource | null> => {
+export const deleteRessource = async (
+  id: string
+): Promise<IRessource | null> => {
   return await RessourceDatabase.remove(id);
 };

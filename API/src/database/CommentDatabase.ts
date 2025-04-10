@@ -23,4 +23,10 @@ const remove = async (id: number): Promise<IComment | null> => {
   return await Comment.findOneAndDelete({ id });
 };
 
-export { create, findAll, findById, remove, update };
+const findAllByRessourceId = async (
+  ressourceId: string
+): Promise<IComment[]> => {
+  return await Comment.find({ ressourceId });
+};
+
+export { create, findAll, findAllByRessourceId, findById, remove, update };
