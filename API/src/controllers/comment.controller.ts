@@ -26,7 +26,7 @@ export const getById = async (req: Request, res: Response): Promise<void> => {
       Number(req.params.id)
     );
     if (!comment) {
-      return res.status(404).json({ message: "Comment not found" });
+      res.status(404).json({ message: "Comment not found" });
     }
     res.status(200).json(comment);
   } catch (error) {
@@ -67,7 +67,7 @@ export const getAllCommentsByRessourceId = async (
 ): Promise<void> => {
   try {
     const comments: IComment[] =
-      await CommentService.getAllCommentsByRessourceId(req.params.id);
+      await CommentService.getAllCommentsByRessourceId(req.params.ressourceId);
     res.status(200).json(comments);
   } catch (error) {
     res.status(500).json({ message: "Error fetching comments", error });
