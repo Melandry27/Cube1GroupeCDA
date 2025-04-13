@@ -1,0 +1,11 @@
+meta {
+  name: Update Role
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{BASE_URL}}/roles/id
+  body: json
+  auth: inherit
+}
