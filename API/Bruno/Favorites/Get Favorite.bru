@@ -1,0 +1,11 @@
+meta {
+  name: Get Favorite
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{BASE_URL}}/favorites/id
+  body: none
+  auth: inherit
+}

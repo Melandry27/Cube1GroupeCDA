@@ -25,3 +25,9 @@ export const updateComment = async (
 export const deleteComment = async (id: number): Promise<IComment | null> => {
   return await CommentDatabase.remove(id);
 };
+
+export const getAllCommentsByRessourceId = async (
+  ressourceId: string
+): Promise<IComment[]> => {
+  return await CommentDatabase.findAllByRessourceId(ressourceId);
+};

@@ -26,7 +26,7 @@ export const getById = async (req: Request, res: Response): Promise<void> => {
       Number(req.params.id)
     );
     if (!comment) {
-      return res.status(404).json({ message: "Comment not found" });
+      res.status(404).json({ message: "Comment not found" });
     }
     res.status(200).json(comment);
   } catch (error) {
@@ -54,11 +54,22 @@ export const remove = async (req: Request, res: Response): Promise<void> => {
     const deletedComment: IComment | null = await CommentService.deleteComment(
       Number(req.params.id)
     );
-    if (!deletedComment) {
-      return res.status(404).json({ message: "Comment not found" });
-    }
+    if (!deletedComment) res.status(404).json({ message: "Comment not found" });
     res.status(200).json({ message: "Comment deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: "Error deleting comment", error });
+  }
+};
+
+export const getAllCommentsByRessourceId = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const comments: IComment[] =
+      await CommentService.getAllCommentsByRessourceId(req.params.ressourceId);
+    res.status(200).json(comments);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching comments", error });
   }
 };

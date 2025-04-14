@@ -1,0 +1,20 @@
+meta {
+  name: Update Statistic
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{BASE_URL}}/statistics/id
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "ressourceId": "",
+    "views": "",
+    "favorites": "",
+    "shares": ""
+  }
+}
