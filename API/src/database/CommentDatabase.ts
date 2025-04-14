@@ -1,32 +1,30 @@
 import Comment, { IComment } from "../models/Comment";
 
-const create = async (commentData: IComment): Promise<IComment> => {
-  return await Comment.create(commentData);
+export const create = async (commentData: IComment): Promise<IComment> => {
+  return Comment.create(commentData);
 };
 
-const findAll = async (): Promise<IComment[]> => {
-  return await Comment.find();
+export const getAll = async (): Promise<IComment[]> => {
+  return Comment.find();
 };
 
-const findById = async (id: number): Promise<IComment | null> => {
-  return await Comment.findOne({ id });
+export const getById = async (id: string): Promise<IComment | null> => {
+  return Comment.findOne({ _id: id });
 };
 
-const update = async (
-  id: number,
+export const update = async (
+  id: string,
   updateData: Partial<IComment>
 ): Promise<IComment | null> => {
-  return await Comment.findOneAndUpdate({ id }, updateData, { new: true });
+  return Comment.findOneAndUpdate({ _id: id }, updateData, { new: true });
 };
 
-const remove = async (id: number): Promise<IComment | null> => {
-  return await Comment.findOneAndDelete({ id });
+export const remove = async (id: string): Promise<IComment | null> => {
+  return Comment.findOneAndDelete({ _id: id });
 };
 
-const findAllByRessourceId = async (
+export const getAllByRessourceId = async (
   ressourceId: string
 ): Promise<IComment[]> => {
-  return await Comment.find({ ressourceId });
+  return Comment.find({ ressourceId });
 };
-
-export { create, findAll, findAllByRessourceId, findById, remove, update };

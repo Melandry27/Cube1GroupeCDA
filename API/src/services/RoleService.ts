@@ -5,7 +5,7 @@ export const getRoles = async (): Promise<IRole[]> => {
   return RoleDB.getAllRoles();
 };
 
-export const getRole = async (id: number): Promise<IRole | null> => {
+export const getRole = async (id: string): Promise<IRole | null> => {
   return RoleDB.getRoleById(id);
 };
 
@@ -14,12 +14,12 @@ export const createNewRole = async (roleData: IRole): Promise<IRole> => {
 };
 
 export const updateExistingRole = async (
-  id: number,
+  id: string,
   updateData: Partial<IRole>
 ): Promise<IRole | null> => {
   return RoleDB.updateRole(id, updateData);
 };
 
-export const deleteRoleById = async (id: number): Promise<IRole | null> => {
+export const deleteRoleById = async (id: string): Promise<IRole | null> => {
   return RoleDB.deleteRole(id);
 };

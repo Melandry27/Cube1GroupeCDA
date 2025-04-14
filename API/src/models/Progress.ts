@@ -7,7 +7,6 @@ enum ProgressStatus {
 }
 
 interface IProgress extends Document {
-  id: number;
   userId: string;
   ressourceId: string;
   status: ProgressStatus;
@@ -15,7 +14,6 @@ interface IProgress extends Document {
 
 const ProgressSchema = new Schema<IProgress>(
   {
-    id: { type: Number, required: true },
     userId: { type: String, required: true },
     ressourceId: { type: String, required: true },
     status: {

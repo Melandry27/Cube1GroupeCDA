@@ -7,7 +7,6 @@ enum RessourceType {
 }
 
 interface IRessource extends Document {
-  id: number;
   title: string;
   content: string;
   type: RessourceType;
@@ -16,7 +15,6 @@ interface IRessource extends Document {
 
 const RessourceSchema = new Schema<IRessource>(
   {
-    id: { type: Number, required: true },
     title: { type: String, required: true },
     content: { type: String, required: true },
     type: {
