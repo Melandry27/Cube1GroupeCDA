@@ -18,6 +18,8 @@ const RessourceSection = ({ itemCount }) => {
         { id: 10, title: "Article 9", image: require('../../assets/adaptive-icon.png'), description: 'Description courte d\'une ressource avec des infos...' },
     ];
 
+    const displayedArticles = articles.slice(0, itemCount);
+
     return (
         <View style={styles.blogContainer}>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -40,24 +42,10 @@ const styles = StyleSheet.create({
         marginTop: 20,
         paddingLeft: 10,
     },
-    sectionTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginBottom: 10,
-    },
     articleCard: {
         width: 150,
         marginRight: 70,
     },
-    articleImage: {
-        width: '100%',
-        height: 100,
-        borderRadius: 10,
-    },
-    articleTitle: {
-        textAlign: 'center',
-        marginTop: 5,
-    },
 });
 
-export default BlogSection;
+export default RessourceSection;
