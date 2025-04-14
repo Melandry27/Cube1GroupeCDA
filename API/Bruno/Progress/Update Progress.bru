@@ -5,7 +5,15 @@ meta {
 }
 
 put {
-  url: {{BASE_URL}}/progress/id
-  body: none
+  url: {{BASE_URL}}/progress/67fd5d3ae8b2673b494684f5
+  body: json
   auth: inherit
+}
+
+body:json {
+  {
+    "ressourceId": "id",
+    "userId": "id",
+    "status": "Completed"
+  }
 }

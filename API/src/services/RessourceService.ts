@@ -1,31 +1,25 @@
 import * as RessourceDatabase from "../database/RessourceDatabase";
 import { IRessource } from "../models/Ressource";
 
-export const createRessource = async (
-  ressourceData: IRessource
-): Promise<IRessource> => {
-  return await RessourceDatabase.create(ressourceData);
+export const getAll = async (): Promise<IRessource[]> => {
+  return RessourceDatabase.getAllRessources();
 };
 
-export const getAllRessources = async (): Promise<IRessource[]> => {
-  return await RessourceDatabase.findAll();
+export const getById = async (id: string): Promise<IRessource | null> => {
+  return RessourceDatabase.getRessourceById(id);
 };
 
-export const getRessourceById = async (
-  id: string
-): Promise<IRessource | null> => {
-  return await RessourceDatabase.findById(id);
+export const create = async (ressourceData: IRessource): Promise<IRessource> => {
+  return RessourceDatabase.createRessource(ressourceData);
 };
 
-export const updateRessource = async (
+export const update = async (
   id: string,
   updateData: Partial<IRessource>
 ): Promise<IRessource | null> => {
-  return await RessourceDatabase.update(id, updateData);
+  return RessourceDatabase.updateRessource(id, updateData);
 };
 
-export const deleteRessource = async (
-  id: string
-): Promise<IRessource | null> => {
-  return await RessourceDatabase.remove(id);
+export const remove = async (id: string): Promise<IRessource | null> => {
+  return RessourceDatabase.removeRessource(id);
 };
