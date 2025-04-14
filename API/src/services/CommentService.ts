@@ -8,26 +8,26 @@ export const createComment = async (
 };
 
 export const getAllComments = async (): Promise<IComment[]> => {
-  return await CommentDatabase.findAll();
+  return await CommentDatabase.getAll();
 };
 
-export const getCommentById = async (id: number): Promise<IComment | null> => {
-  return await CommentDatabase.findById(id);
+export const getById = async (id: string): Promise<IComment | null> => {
+  return await CommentDatabase.getById(id);
 };
 
-export const updateComment = async (
-  id: number,
+export const update = async (
+  id: string,
   updateData: Partial<IComment>
 ): Promise<IComment | null> => {
   return await CommentDatabase.update(id, updateData);
 };
 
-export const deleteComment = async (id: number): Promise<IComment | null> => {
+export const remove = async (id: string): Promise<IComment | null> => {
   return await CommentDatabase.remove(id);
 };
 
-export const getAllCommentsByRessourceId = async (
+export const getAllByRessourceId = async (
   ressourceId: string
 ): Promise<IComment[]> => {
-  return await CommentDatabase.findAllByRessourceId(ressourceId);
+  return await CommentDatabase.getAllByRessourceId(ressourceId);
 };

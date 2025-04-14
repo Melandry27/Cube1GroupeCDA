@@ -5,7 +5,20 @@ meta {
 }
 
 put {
-  url: {{BASE_URL}}/users/67f3abee049f95028a1d7b11
-  body: none
+  url: {{BASE_URL}}/users/id
+  body: json
   auth: inherit
+}
+
+body:json {
+  {
+    "name": "John Doe 10",
+    "email": "test 10",
+    "password": "test10",
+    "roleId": "id",
+    "adress": "test 10",
+    "phone": "03 03 03 03 03",
+    "validateEmail": true,
+    "validatePassword": true
+  }
 }

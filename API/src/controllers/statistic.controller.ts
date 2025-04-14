@@ -22,9 +22,7 @@ export const getAll = async (req: Request, res: Response): Promise<void> => {
 
 export const getById = async (req: Request, res: Response): Promise<void> => {
   try {
-    const stat: IStatistic | null = await StatisticService.getById(
-      req.params.id
-    );
+    const stat: IStatistic | null = await StatisticService.getById(req.params.id);
     if (!stat) {
       res.status(404).json({ message: "Statistic not found" });
       return;

@@ -6,7 +6,7 @@ const router = Router();
 router.get("/", CommentController.getAll);
 router.get(
   "/ressource/:ressourceId",
-  CommentController.getAllCommentsByRessourceId
+  CommentController.getAllByRessourceId
 );
 router.get("/:id", CommentController.getById);
 router.post("/", CommentController.create);

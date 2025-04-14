@@ -1,29 +1,29 @@
 import * as CategoryDatabase from "../database/CategoryDatabase";
 import { ICategory } from "../models/Category";
 
-export const createCategory = async (
+export const create = async (
   categoryData: ICategory
 ): Promise<ICategory> => {
-  return await CategoryDatabase.create(categoryData);
+  return CategoryDatabase.create(categoryData);
 };
 
-export const getCategories = async (): Promise<ICategory[]> => {
-  return await CategoryDatabase.findAll();
+export const getAll = async (): Promise<ICategory[]> => {
+  return CategoryDatabase.findAll();
 };
 
-export const getCategoryById = async (
-  id: number
+export const getById = async (
+  id: string
 ): Promise<ICategory | null> => {
-  return await CategoryDatabase.findById(id);
+  return CategoryDatabase.findById(id);
 };
 
-export const updateCategory = async (
-  id: number,
+export const update = async (
+  id: string,
   updateData: Partial<ICategory>
 ): Promise<ICategory | null> => {
-  return await CategoryDatabase.update(id, updateData);
+  return CategoryDatabase.update(id, updateData);
 };
 
-export const deleteCategory = async (id: number): Promise<ICategory | null> => {
-  return await CategoryDatabase.remove(id);
+export const remove = async (id: string): Promise<ICategory | null> => {
+  return CategoryDatabase.remove(id);
 };
