@@ -9,13 +9,11 @@ enum RoleName {
 }
 
 interface IRole extends Document {
-  id: number;
   name: RoleName;
 }
 
 const RoleSchema = new Schema<IRole>(
   {
-    id: { type: Number, required: true },
     name: { type: String, enum: Object.values(RoleName), required: true },
   },
   {

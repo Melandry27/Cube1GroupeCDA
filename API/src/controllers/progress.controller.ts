@@ -27,6 +27,7 @@ export const getById = async (req: Request, res: Response): Promise<void> => {
     );
     if (!progress) {
       res.status(404).json({ message: "Progress not found" });
+      return;
     }
     res.status(200).json(progress);
   } catch (error) {
@@ -40,6 +41,7 @@ export const update = async (req: Request, res: Response): Promise<void> => {
       await ProgressService.updateProgress(req.params.id, req.body);
     if (!updatedProgress) {
       res.status(404).json({ message: "Progress not found" });
+      return;
     }
     res.status(200).json(updatedProgress);
   } catch (error) {
@@ -53,6 +55,7 @@ export const remove = async (req: Request, res: Response): Promise<void> => {
       await ProgressService.deleteProgress(req.params.id);
     if (!deletedProgress) {
       res.status(404).json({ message: "Progress not found" });
+      return;
     }
     res.status(200).json({ message: "Progress deleted successfully" });
   } catch (error) {

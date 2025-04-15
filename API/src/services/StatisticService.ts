@@ -5,7 +5,7 @@ export const getAll = async (): Promise<IStatistic[]> => {
   return StatisticDB.getAllStatistics();
 };
 
-export const getById = async (id: number): Promise<IStatistic | null> => {
+export const getById = async (id: string): Promise<IStatistic | null> => {
   return StatisticDB.getStatisticById(id);
 };
 
@@ -14,12 +14,12 @@ export const create = async (data: IStatistic): Promise<IStatistic> => {
 };
 
 export const update = async (
-  id: number,
+  id: string,
   updateData: Partial<IStatistic>
 ): Promise<IStatistic | null> => {
   return StatisticDB.updateStatistic(id, updateData);
 };
 
-export const remove = async (id: number): Promise<IStatistic | null> => {
+export const remove = async (id: string): Promise<IStatistic | null> => {
   return StatisticDB.deleteStatistic(id);
 };

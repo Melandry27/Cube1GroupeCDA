@@ -1,0 +1,11 @@
+meta {
+  name: Update Ressource
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{BASE_URL}}/ressources/id
+  body: json
+  auth: inherit
+}

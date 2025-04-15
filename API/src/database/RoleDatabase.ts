@@ -1,11 +1,11 @@
-import RoleModel, { IRole } from "../models/role.model";
+import RoleModel, { IRole } from "../models/Role";
 
 export const getAllRoles = async (): Promise<IRole[]> => {
   return RoleModel.find();
 };
 
-export const getRoleById = async (id: number): Promise<IRole | null> => {
-  return RoleModel.findOne({ id });
+export const getRoleById = async (id: string): Promise<IRole | null> => {
+  return RoleModel.findOne({ _id: id });
 };
 
 export const createRole = async (roleData: IRole): Promise<IRole> => {
@@ -14,12 +14,12 @@ export const createRole = async (roleData: IRole): Promise<IRole> => {
 };
 
 export const updateRole = async (
-  id: number,
+  id: string,
   updateData: Partial<IRole>
 ): Promise<IRole | null> => {
-  return RoleModel.findOneAndUpdate({ id }, updateData, { new: true });
+  return RoleModel.findOneAndUpdate({ _id: id }, updateData, { new: true });
 };
 
-export const deleteRole = async (id: number): Promise<IRole | null> => {
-  return RoleModel.findOneAndDelete({ id });
+export const deleteRole = async (id: string): Promise<IRole | null> => {
+  return RoleModel.findOneAndDelete({ _id: id });
 };

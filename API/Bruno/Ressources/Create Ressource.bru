@@ -1,0 +1,21 @@
+meta {
+  name: Create Ressource
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{BASE_URL}}/ressources/
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "title": "Introduction à la réforme éducative",
+    "content": "Cette ressource explore les principaux axes de la réforme éducative 2025.",
+    "type": "In Progress",
+    "createdBy": "user123"
+  }
+  
+}
