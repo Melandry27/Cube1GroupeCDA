@@ -3,6 +3,7 @@ import * as RessourceController from "../controllers/ressource.controller";
 
 const router = Router();
 
+router.get("/types", RessourceController.getTypes);
 router.get("/", RessourceController.getAll);
 router.get("/:id", RessourceController.getById);
 router.post("/", RessourceController.create);

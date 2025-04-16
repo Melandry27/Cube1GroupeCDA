@@ -17,6 +17,7 @@ import CreateCategory from "./pages/CreateCategory";
 import EditCategory from "./pages/EditCategory";
 import CreateUser from "./pages/CreateUser";
 import EditUser from "./pages/EditUser";
+import "./App.css";
 
 const App = () => {
   return (

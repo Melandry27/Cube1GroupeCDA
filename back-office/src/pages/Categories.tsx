@@ -1,15 +1,45 @@
+import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router";
+import { toast } from "react-toastify";
 
 const Categories = () => {
 
     const navigate = useNavigate();
+    const [categories, setCategories] = useState([]);
 
-    const handleCreate = () => {
-        navigate("create");
-    };
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const response = await fetch("/api/categories");
+                if (!response.ok) throw new Error("Erreur lors de la récupération des catégories");
+                const data = await response.json();
+                setCategories(data);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        fetchCategories();
+    }
+    , []);
 
-    const handleEdit = () => {
-        navigate("edit/${id}");
+    const handleCreate = () => navigate("create");
+
+    const handleEdit = (id: string) => navigate(`edit/${id}`);
+
+    const handleDelete = async (id: string) => {
+        if (window.confirm("Êtes-vous sûr de vouloir supprimer cette catégorie ?")) {
+            try {
+                const response = await fetch(`/api/categories/${id}`, { method: "DELETE" });
+                if (response.ok) {
+                    toast.success("Catégorie supprimée avec succès !");
+                    setCategories((prev) => prev.filter((c) => c._id !== id));
+                } else {
+                    throw new Error("Erreur lors de la suppression de la catégorie");
+                }
+            } catch (error) {
+                toast.error("Impossible de supprimer la catégorie. Veuillez réessayer.");
+            }
+        }
     };
 
 return (
@@ -22,33 +52,33 @@ return (
     <div className="fr-table fr-table--full fr-mt-2w">
         <table className="fr-table">
             <thead>
-            <tr>
-                <th style={{ width: '15%' }}>Nom</th>
-                <th style={{ width: '55%' }}>Description</th>
-                <th style={{ width: '26%' }}>Actions</th>
-            </tr>
+                <tr>
+                    <th style={{ width: '15%' }}>Nom</th>
+                    <th style={{ width: '30%' }}>Description</th>
+                    <th style={{ width: '20%' }}>Date de création</th>
+                    <th style={{ width: '25%' }}>Actions</th>
+                </tr>
             </thead>
             <tbody>
-            <tr>
-                <td>Politique</td>
-                <td>Catégorie liée aux réformes gouvernementales et aux politiques publiques.</td>
-                <td>
-                <div className="fr-btns-group fr-btns-group--inline">
-                    <button className="fr-btn fr-btn--secondary fr-btn--sm fr-mr-2w" onClick={handleEdit}>Modifier</button>
-                    <button className="fr-btn fr-btn--tertiary fr-btn--sm">Supprimer</button>
-                </div>
-                </td>
-            </tr>
-            <tr>
-                <td>Santé</td>
-                <td>Catégorie couvrant les sujets liés à la santé et au bien-être.</td>
-                <td>
-                <div className="fr-btns-group fr-btns-group--inline">
-                    <button className="fr-btn fr-btn--secondary fr-btn--sm fr-mr-2w" onClick={handleEdit}>Modifier</button>
-                    <button className="fr-btn fr-btn--tertiary fr-btn--sm">Supprimer</button>
-                </div>
-                </td>
-            </tr>
+                {categories.length > 0 ? (
+                    categories.map((category) => (
+                            <tr key={category._id}>
+                                <td>{category.name}</td>
+                                <td>{category.description}</td>
+                                <td>{new Date(category.createdAt).toLocaleDateString()}</td>
+                                <td>
+                                    <div className="fr-btns-group fr-btns-group--inline">
+                                        <button className="fr-btn fr-btn--secondary fr-btn--sm fr-mr-2w" onClick={() => handleEdit(category._id)}>Modifier</button>
+                                        <button className="fr-btn fr-btn--tertiary fr-btn--sm" onClick={() => handleDelete(category._id)}>Supprimer</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        ))
+                ) : (
+                    <tr>
+                        <td colSpan={3} className="fr-text--lg">Aucune catégorie trouvée</td>
+                    </tr>
+                )}  
             </tbody>
         </table>
     </div>

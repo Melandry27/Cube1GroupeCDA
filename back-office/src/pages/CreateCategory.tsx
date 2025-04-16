@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const CreateCategory = () => {
   const [category, setCategory] = useState({
@@ -13,18 +15,26 @@ const CreateCategory = () => {
     setCategory({ ...category, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Catégorie créée :", category);
 
-    // A remplacez par une vraie requête HTTP pour créer la catégorie
-    // await fetch("/api/categories", {
-    //   method: "POST",
-    //   body: JSON.stringify(category),
-    //   headers: { "Content-Type": "application/json" },
-    // });
+    try {
+      const categoryResponse = await fetch("/api/categories", {
+        method: "POST",
+        body: JSON.stringify(category),
+        headers: { "Content-Type": "application/json" },
+      });
 
-    navigate("/categories");
+      if (categoryResponse.ok) {
+        toast.success("Catégorie créée avec succès !");
+        setTimeout(() => navigate("/categories"), 5000);
+      } else {
+        throw new Error("Erreur lors de la création de la catégorie");
+      }
+      
+    } catch (error) {
+      toast.error("La catégorie n'a pas pu être créée. Veuillez réessayer.");
+    }
   };
 
   const goBack = () => {
@@ -65,6 +75,8 @@ const CreateCategory = () => {
           <button type="submit" className="fr-btn fr-btn--primary">Créer</button>
         </div>
       </form>
+
+      <ToastContainer />
     </>
   );
 };
