@@ -37,7 +37,7 @@ const Comments = () => {
 
   const getUserName = (userId: string) => {
     const user = users.find((u) => u._id === userId);
-    return user ? `${user.firstName} ${user.lastName}` : "Utilisateur inconnu";
+    return user ? `${user.name}` : "Utilisateur inconnu";
   };
 
   const getRessourceTitle = (ressourceId: string) => {
@@ -83,9 +83,9 @@ const Comments = () => {
             {comments.length > 0 ? (
               comments.map((comment) => (
                 <tr key={comment._id}>
-                  <td>{getUserName(comment.user)}</td>
+                  <td>{getUserName(comment.userId)}</td>
                   <td>{comment.content}</td>
-                  <td>{getRessourceTitle(comment.ressource)}</td>
+                  <td>{getRessourceTitle(comment.ressourceId)}</td>
                   <td>{new Date(comment.createdAt).toLocaleDateString()}</td>
                   <td>
                     <div className="fr-btns-group fr-btns-group--inline">

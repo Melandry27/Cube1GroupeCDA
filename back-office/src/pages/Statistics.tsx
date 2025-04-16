@@ -54,27 +54,34 @@ const StatsAvancees = () => {
           categories: categories.length,
         });
 
-        const roleCount = roles.map(role => ({
-          name: role.name,
-          value: users.filter(user => user.role === role._id).length,
-        }));
-
         const monthlyStats: Record<string, any> = {};
 
-        [...users, ...ressources, ...comments].forEach((item) => {
-          const date = new Date(item.createdAt);
-          if (isNaN(date.getTime())) return;
-        
+        const getMonthKey = (dateStr: string) => {
+          const date = new Date(dateStr);
+          if (isNaN(date.getTime())) return null;
           const month = date.toLocaleString("fr-FR", { month: "long" });
-          const key = `${month}-${date.getFullYear()}`;
-        
-          if (!monthlyStats[key]) {
-            monthlyStats[key] = { name: key, utilisateurs: 0, articles: 0, commentaires: 0 };
-          }
-        
-          if ("email" in item) monthlyStats[key].utilisateurs++;
-          else if ("content" in item && item.ressource) monthlyStats[key].commentaires++;
-          else monthlyStats[key].articles++;
+          return `${month}-${date.getFullYear()}`;
+        };
+
+        users.forEach(user => {
+          const key = getMonthKey(user.createdAt);
+          if (!key) return;
+          if (!monthlyStats[key]) monthlyStats[key] = { name: key, utilisateurs: 0, articles: 0, commentaires: 0 };
+          monthlyStats[key].utilisateurs++;
+        });
+
+        ressources.forEach(ressource => {
+          const key = getMonthKey(ressource.createdAt);
+          if (!key) return;
+          if (!monthlyStats[key]) monthlyStats[key] = { name: key, utilisateurs: 0, articles: 0, commentaires: 0 };
+          monthlyStats[key].articles++;
+        });
+
+        comments.forEach(comment => {
+          const key = getMonthKey(comment.createdAt);
+          if (!key) return;
+          if (!monthlyStats[key]) monthlyStats[key] = { name: key, utilisateurs: 0, articles: 0, commentaires: 0 };
+          monthlyStats[key].commentaires++;
         });
 
         const monthMap = {
@@ -91,7 +98,7 @@ const StatsAvancees = () => {
           "novembre": "November",
           "décembre": "December",
         };
-        
+
         const sortedMonthly = Object.values(monthlyStats).sort((a: any, b: any) => {
           const [monthA, yearA] = a.name.split("-");
           const [monthB, yearB] = b.name.split("-");
@@ -103,7 +110,6 @@ const StatsAvancees = () => {
         setUserStats(sortedMonthly);
         setCommentStats(sortedMonthly);
         setEngagementStats(sortedMonthly);
-        setRoleStats(roleCount);
 
         const catCount = {};
         ressources.forEach((r) => {
@@ -125,7 +131,6 @@ const StatsAvancees = () => {
         <h2 className="fr-h3 fr-mr-auto">Statistiques Avancées</h2>
       </div>
 
-      {/* ✅ Bloc KPI */}
       <div className="fr-grid-row fr-grid-row--gutters fr-mb-4w">
         {[
           { label: "Utilisateurs", value: kpis.users },
@@ -143,7 +148,6 @@ const StatsAvancees = () => {
         ))}
       </div>
 
-      {/* 📊 Graphiques */}
       <div className="fr-grid-row fr-grid-row--gutters">
         <div className="fr-col-12 fr-col-md-6">
           <h3 className="fr-h5">Évolution des utilisateurs et articles</h3>
@@ -168,18 +172,6 @@ const StatsAvancees = () => {
             <Legend />
             <Bar dataKey="commentaires" fill="#ffc658" />
           </BarChart>
-        </div>
-
-        <div className="fr-col-12 fr-col-md-6">
-          <h3 className="fr-h5">Répartition des rôles</h3>
-          <PieChart width={400} height={300}>
-            <Pie data={roleStats} cx={200} cy={150} outerRadius={80} fill="#8884d8" dataKey="value" label>
-              {roleStats.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-              ))}
-            </Pie>
-            <Tooltip />
-          </PieChart>
         </div>
 
         <div className="fr-col-12 fr-col-md-6">
