@@ -17,6 +17,8 @@ import CreateCategory from "./pages/CreateCategory";
 import EditCategory from "./pages/EditCategory";
 import CreateUser from "./pages/CreateUser";
 import EditUser from "./pages/EditUser";
+import { Navigate } from "react-router";
+import "./App.css";
 
 const App = () => {
   return (
@@ -25,6 +27,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/" element={<Home />}>
+              <Route index element={<Navigate to="/dashboard" replace />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/ressources" element={<Ressources/>} />
               <Route path="/ressources/create" element={<CreateRessource />} />

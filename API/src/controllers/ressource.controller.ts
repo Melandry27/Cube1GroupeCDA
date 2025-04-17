@@ -35,6 +35,15 @@ export const getById = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+export const getTypes = (req: Request, res: Response): void => {
+  try {
+    const types = RessourceService.getResourceTypes();
+    res.status(200).json(types);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching resource types", error });
+  }
+};
+
 export const update = async (req: Request, res: Response): Promise<void> => {
   try {
     const updatedRessource: IRessource | null =

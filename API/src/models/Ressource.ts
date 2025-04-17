@@ -11,6 +11,7 @@ interface IRessource extends Document {
   content: string;
   type: RessourceType;
   createdBy: string;
+  category: string;
 }
 
 const RessourceSchema = new Schema<IRessource>(
@@ -23,6 +24,7 @@ const RessourceSchema = new Schema<IRessource>(
       required: true,
     },
     createdBy: { type: String, required: true },
+    category: { type: String, ref: 'Category', required: true }
   },
   {
     timestamps: true,
