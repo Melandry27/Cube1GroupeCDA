@@ -1,14 +1,13 @@
 import bcrypt from "bcrypt";
-import { Request, Response } from "express";
+import { Request, RequestHandler, Response } from "express";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
 import User from "../models/User";
 
 const JWT_SECRET = process.env.JWT_SECRET || "default_secret";
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "1h";
 
 const generateToken = (userId: string) => {
-  return jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+  return jwt.sign({ id: userId }, JWT_SECRET);
 };
 
 export const register = async (req: Request, res: Response) => {
@@ -17,7 +16,7 @@ export const register = async (req: Request, res: Response) => {
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ message: "Cet email est déjà utilisé." });
+      res.status(400).json({ message: "Cet email est déjà utilisé." });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -35,33 +34,33 @@ export const register = async (req: Request, res: Response) => {
 
     await newUser.save();
 
-    return res
-      .status(201)
-      .json({ message: "Utilisateur enregistré avec succès." });
+    res.status(201).json({ message: "Utilisateur enregistré avec succès." });
   } catch (error) {
-    return res
+    res
       .status(500)
       .json({ message: "Erreur lors de l'enregistrement.", error });
   }
 };
 
-export const login = async (req: Request, res: Response) => {
+export const login: RequestHandler = async (req, res) => {
   try {
     const { email, password } = req.body;
 
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(404).json({ message: "Utilisateur non trouvé." });
+      res.status(404).json({ message: "Utilisateur non trouvé." });
+      return;
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      return res.status(401).json({ message: "Mot de passe incorrect." });
+      res.status(401).json({ message: "Mot de passe incorrect." });
+      return;
     }
 
     const token = generateToken(user.id);
 
-    return res.status(200).json({
+    res.status(200).json({
       message: "Connexion réussie.",
       token,
       user: {
@@ -73,10 +72,10 @@ export const login = async (req: Request, res: Response) => {
         phone: user.phone,
       },
     });
+    return;
   } catch (error) {
-    return res
-      .status(500)
-      .json({ message: "Erreur lors de la connexion.", error });
+    res.status(500).json({ message: "Erreur lors de la connexion.", error });
+    return;
   }
 };
 
@@ -86,10 +85,10 @@ export const forgotPassword = async (req: Request, res: Response) => {
 
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(404).json({ message: "Utilisateur non trouvé." });
+      res.status(404).json({ message: "Utilisateur non trouvé." });
     }
 
-    const resetToken = generateToken(user.id);
+    const resetToken = generateToken(user?.id);
 
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
@@ -104,18 +103,18 @@ export const forgotPassword = async (req: Request, res: Response) => {
       from: process.env.SMTP_USER,
       to: email,
       subject: "Réinitialisation du mot de passe",
-      html: `<p>Bonjour ${user.name},</p>
+      html: `<p>Bonjour ${user?.name},</p>
              <p>Veuillez cliquer sur le lien ci-dessous pour réinitialiser votre mot de passe :</p>
              <a href="http://localhost:3000/reset-password/${resetToken}">Réinitialiser mon mot de passe</a>
              <p>Ce lien est valide pendant une heure.</p>`,
     });
 
-    return res.status(200).json({
+    res.status(200).json({
       message:
         "Un email contenant les instructions pour réinitialiser votre mot de passe a été envoyé.",
     });
   } catch (error) {
-    return res
+    res
       .status(500)
       .json({ message: "Erreur lors de la réinitialisation.", error });
   }

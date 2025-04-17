@@ -1,21 +1,35 @@
+import { useMutation } from "@tanstack/react-query";
 import { createContext, useContext, useState } from "react";
+import { login } from "../services/auth";
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  login: () => void;
+  loginUser: (credentials: { email: string; password: string }) => void;
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
     !!localStorage.getItem("token")
   );
 
-  const login = () => {
-    localStorage.setItem("token", "fake-jwt-token");
-    setIsAuthenticated(true);
+  const mutation = useMutation({
+    mutationFn: login,
+    onSuccess: (data) => {
+      localStorage.setItem("token", data.token);
+      setIsAuthenticated(true);
+    },
+    onError: (err) => {
+      console.error("Login failed", err);
+    },
+  });
+
+  const loginUser = (credentials: { email: string; password: string }) => {
+    mutation.mutate(credentials);
   };
 
   const logout = () => {
@@ -24,7 +38,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, loginUser, logout }}>
       {children}
     </AuthContext.Provider>
   );

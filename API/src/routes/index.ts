@@ -1,4 +1,5 @@
 import { Router } from "express";
+import authRoutes from "./AuthRoute";
 import categoryRoutes from "./CategoryRoute";
 import commentRoutes from "./CommentRoute";
 import favoriteRoutes from "./FavoriteRoute";
@@ -9,6 +10,8 @@ import statisticRoutes from "./StatisticRoute";
 import userRoutes from "./UserRoute";
 
 const router = Router();
+
+router.use("/auth", authRoutes);
 
 router.use("/categories", categoryRoutes);
 router.use("/comments", commentRoutes);
