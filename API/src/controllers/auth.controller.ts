@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
 
 import User, { CreateUserInput } from "../models/User";
+import * as AuthService from "../services/AuthService";
 import * as RoleServices from "../services/RoleService";
 import * as UserService from "../services/UserService";
 
@@ -41,6 +42,7 @@ export const register = async (req: Request, res: Response) => {
       roleId,
       adress,
       phone,
+      isVerified: false,
     });
 
     if (!user) {
@@ -49,6 +51,30 @@ export const register = async (req: Request, res: Response) => {
         .json({ message: "Erreur lors de la création de l'utilisateur." });
       return;
     }
+
+    const tokenVerification = AuthService.createVerificationToken(
+      email,
+      JWT_SECRET
+    );
+
+    const transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: parseInt(process.env.SMTP_PORT || "587"),
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
+    });
+
+    await transporter.sendMail({
+      from: process.env.SMTP_USER,
+      to: email,
+      subject: "Vérification de votre compte",
+      html: `<p>Bonjour ${name},</p>
+            <p>Merci pour votre inscription ! Veuillez cliquer sur le bouton ci-dessous pour vérifier votre compte :</p>
+            <a href="http://localhost:5000/api/auth/verify-email/${tokenVerification}" style="padding: 10px 15px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px;">Vérifier mon compte</a>
+            <p>Ce lien est valide pendant 1 heure.</p>`,
+    });
 
     res.status(201).json({ message: "Utilisateur enregistré avec succès." });
     return;
@@ -128,5 +154,46 @@ export const forgotPassword = async (req: Request, res: Response) => {
     res
       .status(500)
       .json({ message: "Erreur lors de la réinitialisation.", error });
+  }
+};
+
+export const verifyEmail = async (req: Request, res: Response) => {
+  try {
+    const { token } = req.params;
+
+    const decoded = jwt.verify(token, JWT_SECRET) as { email: string };
+    const user = await User.findOne({ email: decoded.email });
+
+    if (!user) {
+      res.status(404).json({ message: "Utilisateur non trouvé." });
+      return;
+    }
+
+    if (user.isVerified) {
+      res.status(400).json({ message: "Le compte est déjà vérifié." });
+      return;
+    }
+
+    // Update user verification status
+    await UserService.update(user.id, {
+      isVerified: true,
+    });
+
+    res.send(`
+      <html>
+        <head>
+          <title>Vérification</title>
+          <script>
+            alert("Votre compte a bien été vérifié.");
+            window.close();
+          </script>
+        </head>
+        <body>
+          <p>Vous pouvez fermer cette page.</p>
+        </body>
+      </html>
+    `);
+  } catch (error) {
+    res.status(400).json({ message: "Lien invalide ou expiré.", error });
   }
 };

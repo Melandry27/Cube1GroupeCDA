@@ -23,6 +23,7 @@ export const create = async (req: Request, res: Response): Promise<void> => {
       roleId,
       adress,
       phone,
+      isVerified: false,
     });
 
     if (!user) {

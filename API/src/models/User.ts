@@ -7,6 +7,7 @@ interface IUser extends Document {
   roleId: string;
   adress: string;
   phone: string;
+  isVerified: boolean;
   validateEmail: boolean;
   validatePassword: boolean;
 }
@@ -18,6 +19,7 @@ export type CreateUserInput = {
   roleId: string;
   adress: string;
   phone: string;
+  isVerified: boolean;
 };
 
 const UserSchema = new Schema<IUser>(
@@ -30,6 +32,7 @@ const UserSchema = new Schema<IUser>(
     phone: { type: String, required: true },
     validateEmail: { type: Boolean, default: false, required: false },
     validatePassword: { type: Boolean, default: false, required: false },
+    isVerified: { type: Boolean, default: false, required: false },
   },
   {
     timestamps: true,
