@@ -11,6 +11,15 @@ interface IUser extends Document {
   validatePassword: boolean;
 }
 
+export type CreateUserInput = {
+  name: string;
+  email: string;
+  password: string;
+  roleId: string;
+  adress: string;
+  phone: string;
+};
+
 const UserSchema = new Schema<IUser>(
   {
     name: { type: String, required: true },
@@ -19,8 +28,8 @@ const UserSchema = new Schema<IUser>(
     roleId: { type: String, required: true },
     adress: { type: String, required: true },
     phone: { type: String, required: true },
-    validateEmail: { type: Boolean, default: false },
-    validatePassword: { type: Boolean, default: false },
+    validateEmail: { type: Boolean, default: false, required: false },
+    validatePassword: { type: Boolean, default: false, required: false },
   },
   {
     timestamps: true,

@@ -1,11 +1,39 @@
 import { Request, Response } from "express";
-import { IUser } from "../models/User";
+
+import bcrypt from "bcrypt";
+import { CreateUserInput, IUser } from "../models/User";
 import * as UserService from "../services/UserService";
 
 export const create = async (req: Request, res: Response): Promise<void> => {
   try {
-    const user: IUser = await UserService.create(req.body);
-    res.status(201).json(user);
+    const { name, email, password, roleId, adress, phone } = req.body;
+
+    const existingUser = await UserService.getByEmail(email);
+    if (existingUser) {
+      res.status(400).json({ message: "Cet email est déjà utilisé." });
+      return;
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user: CreateUserInput = await UserService.create({
+      name,
+      email,
+      password: hashedPassword,
+      roleId,
+      adress,
+      phone,
+    });
+
+    if (!user) {
+      res
+        .status(400)
+        .json({ message: "Erreur lors de la création de l'utilisateur." });
+      return;
+    }
+
+    res.status(201).json({ message: "Utilisateur enregistré avec succès." });
+    return;
   } catch (error) {
     res.status(500).json({ message: "Error creating user", error });
   }

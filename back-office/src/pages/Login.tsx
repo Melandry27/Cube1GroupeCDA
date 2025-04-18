@@ -3,8 +3,12 @@ import { useNavigate } from "react-router";
 import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
-  const { loginUser } = useAuth();
+  const { loginUser, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+
+  if (isAuthenticated) {
+    navigate("/");
+  }
 
   const [form, setForm] = useState({
     email: "",
@@ -22,8 +26,6 @@ const Login = () => {
     loginUser(form);
     navigate("/");
   };
-
-  console.log("Login form", form);
 
   return (
     <div className="fr-container fr-my-10v">

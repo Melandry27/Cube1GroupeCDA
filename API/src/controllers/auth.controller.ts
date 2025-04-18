@@ -2,43 +2,58 @@ import bcrypt from "bcrypt";
 import { Request, RequestHandler, Response } from "express";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
-import User from "../models/User";
+
+import User, { CreateUserInput } from "../models/User";
+import * as RoleServices from "../services/RoleService";
+import * as UserService from "../services/UserService";
 
 const JWT_SECRET = process.env.JWT_SECRET || "default_secret";
 
-const generateToken = (userId: string) => {
-  return jwt.sign({ id: userId }, JWT_SECRET);
+const generateToken = (user: any, role: any) => {
+  return jwt.sign(
+    {
+      name: user.name,
+      email: user.email,
+      role: role.name,
+      adress: user.adress,
+      phone: user.phone,
+    },
+    JWT_SECRET
+  );
 };
 
 export const register = async (req: Request, res: Response) => {
   try {
     const { name, email, password, roleId, adress, phone } = req.body;
 
-    const existingUser = await User.findOne({ email });
+    const existingUser = await UserService.getByEmail(email);
     if (existingUser) {
       res.status(400).json({ message: "Cet email est déjà utilisé." });
+      return;
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newUser = new User({
+    const user: CreateUserInput = await UserService.create({
       name,
       email,
       password: hashedPassword,
       roleId,
       adress,
       phone,
-      validateEmail: false,
-      validatePassword: true,
     });
 
-    await newUser.save();
+    if (!user) {
+      res
+        .status(400)
+        .json({ message: "Erreur lors de la création de l'utilisateur." });
+      return;
+    }
 
     res.status(201).json({ message: "Utilisateur enregistré avec succès." });
+    return;
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Erreur lors de l'enregistrement.", error });
+    res.status(500).json({ message: "Error creating user", error });
   }
 };
 
@@ -46,7 +61,7 @@ export const login: RequestHandler = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await User.findOne({ email });
+    const user = await UserService.getByEmail(email);
     if (!user) {
       res.status(404).json({ message: "Utilisateur non trouvé." });
       return;
@@ -57,20 +72,13 @@ export const login: RequestHandler = async (req, res) => {
       res.status(401).json({ message: "Mot de passe incorrect." });
       return;
     }
+    const role = await RoleServices.getRole(user.roleId);
 
-    const token = generateToken(user.id);
+    const token = generateToken(user, role);
 
     res.status(200).json({
       message: "Connexion réussie.",
       token,
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        roleId: user.roleId,
-        adress: user.adress,
-        phone: user.phone,
-      },
     });
     return;
   } catch (error) {
@@ -86,9 +94,12 @@ export const forgotPassword = async (req: Request, res: Response) => {
     const user = await User.findOne({ email });
     if (!user) {
       res.status(404).json({ message: "Utilisateur non trouvé." });
+      return;
     }
 
-    const resetToken = generateToken(user?.id);
+    const role = await RoleServices.getRole(user.roleId);
+
+    const resetToken = generateToken(user?.id, role);
 
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,

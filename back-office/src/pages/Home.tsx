@@ -1,7 +1,7 @@
 import { Outlet, useNavigate } from "react-router";
-import { useAuth } from "../context/AuthContext";
-import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
+import Sidebar from "../components/Sidebar";
+import { useAuth } from "../context/AuthContext";
 
 const Home = () => {
   const { logout } = useAuth();
