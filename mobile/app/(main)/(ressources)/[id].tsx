@@ -1,30 +1,80 @@
-import React from 'react';
-import {View, Text, StyleSheet, Image} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, Image, ActivityIndicator, ScrollView } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import Title from "../../components/Title";
+import CommentBar from "../../components/CommentBar";
+import Comments from "../../components/Comments";
+import FavorisButton from "../../components/FavorisButton";
+import { fetchRessourceById } from "../../services/ressourcesService";
 
 export default function RessourceDetail() {
     const { id } = useLocalSearchParams();
+    const [ressource, setRessource] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-    // Récupérer les données de la ressource à partir de l'ID
-    // const ressource = getRessourceById(id);
+    useEffect(() => {
+        const loadRessource = async () => {
+            if (!id) {
+                console.error("L'id de la ressource n'existe pas");
+                return;
+            }
+            try {
+                const data = await fetchRessourceById(String(id));
+                setRessource(data);
+            } catch (error) {
+                console.error('Erreur lors de la récupération de la ressource:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadRessource();
+    }, [id]);
+
+    if (loading) {
+        return <ActivityIndicator size="large" color="#0000ff" />;
+    }
+
+    if (!ressource) {
+        return <Text style={styles.text}>Aucune ressource trouvée pour cet ID.</Text>;
+    }
 
     return (
-        <View style={styles.container}>
-            <Title size={"medium"}>Titre de la ressource</Title>
-            <Image></Image>
-            <Text style={styles.text}>ID: {id}</Text>
+        <View style={{ flex: 1 }}>
+            <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.scrollContent}>
+                <View style={styles.container}>
+                    <Title size={"medium"} style={styles.titleWidth}>{ressource.title}</Title>
+                    <FavorisButton ressourceId={ressource._id} />
+                    <Image source={{ uri: ressource.image }} style={styles.image} />
+                    <Text style={styles.text}>{ressource.content}</Text>
+                </View>
+                <CommentBar
+                    ressourceId={ressource._id}
+                    onSubmit={(comment) => console.log(comment)}
+                />
+                <Comments ressourceId={ressource._id} />
+            </ScrollView>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-
+        backgroundColor: '#fff',
         padding: 20,
+    },
+    scrollContent: {
+        paddingBottom: 80,
     },
     text: {
         fontSize: 18,
+    },
+    titleWidth: {
+        width: '80%',
+    },
+    image: {
+        width: '100%',
+        height: 200,
+        marginVertical: 20,
     },
 });
