@@ -1,18 +1,35 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { ScrollView, SafeAreaView, StyleSheet } from 'react-native';
 import Header from "../../components/Header";
 import { StatusBar } from "expo-status-bar";
 import Title from "../../components/Title";
 import RessourceSection from "../../components/RessourceSection";
+import {fetchCategories} from "../../services/categoriesService";
 
 export default function RessourceList() {
+    const [categories, setCategories] = useState([]);
+
+    useEffect(() => {
+        async function loadCategories() {
+            const fetchedCategories = await fetchCategories();
+            setCategories(fetchedCategories);
+        }
+        loadCategories();
+    }, []);
+
     return (
         <SafeAreaView style={styles.container}>
             <Header />
             <StatusBar style="auto" />
-            <ScrollView contentContainerStyle={styles.scrollViewContent}>
+            <ScrollView>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                    {categories.map((category) => (
+                        <Title key={category._id} size={"small"} style={styles.sectionTitle}>
+                            {category.name}
+                        </Title>
+                    ))}
+                </ScrollView>
 
-                {/*ajouter tag categorie ici pour filtrer sur le type de ressources voulues*/}
 
                 <Title size={"small"} style={styles.sectionTitle}>Vos ressources favorites</Title>
                 <RessourceSection itemCount={3} />
