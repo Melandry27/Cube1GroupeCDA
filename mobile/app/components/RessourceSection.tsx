@@ -1,30 +1,50 @@
-import React from 'react';
-import { View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, ScrollView, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import RessourceCard from "./RessourceCard";
+import { fetchAllRessources } from '../services/ressourcesService';
 
-const RessourceSection = ({ itemCount }) => {
+const RessourceSection = ({ itemCount, type }) => {
     const router = useRouter();
-    const articles = [
-        { id: 1, title: "Article 1", image: { uri: 'https://www.adimeo.com/hubfs/rediger-des-articles-de-blog-qui-seront-lus.webp' }, description: 'Description courte d\'une ressource avec des infos...' },
-        { id: 2, title: "Article 1", image: { uri: 'https://www.redacteur.com/blog/wp-content/uploads/sites/6/2022/03/Image-a-la-une-design-blog.png' }, description: 'Description courte d\'une ressource avec des infos...' },
-        { id: 3, title: "Article 1", image: { uri: 'https://www.redacteur.com/blog/wp-content/uploads/sites/6/2022/01/structurer-article-blog-8-etapes.jpg.webp' }, description: 'Description courte d\'une ressource avec des infos...' },
-        { id: 4, title: "Article 3", image: require('../../assets/adaptive-icon.png'), description: 'Description courte d\'une ressource avec des infos...' },
-        { id: 5, title: "Article 4", image: require('../../assets/adaptive-icon.png'), description: 'Description courte d\'une ressource avec des infos...' },
-        { id: 6, title: "Article 5", image: require('../../assets/adaptive-icon.png'), description: 'Description courte d\'une ressource avec des infos...' },
-        { id: 7, title: "Article 6", image: require('../../assets/adaptive-icon.png'), description: 'Description courte d\'une ressource avec des infos...' },
-        { id: 8, title: "Article 7", image: require('../../assets/adaptive-icon.png'), description: 'Description courte d\'une ressource avec des infos...' },
-        { id: 9, title: "Article 8", image: require('../../assets/adaptive-icon.png'), description: 'Description courte d\'une ressource avec des infos...' },
-        { id: 10, title: "Article 9", image: require('../../assets/adaptive-icon.png'), description: 'Description courte d\'une ressource avec des infos...' },
-    ];
+    const [articles, setArticles] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const loadRessources = async () => {
+            try {
+                const data = await fetchAllRessources();
+
+                // Si le type est "last", trier les ressources par date de création (descendant)
+                if (type === 'last') {
+                    data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                }
+
+                setArticles(data);
+            } catch (error) {
+                console.error('Error fetching articles:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadRessources();
+    }, [type]);
 
     const displayedArticles = articles.slice(0, itemCount);
+
+    if (loading) {
+        return <ActivityIndicator size="large" color="#0000ff" />;
+    }
 
     return (
         <View style={styles.blogContainer}>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 {displayedArticles.map(article => (
-                    <TouchableOpacity key={article.id} style={styles.articleCard} onPress={() => router.push(`/${article.id}`)}>
+                    <TouchableOpacity
+                        key={String(article._id)}
+                        style={styles.articleCard}
+                        onPress={() => router.push(`/${String(article._id)}`)}
+                    >
                         <RessourceCard
                             image={article.image}
                             title={article.title}
