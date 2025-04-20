@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet, Text } from 'react-native';
+import {View, TextInput, Button, StyleSheet, Text, TouchableOpacity} from 'react-native';
 import { useRouter } from 'expo-router';
 import { createRessource } from '../../services/ressourcesService';
+import {Stack} from "expo-router/stack";
 
 const CreateRessource = () => {
     const router = useRouter();
@@ -26,6 +27,13 @@ const CreateRessource = () => {
 
     return (
         <View style={styles.container}>
+            <Stack.Screen
+                name="createRessource"
+                options={{
+                    title: "Créer une ressource",
+                    presentation: "modal",
+                }}
+            />
             <Text style={styles.label}>Title</Text>
             <TextInput
                 style={styles.input}
@@ -41,7 +49,9 @@ const CreateRessource = () => {
                 placeholder="Enter description"
             />
 
-            <Button title="Create Ressource" onPress={handleSubmit} />
+            <TouchableOpacity title="Create Ressource" style={styles.button} onPress={handleSubmit}>
+                <Text style={styles.buttonText}>Créer une ressource</Text>
+            </TouchableOpacity>
         </View>
     );
 };
@@ -63,6 +73,16 @@ const styles = StyleSheet.create({
         marginBottom: 15,
         paddingHorizontal: 10,
         borderRadius: 5,
+    },
+    button: {
+        backgroundColor: '#000091',
+        padding: 10,
+        borderRadius: 5,
+        alignItems: 'center',
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 16,
     },
 });
 
