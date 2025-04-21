@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import {SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Header from '../components/Header';
 import RessourceSection from "../components/RessourceSection";
 import Title from "../components/Title";
@@ -14,6 +14,7 @@ export default function App() {
         <SafeAreaView>
             <StatusBar style="auto" />
             <Header />
+            <ScrollView  contentContainerStyle={styles.scrollContent}>
             <Title size={"small"} style={styles.sectionTitle}>👋 Bonjour [prénom]</Title>
             <View style={styles.buttonContainer}>
 
@@ -42,6 +43,7 @@ export default function App() {
 
             <Title size={"small"} style={styles.sectionTitle}>📚 Les dernières ressources </Title>
             <RessourceSection itemCount={5} type={"last"}/>
+            </ScrollView>
         </SafeAreaView>
     );
 }
@@ -90,6 +92,9 @@ const styles = StyleSheet.create({
         fontSize: 16,
         color: '#000091',
         marginLeft: 10,
+    },
+    scrollContent: {
+        paddingBottom: 170,
     },
     rectangleButton: {
         marginTop: 20,
