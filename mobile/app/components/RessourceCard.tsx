@@ -47,6 +47,19 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#555',
     },
+    categoryTag: {
+        marginTop: 10,
+        paddingHorizontal: 8,
+        paddingVertical: 4,
+        borderRadius: 15,
+        // backgroundColor: '#E0E0E0',
+        alignSelf: 'flex-start',
+    },
+    categoryText: {
+        color: '#fff',
+        fontSize: 12,
+        fontWeight: 'bold',
+    },
 });
 
-export default BlogCard;
+export default RessourceCard;
