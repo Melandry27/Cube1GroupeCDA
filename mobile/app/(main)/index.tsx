@@ -20,14 +20,14 @@ export default function App() {
             <TouchableOpacity style={styles.squareButton}>
                 <Ionicons
                     size={32}
-                    color={"#000"}
+                    color={"#000091"}
                     name={"heart"}
                 />
                 <Title size={"small"} style={styles.squareTitle}>Mes Favoris</Title>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.squareButton}>
-                <FontAwesome6 name="book" color={"black"} size={32} />
+                <FontAwesome6 name="book" color={'#000091'} size={32} />
                 <Title size={"small"} style={styles.squareTitle}>Mes Ressources</Title>
             </TouchableOpacity>
             </View>
@@ -36,7 +36,7 @@ export default function App() {
                 style={styles.rectangleButton}
                 onPress={() => router.push('/createRessource')}
             >
-                <FontAwesome6 name="plus" color={"black"} size={32} />
+                <FontAwesome6 name="plus" color={'#000091'} size={32} />
                 <Title size={"small"} style={styles.rectangleTitle}>Créer une ressources</Title>
             </TouchableOpacity>
 
@@ -84,11 +84,11 @@ const styles = StyleSheet.create({
     squareTitle: {
         fontSize: 16,
         marginTop: 10,
-        color: '#000',
+        color: '#000091',
     },
     rectangleTitle: {
         fontSize: 16,
-        color: '#000',
+        color: '#000091',
         marginLeft: 10,
     },
     rectangleButton: {

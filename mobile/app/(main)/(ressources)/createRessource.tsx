@@ -34,7 +34,7 @@ const CreateRessource = () => {
                     presentation: "modal",
                 }}
             />
-            <Text style={styles.label}>Title</Text>
+            <Text style={styles.label}>Titre</Text>
             <TextInput
                 style={styles.input}
                 value={title}
@@ -48,6 +48,8 @@ const CreateRessource = () => {
                 onChangeText={setContent}
                 placeholder="Enter description"
             />
+
+            
 
             <TouchableOpacity title="Create Ressource" style={styles.button} onPress={handleSubmit}>
                 <Text style={styles.buttonText}>Créer une ressource</Text>

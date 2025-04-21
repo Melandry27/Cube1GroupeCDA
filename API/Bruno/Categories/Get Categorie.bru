@@ -5,7 +5,11 @@ meta {
 }
 
 get {
-  url: {{BASE_URL}}/categories/id
+  url: {{BASE_URL}}/categories/{{id}}
   body: none
   auth: inherit
+}
+
+vars:pre-request {
+  id: 67fd70a44eb452d7b6782735
 }

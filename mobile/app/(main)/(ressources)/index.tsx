@@ -24,7 +24,7 @@ export default function RessourceList() {
             <ScrollView>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                     {categories.map((category) => (
-                        <Title key={category._id} size={"small"} style={styles.sectionTitle}>
+                        <Title key={category._id} size={"small"} style={styles.tag}>
                             {category.name}
                         </Title>
                     ))}
@@ -52,5 +52,13 @@ const styles = StyleSheet.create({
     sectionTitle: {
         paddingHorizontal: 20,
         paddingTop: 20,
+    },
+    tag: {
+        marginVertical: 20,
+        marginHorizontal: 10,
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        borderRadius: 20,
+        backgroundColor: "#E0E0E0",
     },
 });
