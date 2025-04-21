@@ -4,29 +4,28 @@ import { Ionicons } from '@expo/vector-icons';
 import Title from "./Title";
 import SearchBar from "./SearchBar";
 
-const Header = ({ props }) => {
+const Header = ({ searchText, setSearchText }) => {
     const [searchVisible, setSearchVisible] = useState(false);
-    const [searchText, setSearchText] = useState("");
 
     return (
-        <SafeAreaView style={styles.safeArea}>
-            <StatusBar barStyle="dark-content" />
-            <View style={styles.header}>
-                <Image source={require('../../assets/Ministère_des_Solidarités_et_de_la_Santé.png')} style={styles.logo} />
+      <SafeAreaView style={styles.safeArea}>
+          <StatusBar barStyle="dark-content" />
+          <View style={styles.header}>
+              <Image source={require('../../assets/Ministère_des_Solidarités_et_de_la_Santé.png')} style={styles.logo} />
 
-                <TouchableOpacity style={styles.searchButton} onPress={() => setSearchVisible(!searchVisible)}>
-                    <Ionicons name="search" size={24} color="#000091" />
-                </TouchableOpacity>
+              <TouchableOpacity style={styles.searchButton} onPress={() => setSearchVisible(!searchVisible)}>
+                  <Ionicons name="search" size={24} color="#000091" />
+              </TouchableOpacity>
+          </View>
+          <View style={styles.grayBar} />
+          <Title style={styles.title} size={"medium"}>(Re)sources Relationnelles</Title>
+
+          {searchVisible && (
+            <View style={styles.searchContainer}>
+                <SearchBar searchText={searchText} setSearchText={setSearchText} />
             </View>
-            <View style={styles.grayBar} />
-            <Title style={styles.title} size={"medium"}>(Re)sources Relationnelles</Title>
-
-            {searchVisible && (
-                <View style={styles.searchContainer}>
-                    <SearchBar/>
-                </View>
-            )}
-        </SafeAreaView>
+          )}
+      </SafeAreaView>
     );
 };
 

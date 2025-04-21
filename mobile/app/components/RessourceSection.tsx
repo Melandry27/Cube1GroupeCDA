@@ -4,9 +4,7 @@ import { useRouter } from 'expo-router';
 import RessourceCard from "./RessourceCard";
 import { fetchAllRessources } from '../services/ressourcesService';
 import { fetchCategories } from '../services/categoriesService';
-
-const RessourceSection = ({ itemCount, type, filterCategory }) => {
-    const router = useRouter();
+const RessourceSection = ({ itemCount, type, filterCategory, searchText }) => {
     const [articles, setArticles] = useState([]);
     const [categories, setCategories] = useState({});
     const [loading, setLoading] = useState(true);
@@ -44,7 +42,9 @@ const RessourceSection = ({ itemCount, type, filterCategory }) => {
         loadRessources();
     }, [type, filterCategory]);
 
-    const displayedArticles = articles.slice(0, itemCount);
+    const displayedArticles = articles
+      .filter(article => (article?.title || '').toLowerCase().includes((searchText || '').toLowerCase()))
+      .slice(0, itemCount);
 
     if (loading) {
         return <ActivityIndicator size="large" color="#0000ff" />;
