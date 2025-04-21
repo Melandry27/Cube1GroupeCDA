@@ -9,6 +9,7 @@ import { fetchCategories } from "../../services/categoriesService";
 export default function RessourceList() {
     const [categories, setCategories] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
+    const [searchText, setSearchText] = useState("");
 
     useEffect(() => {
         async function loadCategories() {
@@ -24,7 +25,7 @@ export default function RessourceList() {
 
     return (
       <SafeAreaView style={styles.container}>
-          <Header />
+          <Header searchText={searchText} setSearchText={setSearchText} />
           <StatusBar style="auto" />
           <ScrollView>
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -51,6 +52,7 @@ export default function RessourceList() {
                 itemCount={10}
                 type="filtered"
                 filterCategory={selectedCategory}
+                searchText={searchText}
               />
           </ScrollView>
       </SafeAreaView>
