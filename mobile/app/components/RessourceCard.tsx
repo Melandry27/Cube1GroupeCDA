@@ -2,10 +2,10 @@ import React from 'react';
 import { View, Image, Text, StyleSheet } from 'react-native';
 import Title from "./Title";
 
-const BlogCard = ({ title, description, image }) => {
+const RessourceCard = ({ title, description, image }) => {
     return (
         <View style={styles.card}>
-            <Image source={image} style={styles.image} />
+            <Image source={{uri: image}} style={styles.image} />
             <View style={styles.textContainer}>
                 <Title size={"small"} style={styles.title}>{title}</Title>
                 <Text style={styles.description}>{description}</Text>
@@ -44,4 +44,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default BlogCard;
+export default RessourceCard;
