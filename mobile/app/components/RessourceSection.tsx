@@ -1,34 +1,55 @@
-import React from 'react';
-import { View, Image, ScrollView, Text, StyleSheet } from 'react-native';
-import BlogCard from "./RessourceCard";
+import React, { useEffect, useState } from 'react';
+import { View, ScrollView, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { useRouter } from 'expo-router';
 import RessourceCard from "./RessourceCard";
+import { fetchAllRessources } from '../services/ressourcesService';
 
-const BlogSection = () => {
+const RessourceSection = ({ itemCount, type }) => {
+    const router = useRouter();
+    const [articles, setArticles] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    // La team, faut modifier ici pour boucler sur les ressources de la base de données
-    const articles = [
-        { id: 1, title: "Articlo 1", image: require('../../assets/adaptive-icon.png'), description: 'Descirption courte d\'une ressource avec des infos... '},
-        { id: 2, title: "Article 2", image: require('../../assets/adaptive-icon.png'), description: 'Descirption courte d\'une ressource avec des infos... ' },
-        { id: 3, title: "Article 3", image: require('../../assets/adaptive-icon.png'), description: 'Descirption courte d\'une ressource avec des infos... ' },
-        { id: 4, title: "Article 3", image: require('../../assets/adaptive-icon.png'), description: 'Descirption courte d\'une ressource avec des infos... ' },
-        { id: 5, title: "Article 3", image: require('../../assets/adaptive-icon.png'), description: 'Descirption courte d\'une ressource avec des infos... ' },
-        { id: 6, title: "Article 3", image: require('../../assets/adaptive-icon.png'), description: 'Descirption courte d\'une ressource avec des infos... ' },
-        { id: 7, title: "Article 3", image: require('../../assets/adaptive-icon.png'), description: 'Descirption courte d\'une ressource avec des infos... ' },
-        { id: 8, title: "Article 3", image: require('../../assets/adaptive-icon.png'), description: 'Descirption courte d\'une ressource avec des infos... ' },
-        { id: 9, title: "Article 3", image: require('../../assets/adaptive-icon.png'), description: 'Descirption courte d\'une ressource avec des infos... ' },
-    ];
+    useEffect(() => {
+        const loadRessources = async () => {
+            try {
+                const data = await fetchAllRessources();
+
+                if (type === 'last') {
+                    data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                }
+
+                setArticles(data);
+            } catch (error) {
+                console.error('Error fetching articles:', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadRessources();
+    }, [type]);
+
+    const displayedArticles = articles.slice(0, itemCount);
+
+    if (loading) {
+        return <ActivityIndicator size="large" color="#0000ff" />;
+    }
 
     return (
         <View style={styles.blogContainer}>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                {articles.map(article => (
-                    <View key={article.id} style={styles.articleCard}>
+                {displayedArticles.map(article => (
+                    <TouchableOpacity
+                        key={String(article._id)}
+                        style={styles.articleCard}
+                        onPress={() => router.push(`/${String(article._id)}`)}
+                    >
                         <RessourceCard
                             image={article.image}
                             title={article.title}
                             description={article.description}
                         />
-                    </View>
+                    </TouchableOpacity>
                 ))}
             </ScrollView>
         </View>
@@ -40,24 +61,10 @@ const styles = StyleSheet.create({
         marginTop: 20,
         paddingLeft: 10,
     },
-    sectionTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginBottom: 10,
-    },
     articleCard: {
         width: 150,
         marginRight: 70,
     },
-    articleImage: {
-        width: '100%',
-        height: 100,
-        borderRadius: 10,
-    },
-    articleTitle: {
-        textAlign: 'center',
-        marginTop: 5,
-    },
 });
 
-export default BlogSection;
+export default RessourceSection;
