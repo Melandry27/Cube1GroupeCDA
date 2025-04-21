@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import File, { IFile } from "../models/File";
 
 export const create = async (fileData: Partial<IFile>): Promise<IFile> => {
@@ -14,7 +15,7 @@ export const findById = async (id: string): Promise<IFile | null> => {
 };
 
 export const update = async (
-  id: string,
+  id: string | Types.ObjectId,
   updateData: Partial<IFile>
 ): Promise<IFile | null> => {
   return await File.findOneAndUpdate({ _id: id }, updateData, { new: true });

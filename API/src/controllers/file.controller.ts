@@ -14,7 +14,19 @@ export const create = async (req: Request, res: Response): Promise<void> => {
     };
 
     const file: IFile = await FileService.create(fileData);
-    res.status(201).json(file);
+
+    if (!file) {
+      res.status(400).json({ message: "File upload failed" });
+      return;
+    }
+
+    const fileRename = await FileService.renameFileOnDisk({
+      currentFilename: file.path,
+      newId: file._id.toString(),
+      originalName: file.originalName,
+    });
+
+    res.status(201).json(fileRename);
   } catch (error) {
     res.status(500).json({ message: "Error uploading file", error });
   }
