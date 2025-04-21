@@ -4,6 +4,7 @@ interface IComment extends Document {
   userId: string;
   ressourceId: string;
   content: string;
+  commentStatutsId?: mongoose.Types.ObjectId;
 }
 
 const CommentSchema = new Schema<IComment>(
@@ -11,6 +12,7 @@ const CommentSchema = new Schema<IComment>(
     userId: { type: String, required: true },
     ressourceId: { type: String, required: true },
     content: { type: String, required: true },
+    commentStatutsId: { type: mongoose.Schema.Types.ObjectId, ref: "CommentStatus", required: false },
   },
   {
     timestamps: true,
