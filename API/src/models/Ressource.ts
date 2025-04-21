@@ -11,8 +11,8 @@ interface IRessource extends Document {
   content: string;
   type: RessourceType;
   createdBy: string;
-    category: mongoose.Types.ObjectId;
-    image?: string;
+  categoryId: mongoose.Types.ObjectId;
+  image?: string;
 }
 
 const RessourceSchema = new Schema<IRessource>(
@@ -25,7 +25,7 @@ const RessourceSchema = new Schema<IRessource>(
             required: true,
         },
         createdBy: { type: String, required: true },
-        category: { type: mongoose.Schema.Types.ObjectId, ref: "Category", required: true },
+        categoryId: { type: mongoose.Schema.Types.ObjectId, ref: "Category", required: true },
         image: { type: String, required: false },
     },
     {

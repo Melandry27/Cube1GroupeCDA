@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 import RessourceCard from "./RessourceCard";
 import { fetchAllRessources } from '../services/ressourcesService';
 
-const RessourceSection = ({ itemCount, type }) => {
+const RessourceSection = ({ itemCount, type, filterCategory }) => {
     const router = useRouter();
     const [articles, setArticles] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -18,7 +18,11 @@ const RessourceSection = ({ itemCount, type }) => {
                     data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
                 }
 
-                setArticles(data);
+                const filteredData = filterCategory
+                  ? data.filter((article) => article.categoryId === filterCategory)
+                  : data;
+
+                setArticles(filteredData);
             } catch (error) {
                 console.error('Error fetching articles:', error);
             } finally {
@@ -27,7 +31,7 @@ const RessourceSection = ({ itemCount, type }) => {
         };
 
         loadRessources();
-    }, [type]);
+    }, [type, filterCategory]);
 
     const displayedArticles = articles.slice(0, itemCount);
 
