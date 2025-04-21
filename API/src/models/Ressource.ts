@@ -11,24 +11,26 @@ interface IRessource extends Document {
   content: string;
   type: RessourceType;
   createdBy: string;
-  category: string;
+    category: mongoose.Types.ObjectId;
+    image?: string;
 }
 
 const RessourceSchema = new Schema<IRessource>(
-  {
-    title: { type: String, required: true },
-    content: { type: String, required: true },
-    type: {
-      type: String,
-      enum: Object.values(RessourceType),
-      required: true,
+    {
+        title: { type: String, required: true },
+        content: { type: String, required: true },
+        type: {
+            type: String,
+            enum: Object.values(RessourceType),
+            required: true,
+        },
+        createdBy: { type: String, required: true },
+        category: { type: mongoose.Schema.Types.ObjectId, ref: "Category", required: true },
+        image: { type: String, required: false },
     },
-    createdBy: { type: String, required: true },
-    category: { type: String, ref: 'Category', required: true }
-  },
-  {
-    timestamps: true,
-  }
+    {
+        timestamps: true,
+    }
 );
 
 export { IRessource, RessourceType };
