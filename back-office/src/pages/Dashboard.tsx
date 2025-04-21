@@ -1,4 +1,46 @@
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+
 const Dashboard = () => {
+  const [users, setUsers] = useState([]);
+  const [comments, setComments] = useState([]);
+  const [articlesCount, setArticlesCount] = useState(0);
+  const [usersCount, setUsersCount] = useState(0);
+  const [commentsCount, setCommentsCount] = useState(0);
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        const [usersRes, commentsRes, articlesRes] = await Promise.all([
+          fetch("/api/users"),
+          fetch("/api/comments"),
+          fetch("/api/ressources"),
+        ]);
+
+        if (!usersRes.ok || !commentsRes.ok || !articlesRes.ok) {
+          throw new Error("Erreur lors de la récupération des données du dashboard");
+        }
+
+        const usersData = await usersRes.json();
+        const commentsData = await commentsRes.json();
+        const articlesData = await articlesRes.json();
+
+        setUsers(usersData.slice(-3).reverse()); // Derniers 3 utilisateurs
+        setUsersCount(usersData.length);
+
+        setComments(commentsData.slice(-3).reverse()); // Derniers 3 commentaires
+        setCommentsCount(commentsData.length);
+
+        setArticlesCount(articlesData.length);
+      } catch (error) {
+        toast.error("Erreur de chargement du tableau de bord.");
+        console.error(error);
+      }
+    };
+
+    fetchDashboardData();
+  }, []);
+
   return (
     <>
       <h2 className="fr-h3">Tableau de Bord</h2>
@@ -6,24 +48,11 @@ const Dashboard = () => {
         <div className="fr-col-12 fr-col-md-6">
           <div className="fr-card">
             <div className="fr-card__body fr-py-2w">
-              <h3 className="fr-h5">Dernières Activités</h3>
-              <ul>
-                <li>Nouvel article publié : "Réforme de la Santé"</li>
-                <li>Utilisateur "Jean Dupont" s'est inscrit</li>
-                <li>Nouveau commentaire sur "Vaccination 2024"</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <div className="fr-col-12 fr-col-md-6">
-          <div className="fr-card">
-            <div className="fr-card__body fr-py-2w">
               <h3 className="fr-h5">Statistiques</h3>
               <ul>
-                <li>Articles publiés : 120</li>
-                <li>Utilisateurs enregistrés : 450</li>
-                <li>Commentaires en attente : 10</li>
+                <li>Articles publiés : {articlesCount}</li>
+                <li>Utilisateurs enregistrés : {usersCount}</li>
+                <li>Commentaires publiés : {commentsCount}</li>
               </ul>
             </div>
           </div>
@@ -34,9 +63,11 @@ const Dashboard = () => {
             <div className="fr-card__body fr-py-2w">
               <h3 className="fr-h5">Derniers Utilisateurs</h3>
               <ul>
-                <li>Jean Dupont - Inscrit le 01/04/2024</li>
-                <li>Marie Curie - Inscrite le 31/03/2024</li>
-                <li>Albert Einstein - Inscrit le 30/03/2024</li>
+                {users.map((user) => (
+                  <li key={user._id}>
+                    {user.name} - Inscrit le {new Date(user.createdAt).toLocaleDateString()}
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
@@ -47,9 +78,11 @@ const Dashboard = () => {
             <div className="fr-card__body fr-py-2w">
               <h3 className="fr-h5">Derniers Commentaires</h3>
               <ul>
-                <li>"Très bon article !" - par Sophie</li>
-                <li>"Besoin de plus d'infos sur ce sujet." - par Paul</li>
-                <li>"Merci pour ces précisions." - par Léa</li>
+                {comments.map((comment) => (
+                  <li key={comment._id}>
+                    "{comment.content}" - par {comment.author?.name || "Anonyme"}
+                  </li>
+                ))}
               </ul>
             </div>
           </div>

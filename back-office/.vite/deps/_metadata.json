@@ -1,43 +1,52 @@
 {
-  "hash": "9b93e7bb",
+  "hash": "ec0698bb",
   "configHash": "afaa5635",
-  "lockfileHash": "89f23296",
-  "browserHash": "37ec1d4e",
+  "lockfileHash": "37b3aaf7",
+  "browserHash": "97b40473",
   "optimized": {
     "react/jsx-dev-runtime": {
       "src": "../../node_modules/react/jsx-dev-runtime.js",
       "file": "react_jsx-dev-runtime.js",
-      "fileHash": "1ab99f35",
+      "fileHash": "d1165edc",
       "needsInterop": true
     },
     "react": {
       "src": "../../node_modules/react/index.js",
       "file": "react.js",
-      "fileHash": "e4c4bde5",
+      "fileHash": "d89e0169",
       "needsInterop": true
     },
     "react-dom/client": {
       "src": "../../node_modules/react-dom/client.js",
       "file": "react-dom_client.js",
-      "fileHash": "8dbab858",
+      "fileHash": "0b39b26b",
       "needsInterop": true
     },
     "react-router": {
       "src": "../../node_modules/react-router/dist/development/index.mjs",
       "file": "react-router.js",
-      "fileHash": "d1577ce8",
+      "fileHash": "f88c88ef",
+      "needsInterop": false
+    },
+    "react-toastify": {
+      "src": "../../node_modules/react-toastify/dist/index.mjs",
+      "file": "react-toastify.js",
+      "fileHash": "c27f1ba0",
       "needsInterop": false
     },
     "recharts": {
       "src": "../../node_modules/recharts/es6/index.js",
       "file": "recharts.js",
-      "fileHash": "eb6978c2",
+      "fileHash": "8ffdceb2",
       "needsInterop": false
     }
   },
   "chunks": {
     "chunk-WEJJOBXA": {
       "file": "chunk-WEJJOBXA.js"
+    },
+    "chunk-2KHBIA62": {
+      "file": "chunk-2KHBIA62.js"
     },
     "chunk-VCDLJVZS": {
       "file": "chunk-VCDLJVZS.js"

@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Route, Routes } from "react-router";
+import { Route, Routes, Navigate } from "react-router";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
 import Categories from "./pages/Categories";
@@ -11,6 +11,7 @@ import Dashboard from "./pages/Dashboard";
 import EditCategory from "./pages/EditCategory";
 import EditRessource from "./pages/EditRessource";
 import EditUser from "./pages/EditUser";
+
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
@@ -21,6 +22,8 @@ import Users from "./pages/Users";
 
 const queryClient = new QueryClient();
 
+import "./App.css";
+
 const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
@@ -29,6 +32,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/" element={<Home />}>
+              <Route index element={<Navigate to="/dashboard" replace />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/ressources" element={<Ressources />} />
               <Route path="/ressources/create" element={<CreateRessource />} />

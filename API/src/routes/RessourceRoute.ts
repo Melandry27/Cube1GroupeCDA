@@ -3,6 +3,7 @@ import * as RessourceController from "../controllers/ressource.controller";
 
 const router = Router();
 
+
 /**
  * @swagger
  * tags:
@@ -27,6 +28,8 @@ const router = Router();
  *                 $ref: '#/components/schemas/Ressource'
  */
 router.get("/", RessourceController.getAll);
+
+router.get("/types", RessourceController.getTypes);
 
 /**
  * @swagger

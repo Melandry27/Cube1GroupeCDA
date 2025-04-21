@@ -1,5 +1,5 @@
 import * as RessourceDatabase from "../database/RessourceDatabase";
-import { IRessource } from "../models/Ressource";
+import { IRessource, RessourceType } from "../models/Ressource";
 
 export const getAll = async (): Promise<IRessource[]> => {
   return RessourceDatabase.getAllRessources();
@@ -7,6 +7,10 @@ export const getAll = async (): Promise<IRessource[]> => {
 
 export const getById = async (id: string): Promise<IRessource | null> => {
   return RessourceDatabase.getRessourceById(id);
+};
+
+export const getResourceTypes = (): string[] => {
+  return Object.values(RessourceType);
 };
 
 export const create = async (ressourceData: IRessource): Promise<IRessource> => {
