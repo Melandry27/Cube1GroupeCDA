@@ -1,12 +1,29 @@
-import { useAuth } from "../context/AuthContext";
+import { useState } from "react";
 import { useNavigate } from "react-router";
+import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
-  const { login } = useAuth();
+  const { loginUser, isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
+  if (isAuthenticated) {
+    navigate("/");
+  }
+
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({
+      ...form,
+      [e.target.id]: e.target.value,
+    });
+  };
+
   const handleLogin = () => {
-    login();
+    loginUser(form);
     navigate("/");
   };
 
@@ -18,23 +35,45 @@ const Login = () => {
             <div className="fr-card__body">
               <h1 className="fr-h2 fr-mt-2w">Connexion</h1>
               <p>Connectez-vous pour accéder l'espace d'administration</p>
-              
+
               <div className="fr-input-group">
-                <label className="fr-label" htmlFor="email">Email</label>
-                <input className="fr-input" type="email" id="email" placeholder="exemple@domaine.fr" />
+                <label className="fr-label" htmlFor="email">
+                  Email
+                </label>
+                <input
+                  className="fr-input"
+                  type="email"
+                  id="email"
+                  placeholder="exemple@domaine.fr"
+                  value={form.email}
+                  onChange={handleChange}
+                />
               </div>
 
               <div className="fr-input-group">
-                <label className="fr-label" htmlFor="password">Mot de passe</label>
-                <input className="fr-input" type="password" id="password" />
+                <label className="fr-label" htmlFor="password">
+                  Mot de passe
+                </label>
+                <input
+                  className="fr-input"
+                  type="password"
+                  id="password"
+                  value={form.password}
+                  onChange={handleChange}
+                />
               </div>
 
-              <button className="fr-btn fr-btn--blue-france fr-mt-4w" onClick={handleLogin}>
+              <button
+                className="fr-btn fr-btn--blue-france fr-mt-4w"
+                onClick={handleLogin}
+              >
                 Se connecter
               </button>
 
               <p className="fr-mt-2w">
-                <a href="#" className="fr-link">Mot de passe oublié ?</a>
+                <a href="#" className="fr-link">
+                  Mot de passe oublié ?
+                </a>
               </p>
             </div>
           </div>

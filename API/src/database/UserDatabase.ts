@@ -1,4 +1,4 @@
-import UserModel, { IUser } from "../models/User";
+import UserModel, { CreateUserInput, IUser } from "../models/User";
 
 export const getAllUsers = async (): Promise<IUser[]> => {
   return UserModel.find();
@@ -12,7 +12,7 @@ export const getUserByEmail = async (email: string): Promise<IUser | null> => {
   return UserModel.findOne({ email });
 };
 
-export const createUser = async (data: IUser): Promise<IUser> => {
+export const createUser = async (data: CreateUserInput): Promise<IUser> => {
   const user = new UserModel(data);
   return user.save();
 };

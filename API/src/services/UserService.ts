@@ -1,5 +1,5 @@
 import * as UserDB from "../database/UserDatabase";
-import { IUser } from "../models/User";
+import { CreateUserInput, IUser } from "../models/User";
 
 export const getAll = async (): Promise<IUser[]> => {
   return UserDB.getAllUsers();
@@ -13,7 +13,7 @@ export const getByEmail = async (email: string): Promise<IUser | null> => {
   return UserDB.getUserByEmail(email);
 };
 
-export const create = async (data: IUser): Promise<IUser> => {
+export const create = async (data: CreateUserInput): Promise<IUser> => {
   return UserDB.createUser(data);
 };
 

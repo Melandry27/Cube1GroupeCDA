@@ -1,35 +1,40 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router";
-import { AuthProvider } from "./context/AuthContext";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Route, Routes, Navigate } from "react-router";
 import ProtectedRoute from "./components/ProtectedRoute";
-import Login from "./pages/Login";
-import Home from "./pages/Home"; 
-import NotFound from "./pages/NotFound";
-import Dashboard from "./pages/Dashboard";
-import Ressources from "./pages/Ressources";
+import { AuthProvider } from "./context/AuthContext";
 import Categories from "./pages/Categories";
 import Comments from "./pages/Comments";
-import Users from "./pages/Users";
+import CreateCategory from "./pages/CreateCategory";
+import CreateRessource from "./pages/CreateRessource";
+import CreateUser from "./pages/CreateUser";
+import Dashboard from "./pages/Dashboard";
+import EditCategory from "./pages/EditCategory";
+import EditRessource from "./pages/EditRessource";
+import EditUser from "./pages/EditUser";
+
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import NotFound from "./pages/NotFound";
+import Ressources from "./pages/Ressources";
 import Roles from "./pages/Roles";
 import StatsAvancees from "./pages/Statistics";
-import CreateRessource from "./pages/CreateRessource";
-import EditRessource from "./pages/EditRessource";
-import CreateCategory from "./pages/CreateCategory";
-import EditCategory from "./pages/EditCategory";
-import CreateUser from "./pages/CreateUser";
-import EditUser from "./pages/EditUser";
-import { Navigate } from "react-router";
+import Users from "./pages/Users";
+
+const queryClient = new QueryClient();
+
 import "./App.css";
 
 const App = () => {
   return (
-    <AuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/" element={<Home />}>
               <Route index element={<Navigate to="/dashboard" replace />} />
               <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/ressources" element={<Ressources/>} />
+              <Route path="/ressources" element={<Ressources />} />
               <Route path="/ressources/create" element={<CreateRessource />} />
               <Route path="/ressources/edit/:id" element={<EditRessource />} />
               <Route path="/categories" element={<Categories />} />
@@ -45,7 +50,8 @@ const App = () => {
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
-    </AuthProvider>
+      </AuthProvider>
+    </QueryClientProvider>
   );
 };
 
