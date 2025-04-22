@@ -4,7 +4,12 @@ import * as StatisticService from "../services/StatisticService";
 
 export const create = async (req: Request, res: Response): Promise<void> => {
   try {
-    const stat: IStatistic = await StatisticService.create(req.body);
+    const stat: IStatistic | null = await StatisticService.create(req.body);
+    if (!stat) {
+      res.status(400).json({ message: "Invalid statistic data" });
+      return;
+    }
+
     res.status(201).json(stat);
   } catch (error) {
     res.status(500).json({ message: "Error creating statistic", error });
@@ -13,7 +18,12 @@ export const create = async (req: Request, res: Response): Promise<void> => {
 
 export const getAll = async (req: Request, res: Response): Promise<void> => {
   try {
-    const stats: IStatistic[] = await StatisticService.getAll();
+    const stats: IStatistic[] | null = await StatisticService.getAll();
+    if (!stats || stats.length === 0) {
+      res.status(404).json({ message: "No statistics found" });
+      return;
+    }
+
     res.status(200).json(stats);
   } catch (error) {
     res.status(500).json({ message: "Error fetching statistics", error });
@@ -22,7 +32,9 @@ export const getAll = async (req: Request, res: Response): Promise<void> => {
 
 export const getById = async (req: Request, res: Response): Promise<void> => {
   try {
-    const stat: IStatistic | null = await StatisticService.getById(req.params.id);
+    const stat: IStatistic | null = await StatisticService.getById(
+      req.params.id
+    );
     if (!stat) {
       res.status(404).json({ message: "Statistic not found" });
       return;

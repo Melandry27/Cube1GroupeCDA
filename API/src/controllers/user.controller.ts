@@ -33,7 +33,9 @@ export const create = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    res.status(201).json({ message: "Utilisateur enregistré avec succès." });
+    res
+      .status(201)
+      .json({ user, message: "Utilisateur enregistré avec succès." });
     return;
   } catch (error) {
     res.status(500).json({ message: "Error creating user", error });
