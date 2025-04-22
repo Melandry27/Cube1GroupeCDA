@@ -1,6 +1,6 @@
 import Constants from 'expo-constants';
 
-const API_URL = Constants.expoConfig.extra?.API_URL || 'http://192.168.1.124:5000/api';
+const API_URL = Constants.expoConfig.extra?.API_URL;
 
 export const createComment = async (ressourceId: string, content: string, userId: string) => {
     try {
