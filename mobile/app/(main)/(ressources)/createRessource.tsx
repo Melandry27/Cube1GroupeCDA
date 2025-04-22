@@ -11,7 +11,14 @@ const CreateRessource = () => {
 
     const handleSubmit = async () => {
         try {
-            await createRessource({ title, content, type: 'In Progress', createdBy: '67eee2b27b066acad7220d97' });
+            await createRessource({
+                title,
+                content,
+                type: 'In Progress',
+                createdBy: '67eee2b27b066acad7220d97',
+                categoryId: '6804019daa08e719d8ce623a',
+
+            });
             alert('Ressource created successfully!');
             router.push('/');
         } catch (error) {

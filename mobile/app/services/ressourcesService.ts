@@ -28,24 +28,29 @@ export const fetchAllRessources = async () => {
     }
 };
 
-export const createRessource = async (ressource: {
-    title: string;
-    content: string;
-    type: string;
-    createdBy: string;
-}) => {
+export const createRessource = async (data: any) => {
     try {
-        const response = await fetch(`${API_URL}/ressources/`, {
+        const response = await fetch(`${API_URL}/ressources`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(ressource),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
         });
+
+        const contentType = response.headers.get('Content-Type');
         if (!response.ok) {
-            throw new Error('Failed to create ressource');
+            const errorText = await response.text();
+            throw new Error(`HTTP Error: ${response.status} - ${errorText}`);
         }
-        return await response.json();
+
+        if (contentType && contentType.includes('application/json')) {
+            return await response.json();
+        } else {
+            throw new Error('Unexpected response format: Not JSON');
+        }
     } catch (error) {
-        console.error('Error creating ressource:', error);
+        console.error('Error in createRessource:', error);
         throw error;
     }
 };
