@@ -9,6 +9,13 @@ export default function RootLayout() {
                     headerShown: false,
                 }}
             />
+          <Stack.Screen
+            name="(ressources)/index"
+            options={{
+              title: 'Ressources',
+              unmountOnBlur: true,
+            }}
+          />
         </Stack>
     );
 }
