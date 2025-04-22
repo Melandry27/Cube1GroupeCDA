@@ -1,14 +1,18 @@
 import Ressource, { IRessource } from "../models/Ressource";
 
 export const getAllRessources = async (): Promise<IRessource[]> => {
-  return Ressource.find();
+  return Ressource.find().populate("createdBy");
 };
 
-export const getRessourceById = async (id: string): Promise<IRessource | null> => {
-  return Ressource.findOne({ _id: id });
+export const getRessourceById = async (
+  id: string
+): Promise<IRessource | null> => {
+  return Ressource.findOne({ _id: id }).populate("createdBy");
 };
 
-export const createRessource = async (ressourceData: IRessource): Promise<IRessource> => {
+export const createRessource = async (
+  ressourceData: IRessource
+): Promise<IRessource> => {
   return Ressource.create(ressourceData);
 };
 
@@ -21,6 +25,8 @@ export const updateRessource = async (
   });
 };
 
-export const removeRessource = async (id: string): Promise<IRessource | null> => {
+export const removeRessource = async (
+  id: string
+): Promise<IRessource | null> => {
   return Ressource.findOneAndDelete({ _id: id });
 };

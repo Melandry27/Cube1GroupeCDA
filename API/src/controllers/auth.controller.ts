@@ -18,6 +18,7 @@ const generateToken = (user: any, role: any) => {
       role: role.name,
       adress: user.adress,
       phone: user.phone,
+      isVerified: user.isVerified,
     },
     JWT_SECRET
   );

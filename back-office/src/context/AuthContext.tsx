@@ -10,8 +10,9 @@ interface DecodedUser {
   role: string;
   adress: string;
   phone: string;
-  exp: number; // expiration timestamp
-  iat: number; // issued at timestamp
+  isVerified: boolean;
+  exp: number;
+  iat: number;
 }
 
 interface AuthContextType {
@@ -44,12 +45,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   });
 
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    return !!token && user !== null && allowedRoles.includes(user.role);
+    return (
+      !!token &&
+      user !== null &&
+      allowedRoles.includes(user.role) &&
+      user.isVerified
+    );
   });
-
-  console.log("token", token);
-  console.log("user", user);
-  console.log("isAuthenticated", isAuthenticated);
 
   const mutation = useMutation({
     mutationFn: login,
@@ -57,9 +59,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       try {
         const decoded = jwtDecode<DecodedUser>(data.token);
 
-        console.log("decoded", decoded);
-
-        if (allowedRoles.includes(decoded.role)) {
+        if (allowedRoles.includes(decoded.role) && decoded.isVerified) {
           localStorage.setItem("token", data.token);
           setToken(data.token);
           setUser(decoded);

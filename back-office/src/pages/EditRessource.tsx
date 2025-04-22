@@ -1,15 +1,21 @@
-import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Ressource } from "../utils/interface";
 
 const EditRessource = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  const [ressource, setRessource] = useState({
+  const [ressource, setRessource] = useState<Ressource>({
+    _id: "",
     title: "",
-    createdBy: "",
+    createdBy: {
+      _id: "",
+      name: "",
+      email: "",
+    },
     content: "",
     category: "",
     type: "",
@@ -23,10 +29,12 @@ const EditRessource = () => {
     const fetchRessource = async () => {
       try {
         const ressourceResponse = await fetch(`/api/ressources/${id}`);
-        if (!ressourceResponse.ok) throw new Error("Erreur lors de la récupération de la ressource");
+        if (!ressourceResponse.ok)
+          throw new Error("Erreur lors de la récupération de la ressource");
         const ressourceData = await ressourceResponse.json();
 
         setRessource({
+          _id: ressourceData._id || "",
           title: ressourceData.title || "",
           createdBy: ressourceData.createdBy || "",
           content: ressourceData.content || "",
@@ -41,7 +49,8 @@ const EditRessource = () => {
     const fetchCategories = async () => {
       try {
         const response = await fetch("/api/categories");
-        if (!response.ok) throw new Error("Erreur lors de la récupération des catégories");
+        if (!response.ok)
+          throw new Error("Erreur lors de la récupération des catégories");
         const data = await response.json();
         setCategories(data);
       } catch (error) {
@@ -60,22 +69,26 @@ const EditRessource = () => {
         toast.error("Failed to fetch resource types");
       }
     };
-    
+
     fetchResourceTypes();
 
     if (id) {
-      Promise.all([fetchRessource(), fetchCategories()]).finally(() => setLoading(false));
+      Promise.all([fetchRessource(), fetchCategories()]).finally(() =>
+        setLoading(false)
+      );
     }
   }, [id]);
 
   const resourceTypeLabels: { [key: string]: string } = {
     "In Progress": "En cours",
-    "Completed": "Terminé",
+    Completed: "Terminé",
     "Not Started": "Non commencé",
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     setRessource({ ...ressource, [e.target.name]: e.target.value });
   };
@@ -109,9 +122,14 @@ const EditRessource = () => {
       {loading ? (
         <p>Chargement...</p>
       ) : (
-        <form onSubmit={handleSubmit} className="fr-grid-row fr-grid-row--gutters">
+        <form
+          onSubmit={handleSubmit}
+          className="fr-grid-row fr-grid-row--gutters"
+        >
           <div className="fr-col-12 fr-col-md-6">
-            <label className="fr-label" htmlFor="title">Titre</label>
+            <label className="fr-label" htmlFor="title">
+              Titre
+            </label>
             <input
               className="fr-input"
               id="title"
@@ -123,19 +141,21 @@ const EditRessource = () => {
           </div>
 
           <div className="fr-col-12 fr-col-md-6">
-            <label className="fr-label" htmlFor="createdBy">Auteur</label>
+            <label className="fr-label" htmlFor="createdBy">
+              Auteur
+            </label>
             <input
               className="fr-input"
               id="createdBy"
               name="createdBy"
-              value={ressource.createdBy}
-              onChange={handleChange}
-              required
+              value={ressource?.createdBy?.name}
             />
           </div>
 
           <div className="fr-col-12">
-            <label className="fr-label" htmlFor="content">Contenu</label>
+            <label className="fr-label" htmlFor="content">
+              Contenu
+            </label>
             <textarea
               className="fr-input"
               id="content"
@@ -148,7 +168,9 @@ const EditRessource = () => {
           </div>
 
           <div className="fr-col-12 fr-col-md-6">
-            <label className="fr-label" htmlFor="category">Catégorie</label>
+            <label className="fr-label" htmlFor="category">
+              Catégorie
+            </label>
             <select
               className="fr-select"
               id="category"
@@ -167,7 +189,9 @@ const EditRessource = () => {
           </div>
 
           <div className="fr-col-12 fr-col-md-6">
-            <label className="fr-label" htmlFor="type">Type</label>
+            <label className="fr-label" htmlFor="type">
+              Type
+            </label>
             <select
               className="fr-select"
               id="type"
@@ -185,8 +209,15 @@ const EditRessource = () => {
             </select>
           </div>
 
-          <div className="fr-col-12 fr-grid-row fr-mt-4w" style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
-            <button type="button" className="fr-btn fr-btn--secondary" onClick={goBack}>
+          <div
+            className="fr-col-12 fr-grid-row fr-mt-4w"
+            style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}
+          >
+            <button
+              type="button"
+              className="fr-btn fr-btn--secondary"
+              onClick={goBack}
+            >
               Annuler
             </button>
             <button type="submit" className="fr-btn fr-btn--primary">
