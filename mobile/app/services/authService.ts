@@ -1,0 +1,44 @@
+import Constants from 'expo-constants';
+
+const API_URL = Constants.expoConfig.extra?.API_URL;
+
+export const login = async (email: string, password: string) => {
+  try {
+    const response = await fetch(`${API_URL}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Login failed');
+    }
+
+    return await response.json();
+  } catch (error: any) {
+    console.error('Error during login:', error.message || error);
+    throw error;
+  }
+};
+
+export const signUp = async (name: string, email: string, password: string, adress: string , phone: string) => {
+  try {
+    console.log(name, email, password, adress, phone);
+    const roleId = "68074f31756fe56563cb1e95";
+    const response = await fetch(`${API_URL}/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({name, email, password, roleId, adress, phone}),
+    });
+    console.log(response.body);
+
+    if (!response.ok) {
+      throw new Error(`Sign-up failed: ${response.status} ${response.statusText}`);
+    }
+
+    return await response.json();
+  } catch (error: any) {
+    console.error('Error during sign-up:', error.message || error);
+    throw error;
+  }
+};
