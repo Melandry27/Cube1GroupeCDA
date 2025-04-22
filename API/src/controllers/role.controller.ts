@@ -1,10 +1,32 @@
 import { Request, Response } from "express";
+import slugify from "slugify";
 import { IRole } from "../models/Role";
 import * as RoleService from "../services/RoleService";
 
 export const create = async (req: Request, res: Response): Promise<void> => {
   try {
-    const role: IRole = await RoleService.createNewRole(req.body);
+    const { name } = req.body;
+
+    const nameSlugify: string = slugify(name, {
+      lower: true,
+      strict: true,
+      trim: true,
+    });
+
+    const existingRole: IRole | null = await RoleService.getRoleBySlug(
+      nameSlugify
+    );
+
+    if (existingRole) {
+      res.status(400).json({ message: "Role already exists" });
+      return;
+    }
+
+    const role: IRole = await RoleService.createNewRole({
+      name,
+      slug: nameSlugify,
+    });
+
     res.status(201).json(role);
   } catch (error) {
     res.status(500).json({ message: "Error creating role", error });

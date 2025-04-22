@@ -1,5 +1,5 @@
 import * as RoleDB from "../database/RoleDatabase";
-import { IRole } from "../models/Role";
+import { IRole, IRoleInput } from "../models/Role";
 
 export const getRoles = async (): Promise<IRole[]> => {
   return RoleDB.getAllRoles();
@@ -9,7 +9,11 @@ export const getRole = async (id: string): Promise<IRole | null> => {
   return RoleDB.getRoleById(id);
 };
 
-export const createNewRole = async (roleData: IRole): Promise<IRole> => {
+export const getRoleBySlug = async (slug: string): Promise<IRole | null> => {
+  return RoleDB.getRoleBySlug(slug);
+};
+
+export const createNewRole = async (roleData: IRoleInput): Promise<IRole> => {
   return RoleDB.createRole(roleData);
 };
 

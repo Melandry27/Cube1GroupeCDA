@@ -5,7 +5,18 @@ meta {
 }
 
 post {
-  url: 
-  body: none
+  url: {{BASE_URL}}/auth/register
+  body: json
   auth: inherit
+}
+
+body:json {
+  {
+    "name": "Jean Dupont",
+    "email": "melandry27@gmail.com",
+    "password": "motdepasse123",
+    "roleId": "68075fd7f5b3b98579160be4",
+    "adress": "123 rue du Test",
+    "phone": "612345678"
+  }
 }
