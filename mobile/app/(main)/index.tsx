@@ -7,44 +7,49 @@ import {Ionicons} from "@expo/vector-icons";
 import React from "react";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import {router} from "expo-router";
+import {useAuth} from "../../context/AuthContext";
 
 export default function App() {
+    const { user, token } = useAuth();
+    console.log("user dans index.tsx :", user);
 
     return (
-        <SafeAreaView>
-            <StatusBar style="auto" />
-            <Header />
-            <ScrollView  contentContainerStyle={styles.scrollContent}>
-            <Title size={"small"} style={styles.sectionTitle}>👋 Bonjour [prénom]</Title>
-            <View style={styles.buttonContainer}>
+      <SafeAreaView>
+          <StatusBar style="auto" />
+          <Header />
+          <ScrollView  contentContainerStyle={styles.scrollContent}>
+              <Title size={"small"} style={styles.sectionTitle}>
+                  👋 Bonjour {user?.email || "Utilisateur"}
+              </Title>
+              <View style={styles.buttonContainer}>
 
-            <TouchableOpacity style={styles.squareButton}>
-                <Ionicons
-                    size={32}
-                    color={"#000091"}
-                    name={"heart"}
-                />
-                <Title size={"small"} style={styles.squareTitle}>Mes Favoris</Title>
-            </TouchableOpacity>
+                  <TouchableOpacity style={styles.squareButton}>
+                      <Ionicons
+                        size={32}
+                        color={"#000091"}
+                        name={"heart"}
+                      />
+                      <Title size={"small"} style={styles.squareTitle}>Mes Favoris</Title>
+                  </TouchableOpacity>
 
-            <TouchableOpacity style={styles.squareButton}>
-                <FontAwesome6 name="book" color={'#000091'} size={32} />
-                <Title size={"small"} style={styles.squareTitle}>Mes Ressources</Title>
-            </TouchableOpacity>
-            </View>
+                  <TouchableOpacity style={styles.squareButton}>
+                      <FontAwesome6 name="book" color={'#000091'} size={32} />
+                      <Title size={"small"} style={styles.squareTitle}>Mes Ressources</Title>
+                  </TouchableOpacity>
+              </View>
 
-            <TouchableOpacity
+              <TouchableOpacity
                 style={styles.rectangleButton}
                 onPress={() => router.push('/createRessource')}
-            >
-                <FontAwesome6 name="plus" color={'#000091'} size={32} />
-                <Title size={"small"} style={styles.rectangleTitle}>Créer une ressources</Title>
-            </TouchableOpacity>
+              >
+                  <FontAwesome6 name="plus" color={'#000091'} size={32} />
+                  <Title size={"small"} style={styles.rectangleTitle}>Créer une ressources</Title>
+              </TouchableOpacity>
 
-            <Title size={"small"} style={styles.sectionTitle}>📚 Les dernières ressources </Title>
-            <RessourceSection itemCount={5} type={"last"}/>
-            </ScrollView>
-        </SafeAreaView>
+              <Title size={"small"} style={styles.sectionTitle}>📚 Les dernières ressources </Title>
+              <RessourceSection itemCount={5} type={"last"}/>
+          </ScrollView>
+      </SafeAreaView>
     );
 }
 

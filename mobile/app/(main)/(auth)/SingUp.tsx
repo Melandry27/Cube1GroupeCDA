@@ -34,24 +34,17 @@ export default function SignUp() {
     try {
       const response = await signUp(name, email, password, adress, phone);
 
-      if (!response.ok) {
-        throw new Error('Erreur lors de la création du compte.');
+      if (!response) {
+        Alert.alert('Erreur', 'Une erreur est survenue lors de la création du compte.');
+        return;
       }
 
-      Alert.alert('Succès', 'Compte créé avec succès.');
-    } catch (error: any) {
-      Alert.alert('Erreur', error.message || 'Une erreur est survenue.');
-    }
-
-
-    try {
-      const response = await signUp(name, email, password, adress, phone);
-
-      if (!response.ok) {
-        throw new Error('Erreur lors de la création du compte.');
-      }
-
-      Alert.alert('Succès', 'Compte créé avec succès.');
+      Alert.alert('Succès', 'Compte créé avec succès. Veuillez vérifier votre email pour confirmer votre compte.', [
+        {
+          text: 'OK',
+          onPress: () => navigation.navigate('(main)/Login'),
+        },
+      ]);
     } catch (error: any) {
       Alert.alert('Erreur', error.message || 'Une erreur est survenue.');
     }

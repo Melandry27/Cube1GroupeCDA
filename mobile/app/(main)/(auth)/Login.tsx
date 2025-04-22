@@ -1,32 +1,36 @@
 import React, { useState } from 'react';
-import {View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity} from 'react-native';
+import { Alert, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import Title from "../../components/Title";
-import {login} from "../../services/authService";
-import {useNavigation} from "expo-router";
+import { login } from "../../services/authService";
+import { useAuth } from "../../../context/AuthContext";
+import {router, useNavigation} from "expo-router";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Login() {
   const navigation = useNavigation();
-
   React.useLayoutEffect(() => {
     navigation.setOptions({
       title: 'Connexion',
     });
   }, [navigation]);
 
+  const { login: loginContext } = useAuth();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleLogin = async () => {
     try {
-      const response = await login(email, password);
+      const data = await login(email, password);
 
-      if (!response.ok) {
-        throw new Error('Erreur lors de la connexion.');
-      }
+      console.log('Login successful:', data);
 
-      const data = await response.json();
-      Alert.alert('Succès', 'Connexion réussie.');
-      console.log('Token:', data.token); // Stockez le token de manière sécurisée
+      Alert.alert('Succès', 'Connexion réussie', [
+        {
+          text: 'OK',
+          onPress: () => router.push('(main)'),
+        },
+      ]);
     } catch (error: any) {
       Alert.alert('Erreur', error.message || 'Une erreur est survenue.');
     }
@@ -49,14 +53,16 @@ export default function Login() {
         onChangeText={setPassword}
         secureTextEntry
       />
-      <TouchableOpacity title="S'inscrire" onPress={handleLogin} style={styles.button}><Title style={styles.buttonText} size={"small"}>Se connecter</Title></TouchableOpacity>
+      <TouchableOpacity title="S'inscrire" onPress={handleLogin} style={styles.button}>
+        <Title style={styles.buttonText} size={"small"}>Se connecter</Title>
+      </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20, justifyContent: 'center', backgroundColor: '#fff' },
-  title: {marginBottom: 20 },
+  title: { marginBottom: 20 },
   input: { borderWidth: 1, borderColor: '#ccc', padding: 10, marginBottom: 15, borderRadius: 5 },
   button: { backgroundColor: '#000091', padding: 10, borderRadius: 5, alignItems: 'center' },
   buttonText: { color: '#fff', fontSize: 16 },
