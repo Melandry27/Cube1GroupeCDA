@@ -19,8 +19,6 @@ const Ressources = () => {
           throw new Error("Erreur lors de la récupération des ressources");
         const ressourcesData = await ressourcesResponse.json();
 
-        console.log("ressourcesData", ressourcesData);
-
         const categoriesResponse = await fetch("/api/categories");
         if (!categoriesResponse.ok)
           throw new Error("Erreur lors de la récupération des catégories");
