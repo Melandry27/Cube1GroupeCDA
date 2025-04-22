@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
         marginLeft: 10,
     },
     scrollContent: {
-        paddingBottom: 170,
+        paddingBottom: 200,
     },
     rectangleButton: {
         marginTop: 20,

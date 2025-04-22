@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, ScrollView, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { useRouter } from 'expo-router';
+import {router, useRouter} from 'expo-router';
 import RessourceCard from "./RessourceCard";
 import { fetchAllRessources } from '../services/ressourcesService';
 import { fetchCategories } from '../services/categoriesService';
