@@ -1,22 +1,29 @@
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
+import { Category, Ressource } from "../utils/interface";
 
 const Ressources = () => {
   const navigate = useNavigate();
-  const [ressources, setRessources] = useState([]);
-  const [categories, setCategories] = useState([]);
+
+  const [ressources, setRessources] = useState<Ressource[]>([]);
+
+  const [categories, setCategories] = useState<Category[]>([]);
   const [search, setSearch] = useState("");
 
   useEffect(() => {
     const fetchRessources = async () => {
       try {
         const ressourcesResponse = await fetch("/api/ressources");
-        if (!ressourcesResponse.ok) throw new Error("Erreur lors de la récupération des ressources");
+        if (!ressourcesResponse.ok)
+          throw new Error("Erreur lors de la récupération des ressources");
         const ressourcesData = await ressourcesResponse.json();
 
+        console.log("ressourcesData", ressourcesData);
+
         const categoriesResponse = await fetch("/api/categories");
-        if (!categoriesResponse.ok) throw new Error("Erreur lors de la récupération des catégories");
+        if (!categoriesResponse.ok)
+          throw new Error("Erreur lors de la récupération des catégories");
         const categoriesData = await categoriesResponse.json();
 
         setRessources(ressourcesData);
@@ -30,7 +37,7 @@ const Ressources = () => {
 
   const resourceTypeLabels: { [key: string]: string } = {
     "In Progress": "En cours",
-    "Completed": "Terminé",
+    Completed: "Terminé",
     "Not Started": "Non commencé",
   };
 
@@ -38,9 +45,13 @@ const Ressources = () => {
   const handleEdit = (id: string) => () => navigate(`edit/${id}`);
 
   const handleDelete = async (id: string) => {
-    if (window.confirm("Êtes-vous sûr de vouloir supprimer cette ressource ?")) {
+    if (
+      window.confirm("Êtes-vous sûr de vouloir supprimer cette ressource ?")
+    ) {
       try {
-        const response = await fetch(`/api/ressources/${id}`, { method: "DELETE" });
+        const response = await fetch(`/api/ressources/${id}`, {
+          method: "DELETE",
+        });
         if (response.ok) {
           setRessources((prev) => prev.filter((r) => r._id !== id));
         } else {
@@ -60,14 +71,17 @@ const Ressources = () => {
   const filteredRessources = ressources.filter(
     (ressource) =>
       ressource.title.toLowerCase().includes(search.toLowerCase()) ||
-      ressource.createdBy?.toLowerCase().includes(search.toLowerCase())
+      ressource.createdBy?._id.toLowerCase().includes(search.toLowerCase())
   );
 
   return (
     <>
       <div className="fr-grid-row fr-grid-row--middle fr-grid-row--between fr-mb-4w">
         <h2 className="fr-h3 fr-mr-auto">Gestion des Ressources</h2>
-        <button className="fr-btn fr-btn--primary fr-ml-auto" onClick={handleCreate}>
+        <button
+          className="fr-btn fr-btn--primary fr-ml-auto"
+          onClick={handleCreate}
+        >
           Ajouter une Ressource
         </button>
       </div>
@@ -101,12 +115,22 @@ const Ressources = () => {
               filteredRessources.map((ressource) => (
                 <tr key={ressource._id}>
                   <td>{ressource.title}</td>
-                  <td>{ressource.createdBy}</td>
+                  <td>{ressource.createdBy?.name || "Auteur inconnu"}</td>
                   <td>{ressource.content.slice(0, 60)}...</td>
                   <td>{getCategoryName(ressource.category)}</td>
                   <td>{ressource.views || 0}</td>
-                  <td>{resourceTypeLabels[ressource.status || ressource.type] || ressource.status || ressource.type}</td>
-                  <td>{ressource.createdAt ? new Date(ressource.createdAt).toLocaleDateString() : ""}</td>
+                  <td>
+                    {resourceTypeLabels[
+                      ressource.status || ressource.type || ""
+                    ] ||
+                      ressource.status ||
+                      ressource.type}
+                  </td>
+                  <td>
+                    {ressource.createdAt
+                      ? new Date(ressource.createdAt).toLocaleDateString()
+                      : ""}
+                  </td>
                   <td>
                     <div className="fr-btns-group fr-btns-group--inline">
                       <button
