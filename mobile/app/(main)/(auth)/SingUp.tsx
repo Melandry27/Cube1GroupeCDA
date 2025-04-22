@@ -2,8 +2,17 @@ import React, { useState } from 'react';
 import {View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity} from 'react-native';
 import Title from "../../components/Title";
 import {signUp} from "../../services/authService";
+import {useNavigation} from "expo-router";
 
 export default function SignUp() {
+  const navigation = useNavigation();
+
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      title: 'Inscription',
+    });
+  }, [navigation]);
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
