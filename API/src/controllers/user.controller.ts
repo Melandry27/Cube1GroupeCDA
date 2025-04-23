@@ -2,7 +2,9 @@ import { Request, Response } from "express";
 
 import bcrypt from "bcrypt";
 import { CreateUserInput, IUser } from "../models/User";
+import * as RoleService from "../services/RoleService";
 import * as UserService from "../services/UserService";
+import { generateTokenForAllUsers } from "../utils";
 
 export const create = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -90,5 +92,40 @@ export const remove = async (req: Request, res: Response): Promise<void> => {
     res.status(200).json({ message: "User deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: "Error deleting user", error });
+  }
+};
+
+export const getAllMembers = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const members: IUser[] = await UserService.getAll();
+
+    if (!members) {
+      res.status(404).json({ message: "No members found" });
+      return;
+    }
+
+    const membersWithRole = await members.reduce<
+      Promise<Array<IUser & { role: string }>>
+    >(async (accPromise, member) => {
+      const acc = await accPromise;
+      const role = await RoleService.getRole(member.roleId);
+      acc.push({
+        ...member.toObject(),
+        role: role ? role : "Unknown",
+      });
+      return acc;
+    }, Promise.resolve([]));
+
+    const membersWithToken = generateTokenForAllUsers(membersWithRole);
+
+    res.status(200).json({
+      members: membersWithToken,
+      message: "Members fetched successfully",
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching members", error });
   }
 };

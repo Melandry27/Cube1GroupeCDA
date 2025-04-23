@@ -2,7 +2,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import * as AuthService from "../app/services/authService";
-import { fetchUserByEmail } from "../app/services/usersService";
 
 interface User {
   _id: string;
@@ -42,17 +41,9 @@ const initializeAuthState = async (): Promise<{
   if (storedToken) {
     try {
       const decoded = jwtDecode<DecodedToken>(storedToken);
-      const userData = await fetchUserByEmail(decoded.email); // Récupère les infos utilisateur
       return {
         token: storedToken,
-        user: {
-          _id: userData._id,
-          email: decoded.email,
-          role: decoded.role,
-          name: userData.name,
-          adress: userData.adress,
-          phone: userData.phone,
-        },
+        user: { ...decoded },
       };
     } catch (e) {
       console.log(

@@ -3,22 +3,42 @@ import React from "react";
 import {
   Alert,
   Button,
+  FlatList,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
 import { useAuth } from "../../../context/AuthContext";
+import { useMembers } from "../../../context/MembersContext";
 
 const Index = () => {
   const navigation = useNavigation();
-
   const { user } = useAuth();
+  const { members, selectMember } = useMembers();
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Index</Text>
-      <TouchableOpacity>
+      <Text style={styles.title}>Liste des membres</Text>
+
+      <FlatList
+        data={members}
+        keyExtractor={(item) => item._id}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            style={styles.memberCard}
+            onPress={() => {
+              selectMember(item._id);
+              navigation.navigate("ChatScreen");
+            }}
+          >
+            <Text style={styles.memberName}>{item.name}</Text>
+            <Text style={styles.memberEmail}>{item.email}</Text>
+          </TouchableOpacity>
+        )}
+      />
+
+      <View style={styles.buttonContainer}>
         <Button
           title="Go to Chat"
           onPress={() =>
@@ -27,7 +47,7 @@ const Index = () => {
               : Alert.alert("Connectez-vous d'abord")
           }
         />
-      </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -35,13 +55,33 @@ const Index = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    padding: 16,
     backgroundColor: "#f5f5f5",
   },
-  text: {
+  title: {
+    fontSize: 22,
+    fontWeight: "bold",
+    marginBottom: 12,
+    textAlign: "center",
+  },
+  memberCard: {
+    backgroundColor: "#fff",
+    padding: 16,
+    borderRadius: 12,
+    marginBottom: 10,
+    elevation: 2,
+  },
+  memberName: {
     fontSize: 18,
-    color: "#333",
+    fontWeight: "600",
+  },
+  memberEmail: {
+    fontSize: 14,
+    color: "gray",
+  },
+  buttonContainer: {
+    marginTop: 20,
+    alignItems: "center",
   },
 });
 

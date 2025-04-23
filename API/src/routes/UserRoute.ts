@@ -30,6 +30,24 @@ router.get("/", UserController.getAll);
 
 /**
  * @swagger
+ * /users/members:
+ *   get:
+ *     summary: Récupère tous les membres dans un token
+ *     tags: [Users]
+ *     responses:
+ *       200:
+ *         description: Liste des membres
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/User'
+ */
+router.get("/members", UserController.getAllMembers);
+
+/**
+ * @swagger
  * /users/{id}:
  *   get:
  *     summary: Récupère un utilisateur par ID

@@ -1,17 +1,19 @@
+import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useRef, useState } from "react";
 import {
   Alert,
-  Button,
   FlatList,
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   View,
 } from "react-native";
 import { io, Socket } from "socket.io-client";
 import { useAuth } from "../../../context/AuthContext";
+import { useMembers } from "../../../context/MembersContext";
 
 const SOCKET_URL = "http://10.176.130.12:3001";
 
@@ -28,13 +30,10 @@ const ChatScreen = () => {
   const [chat, setChat] = useState<MessageType[]>([]);
 
   const { user } = useAuth();
-
-  console.log("user", user);
+  const { selectedMember } = useMembers();
 
   const socket = useRef<Socket | null>(null);
   const flatListRef = useRef<FlatList>(null);
-
-  const recipientId = "68078cbfc3f097a92fdabb62";
 
   useEffect(() => {
     if (!user?._id) return;
@@ -47,7 +46,7 @@ const ChatScreen = () => {
       socket.current?.emit("register", user._id);
       socket.current?.emit("getMessages", {
         fromUserId: user._id,
-        toUserId: recipientId,
+        toUserId: selectedMember,
       });
     });
 
@@ -87,12 +86,12 @@ const ChatScreen = () => {
   const sendMessage = () => {
     const newMessage = {
       from: user?._id || "unknown",
-      to: recipientId,
+      to: selectedMember,
       message,
     };
 
     if (newMessage.message.trim() === "") return Alert.alert("Message vide !");
-    if (newMessage.from === newMessage.to)
+    if (newMessage.from === (selectedMember || "").toString())
       return Alert.alert("Vous ne pouvez pas vous envoyer un message !");
     if (newMessage.message.length > 200)
       return Alert.alert("Message trop long (200 max)");
@@ -138,9 +137,12 @@ const ChatScreen = () => {
           value={message}
           onChangeText={setMessage}
           placeholder="Écris ton message..."
+          placeholderTextColor="#6A6A6A"
           style={styles.input}
         />
-        <Button title="Envoyer" onPress={sendMessage} />
+        <TouchableOpacity onPress={sendMessage} style={styles.sendButton}>
+          <Ionicons name="send" size={20} color="#fff" />
+        </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
   );
@@ -149,53 +151,67 @@ const ChatScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#F6F6F6",
   },
   chatContainer: {
     flex: 1,
-    paddingHorizontal: 10,
+    paddingHorizontal: 16,
   },
   chatContent: {
-    paddingVertical: 10,
+    paddingVertical: 12,
   },
   messageBubble: {
-    padding: 10,
-    borderRadius: 12,
-    marginVertical: 5,
+    padding: 12,
+    borderRadius: 8,
+    marginVertical: 6,
     maxWidth: "80%",
   },
   myMessage: {
-    backgroundColor: "#DCF8C6",
+    backgroundColor: "#E3EDFF",
     alignSelf: "flex-end",
+    borderColor: "#000091",
+    borderWidth: 1,
   },
   otherMessage: {
-    backgroundColor: "#F1F0F0",
+    backgroundColor: "#FFFFFF",
     alignSelf: "flex-start",
+    borderColor: "#DDDDDD",
+    borderWidth: 1,
   },
   messageText: {
     fontSize: 16,
+    color: "#161616",
   },
   timestamp: {
     fontSize: 12,
-    color: "gray",
+    color: "#6A6A6A",
     marginTop: 4,
     alignSelf: "flex-end",
   },
   inputContainer: {
     flexDirection: "row",
-    padding: 10,
-    borderTopWidth: 1,
-    borderColor: "#ccc",
     alignItems: "center",
-    gap: 10,
+    padding: 4,
+    borderTopWidth: 1,
+    borderColor: "#D8D8D8",
+    backgroundColor: "#fff",
   },
   input: {
     flex: 1,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 20,
-    paddingHorizontal: 15,
-    paddingVertical: 8,
+    backgroundColor: "#F5F5FE",
+    paddingVertical: 10,
+    paddingHorizontal: 14,
     fontSize: 16,
+    borderWidth: 1,
+    borderColor: "#000091",
+    borderRadius: 6,
+    color: "#161616",
+  },
+  sendButton: {
+    backgroundColor: "#000091",
+    padding: 10,
+    borderRadius: 6,
+    marginLeft: 8,
   },
 });
 
