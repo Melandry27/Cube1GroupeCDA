@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
-import { IComment } from "../models/Comment";
+import { IComment, CommentStatus } from "../models/Comment";
 import * as CommentService from "../services/CommentService";
+
 
 export const create = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -52,6 +53,36 @@ export const update = async (req: Request, res: Response): Promise<void> => {
     res.status(500).json({ message: "Error updating comment", error });
   }
 };
+
+export const updateStatus = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const status = req.body.commentStatus;
+    
+    if (!Object.values(CommentStatus).includes(status)) {
+      res.status(400).json({ 
+        message: "Invalid status value", 
+        validValues: Object.values(CommentStatus) 
+      });
+      return;
+    }
+
+    const updatedComment: IComment | null = await CommentService.updateStatus(
+      req.params.id,
+      status
+    );
+    
+    if (!updatedComment) {
+      res.status(404).json({ message: "Comment not found" });
+      return;
+    }
+    res.status(200).json(updatedComment);
+  } catch (error) {
+    res.status(500).json({ message: "Error updating comment status", error });
+  }
+}
 
 export const remove = async (req: Request, res: Response): Promise<void> => {
   try {

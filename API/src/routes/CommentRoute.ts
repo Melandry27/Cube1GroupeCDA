@@ -131,6 +131,35 @@ router.put("/:id", CommentController.update);
 
 /**
  * @swagger
+ * /comments/status/{id}:
+ *   put:
+ *     summary: Met à jour le status d'un commentaire
+ *     tags: [Comments]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID du commentaire
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               status:
+ *                 type: string
+ *                 enum: [Pending, Approved, Rejected]
+ *     responses:
+ *       200:
+ *         description: Status du commentaire mis à jour
+ */
+router.put("/status/:id", CommentController.updateStatus);
+
+/**
+ * @swagger
  * /comments/{id}:
  *   delete:
  *     summary: Supprime un commentaire

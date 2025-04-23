@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, Link } from "react-router";
 import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
@@ -71,9 +71,9 @@ const Login = () => {
               </button>
 
               <p className="fr-mt-2w">
-                <a href="#" className="fr-link">
+                <Link to="/forgot-password" className="fr-link">
                   Mot de passe oublié ?
-                </a>
+                </Link>
               </p>
             </div>
           </div>

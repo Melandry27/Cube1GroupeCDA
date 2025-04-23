@@ -1,10 +1,16 @@
 import mongoose, { Document, Schema } from "mongoose";
 
+enum CommentStatus {
+  Pending = "Pending",
+  Approved = "Approved",
+  Rejected = "Rejected",
+}
+
 interface IComment extends Document {
   userId: string;
   ressourceId: string;
   content: string;
-  commentStatutsId?: mongoose.Types.ObjectId;
+  commentStatus?: CommentStatus;
 }
 
 const CommentSchema = new Schema<IComment>(
@@ -12,13 +18,18 @@ const CommentSchema = new Schema<IComment>(
     userId: { type: String, required: true },
     ressourceId: { type: String, required: true },
     content: { type: String, required: true },
-    commentStatutsId: { type: mongoose.Schema.Types.ObjectId, ref: "CommentStatus", required: false },
+    commentStatus: { 
+      type: String, 
+      enum: Object.values(CommentStatus), 
+      default: CommentStatus.Pending,
+      required: false 
+    },
   },
   {
     timestamps: true,
   }
 );
 
-export { IComment };
+export { IComment, CommentStatus };
 
 export default mongoose.model<IComment>("Comment", CommentSchema);

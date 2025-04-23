@@ -1,16 +1,13 @@
 import { useEffect, useState } from "react";
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
-  BarChart, Bar, PieChart, Pie, Cell
+  BarChart, Bar
 } from "recharts";
 import { toast } from "react-toastify";
-
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#AA66CC'];
 
 const StatsAvancees = () => {
   const [userStats, setUserStats] = useState([]);
   const [commentStats, setCommentStats] = useState([]);
-  const [roleStats, setRoleStats] = useState([]);
   const [resourceStats, setResourceStats] = useState([]);
   const [engagementStats, setEngagementStats] = useState([]);
 
