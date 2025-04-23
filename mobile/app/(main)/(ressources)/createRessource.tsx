@@ -44,7 +44,7 @@ const CreateRessource = () => {
   };
 
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, token } = useAuth();
 
   const handleSubmit = async () => {
     try {
@@ -53,13 +53,16 @@ const CreateRessource = () => {
         return;
       }
 
-      await createRessource({
-        title: formData.title,
-        content: formData.content,
-        type: "In Progress",
-        createdBy: user?._id,
-        categoryId: "68078faa525dd7b117b4e437",
-      });
+      await createRessource(
+        {
+          title: formData.title,
+          content: formData.content,
+          type: "In Progress",
+          createdBy: user?._id,
+          categoryId: "68078faa525dd7b117b4e437",
+        },
+        token || ""
+      );
 
       Alert.alert("Succès", "La ressource a été créée.");
       router.push("/");

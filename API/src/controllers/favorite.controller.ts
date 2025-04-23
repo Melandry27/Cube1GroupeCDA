@@ -42,9 +42,14 @@ export const getAll = async (req: Request, res: Response): Promise<void> => {
 
 export const getById = async (req: Request, res: Response): Promise<void> => {
   try {
-    const favorite: IFavorite | null = await FavoriteService.getFavoriteById(
-      req.params.id
-    );
+    const {
+      user,
+      params: { id: ressourceId },
+    } = req;
+
+    const favorite: IFavorite | null =
+      await FavoriteService.getFavoriteByRessourceId(ressourceId, user._id);
+
     if (!favorite) {
       res.status(404).json({ message: "Favorite not found" });
       return;
