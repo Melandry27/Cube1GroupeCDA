@@ -29,7 +29,7 @@ export const signUp = async (
   phone: string
 ) => {
   try {
-    const roleId = "68023b49dbee466beb5c3cbf";
+    const roleId = "68074f31756fe56563cb1e95";
     const response = await fetch(`${API_URL}/auth/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },

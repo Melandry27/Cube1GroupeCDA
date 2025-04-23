@@ -23,7 +23,7 @@ export default function Index() {
     <View style={styles.container}>
       {user ? (
         <>
-          <Text style={styles.text}>Bienvenue, {user.email}!</Text>
+          <Text style={styles.text}>Bienvenue, {user.name}!</Text>
           <TouchableOpacity style={styles.button} onPress={handleLogout}>
             <Text style={styles.buttonText}>Se déconnecter</Text>
           </TouchableOpacity>

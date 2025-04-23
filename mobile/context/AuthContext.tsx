@@ -42,16 +42,11 @@ const initializeAuthState = async (): Promise<{
   if (storedToken) {
     try {
       const decoded = jwtDecode<DecodedToken>(storedToken);
-      const userData = await fetchUserByEmail(decoded.email); // Récupère les infos utilisateur
+      console.log("decoded", decoded);
       return {
         token: storedToken,
         user: {
-          _id: userData._id,
-          email: decoded.email,
-          role: decoded.role,
-          name: userData.name,
-          adress: userData.adress,
-          phone: userData.phone
+         ...decoded
         },
       };
     } catch (e) {
@@ -116,7 +111,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  console.log("context", context);
   if (!context)
     throw new Error("useAuth doit être utilisé dans un AuthProvider");
   return context;
