@@ -24,7 +24,7 @@ export default function App() {
       <Header />
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Title size={"small"} style={styles.sectionTitle}>
-          👋 Bonjour {user?.email || "Utilisateur"}
+          👋 Bonjour {user?.name || "Utilisateur"}
         </Title>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.squareButton}>

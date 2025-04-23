@@ -8,13 +8,15 @@ export default function Layout() {
                 options={{
                     title: "Ressources",
                     headerShown: false,
+                    headerBackVisible: true,
                 }}
             />
             <Stack.Screen
                 name="[id]"
                 options={{
-                    title: "Ressource",
-                    // headerShown: false,
+                  title: "Ressource",
+                  headerBackVisible: true,
+                  headerShown: true,
                 }}
             />
         </Stack>

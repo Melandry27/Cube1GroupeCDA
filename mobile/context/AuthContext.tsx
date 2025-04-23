@@ -41,6 +41,7 @@ const initializeAuthState = async (): Promise<{
   if (storedToken) {
     try {
       const decoded = jwtDecode<DecodedToken>(storedToken);
+
       return {
         token: storedToken,
         user: { ...decoded },
