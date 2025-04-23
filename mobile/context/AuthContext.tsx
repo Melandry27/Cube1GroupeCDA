@@ -2,12 +2,15 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import * as AuthService from "../app/services/authService";
+import {fetchUserByEmail} from "../app/services/usersService";
 
 interface User {
-  id: string;
+  _id: string;
+  name: string,
   email: string;
   role: string;
-  name?: string;
+  adress: string,
+  phone: string,
 }
 
 interface AuthContextProps {
@@ -23,9 +26,12 @@ const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 const TOKEN_KEY = "auth_token";
 
 interface DecodedToken {
-  id: string;
+  _id: string;
+  name: string,
   email: string;
   role: string;
+  adress: string,
+  phone: string,
 }
 
 const initializeAuthState = async (): Promise<{
@@ -36,12 +42,20 @@ const initializeAuthState = async (): Promise<{
   if (storedToken) {
     try {
       const decoded = jwtDecode<DecodedToken>(storedToken);
+      const userData = await fetchUserByEmail(decoded.email); // Récupère les infos utilisateur
       return {
         token: storedToken,
-        user: { id: decoded.id, email: decoded.email, role: decoded.role },
+        user: {
+          _id: userData._id,
+          email: decoded.email,
+          role: decoded.role,
+          name: userData.name,
+          adress: userData.adress,
+          phone: userData.phone
+        },
       };
     } catch (e) {
-      console.log("Token invalide, suppression.");
+      console.log("Token invalide ou erreur de récupération utilisateur, suppression.");
       await AsyncStorage.removeItem(TOKEN_KEY);
     }
   }
@@ -82,7 +96,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
     setAuthState({
       token: res.token,
-      user: { id: decoded.id, email: decoded.email, role: decoded.role },
+      user: { ...decoded },
     });
 
     return true;
@@ -102,6 +116,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
+  console.log("context", context);
   if (!context)
     throw new Error("useAuth doit être utilisé dans un AuthProvider");
   return context;

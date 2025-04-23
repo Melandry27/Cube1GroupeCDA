@@ -4,6 +4,7 @@ const API_URL = Constants.expoConfig.extra?.API_URL;
 
 export const createComment = async (ressourceId: string, content: string, userId: string) => {
     try {
+        console.log('user id -comment', userId)
         const response = await fetch(`${API_URL}/comments/`, {
             method: 'POST',
             headers: {

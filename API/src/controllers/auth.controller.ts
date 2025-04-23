@@ -13,6 +13,7 @@ const JWT_SECRET = process.env.JWT_SECRET || "default_secret";
 const generateToken = (user: any, role: any) => {
   return jwt.sign(
     {
+      _id: user._id,
       name: user.name,
       email: user.email,
       role: role.name,

@@ -9,7 +9,7 @@ const CommentBar = ({ ressourceId, onSubmit = () => {} }: { ressourceId: string;
     const handleSend = async () => {
         if (comment.trim()) {
             try {
-                const userId = "646f3a2b4c1d4e2f8b5e0c9a"; //  a remplacer kar l'id du user co
+                const userId = "646f3a2b4c1d4e2f8b5e0c9a";
                 await createComment(ressourceId, comment, userId);
                 onSubmit(comment);
                 setComment("");
