@@ -13,6 +13,7 @@ const JWT_SECRET = process.env.JWT_SECRET || "default_secret";
 const generateToken = (user: any, role: any) => {
   return jwt.sign(
     {
+      _id: user._id,
       name: user.name,
       email: user.email,
       role: role.name,
@@ -89,12 +90,14 @@ export const login: RequestHandler = async (req, res) => {
     const { email, password } = req.body;
 
     const user = await UserService.getByEmail(email);
+
     if (!user) {
       res.status(404).json({ message: "Utilisateur non trouvé." });
       return;
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
+
     if (!isPasswordValid) {
       res.status(401).json({ message: "Mot de passe incorrect." });
       return;
@@ -102,6 +105,8 @@ export const login: RequestHandler = async (req, res) => {
     const role = await RoleServices.getRole(user.roleId);
 
     const token = generateToken(user, role);
+
+    console.log("token", token);
 
     res.status(200).json({
       message: "Connexion réussie.",

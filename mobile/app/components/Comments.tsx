@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, ActivityIndicator, Modal, TouchableOpacity } from 'react-native';
-import {deleteComment, fetchCommentsByRessourceId, editComment} from '../services/commentsService';
+import { View, Text, StyleSheet, ActivityIndicator, Modal, TouchableOpacity } from 'react-native';
+import { deleteComment, fetchCommentsByRessourceId } from '../services/commentsService';
 import { Ionicons } from "@expo/vector-icons";
 
 const Comments = ({ ressourceId }: { ressourceId: string }) => {
@@ -31,19 +31,16 @@ const Comments = ({ ressourceId }: { ressourceId: string }) => {
         setModalVisible(true);
     };
 
-// Doit on garder la modification
-    const handleModify = async () => {
-        if (selectedCommentId) {
-            await editComment(selectedCommentId, ressourceId);
-            setModalVisible(false);
-        }
-    };
-
     const handleDelete = async () => {
         if (selectedCommentId) {
-            await deleteComment(selectedCommentId);
-            setComments(comments.filter(comment => comment._id !== selectedCommentId));
-            setModalVisible(false);
+            try {
+                await deleteComment(selectedCommentId);
+                setComments(comments.filter(comment => comment._id !== selectedCommentId));
+            } catch (error) {
+                console.error('Error deleting comment:', error);
+            } finally {
+                setModalVisible(false);
+            }
         }
     };
 
@@ -56,43 +53,42 @@ const Comments = ({ ressourceId }: { ressourceId: string }) => {
     }
 
     return (
-        <View style={styles.container}>
-            <FlatList
-                data={comments.slice().reverse()}
-                keyExtractor={(item) => String(item._id)}
-                renderItem={({ item }) => (
-                    <View style={styles.commentCard}>
-                        <Text style={styles.userName}>{item.userName || 'Utilisateur inconnu'}</Text>
-                        <Text style={styles.content}>{item.content}</Text>
-                        <Ionicons
-                            name="ellipsis-horizontal"
-                            size={20}
-                            color="#666"
-                            style={styles.ellipsisIcon}
-                            onPress={() => handleOpenModal(item._id)}
-                        />
-                    </View>
-                )}
-                contentContainerStyle={styles.listContent}
-            />
-            <Modal
-                visible={modalVisible}
-                transparent={true}
-                animationType="fade"
-                onRequestClose={() => setModalVisible(false)}
-            >
-                <View style={styles.modalOverlay}>
-                    <View style={styles.modalContainer}>
-                        <TouchableOpacity style={styles.modalOption} onPress={handleModify}>
-                            <Text style={styles.modalText}>Modifier</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.modalOption} onPress={handleDelete}>
-                            <Text style={styles.modalTextDelete}>Supprimer</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </Modal>
-        </View>
+      <View style={styles.container}>
+          {comments.map((item) => (
+            <View key={item._id} style={styles.commentCard}>
+                <Text style={styles.userName}>{item.userName || 'Utilisateur inconnu'}</Text>
+                <Text style={styles.content}>{item.content}</Text>
+                <Ionicons
+                  name="trash"
+                  size={20}
+                  color="#ff0000"
+                  style={styles.trashIcon}
+                  onPress={() => handleOpenModal(item._id)}
+                />
+            </View>
+          ))}
+
+          <Modal
+            visible={modalVisible}
+            transparent={true}
+            animationType="fade"
+            onRequestClose={() => setModalVisible(false)}
+          >
+              <View style={styles.modalOverlay}>
+                  <View style={styles.modalContainer}>
+                      <Text style={styles.modalText}>Êtes-vous sûr de vouloir supprimer ce commentaire ?</Text>
+                      <View style={styles.modalActions}>
+                          <TouchableOpacity style={styles.modalButton} onPress={() => setModalVisible(false)}>
+                              <Text style={styles.cancelText}>Annuler</Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity style={styles.modalButton} onPress={handleDelete}>
+                              <Text style={styles.deleteText}>Supprimer</Text>
+                          </TouchableOpacity>
+                      </View>
+                  </View>
+              </View>
+          </Modal>
+      </View>
     );
 };
 
@@ -100,9 +96,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 10,
-    },
-    listContent: {
-        paddingBottom: 20,
     },
     commentCard: {
         backgroundColor: '#f9f9f9',
@@ -130,36 +123,46 @@ const styles = StyleSheet.create({
         color: '#666',
         marginTop: 20,
     },
-    ellipsisIcon: {
+    trashIcon: {
         position: 'absolute',
         top: 10,
         right: 10,
     },
     modalOverlay: {
         flex: 1,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
         justifyContent: 'center',
         alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     modalContainer: {
-        width: 200,
         backgroundColor: '#fff',
+        padding: 20,
         borderRadius: 10,
-        overflow: 'hidden',
-    },
-    modalOption: {
-        padding: 15,
-        alignItems: 'center',
-        borderBottomWidth: 1,
-        borderBottomColor: '#ddd',
+        width: '80%',
     },
     modalText: {
         fontSize: 16,
+        textAlign: 'center',
+        marginBottom: 20,
         color: '#000',
     },
-    modalTextDelete: {
+    modalActions: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+    },
+    modalButton: {
+        padding: 10,
+        borderRadius: 5,
+        backgroundColor: '#ffffff',
+        marginHorizontal: 10,
+    },
+    cancelText: {
+        color: '#000',
         fontSize: 16,
+    },
+    deleteText: {
         color: '#ff0000',
+        fontSize: 16,
     },
 });
 

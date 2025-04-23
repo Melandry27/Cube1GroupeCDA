@@ -1,9 +1,11 @@
 import { Tabs } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import {AuthProvider} from "../../context/AuthContext";
 
 export default function MainLayout() {
     return (
+      <AuthProvider>
         <Tabs>
             <Tabs.Screen
                 name="index"
@@ -43,5 +45,6 @@ export default function MainLayout() {
                 }}
             />
         </Tabs>
+      </AuthProvider>
     );
 }
