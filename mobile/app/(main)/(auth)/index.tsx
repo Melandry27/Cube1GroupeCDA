@@ -12,7 +12,6 @@ export default function Index() {
   }, [navigation]);
 
   const { user, logout } = useAuth();
-  console.log("user", user);
 
   const handleLogout = () => {
     logout();
