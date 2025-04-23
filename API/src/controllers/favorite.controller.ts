@@ -4,7 +4,27 @@ import * as FavoriteService from "../services/FavoriteService";
 
 export const create = async (req: Request, res: Response): Promise<void> => {
   try {
-    const favorite: IFavorite = await FavoriteService.createFavorite(req.body);
+    const { ressourceId, userId } = req.body;
+
+    const existingFavorite: IFavorite | null =
+      await FavoriteService.getFavoriteByRessourceId(ressourceId, userId);
+
+    if (existingFavorite) {
+      const favorriteUpdated: IFavorite | null =
+        await FavoriteService.updateFavorite(existingFavorite._id as string, {
+          userId: userId,
+          ressourceId: ressourceId,
+          isFavorited: !existingFavorite.isFavorited,
+        });
+      res.status(200).json(favorriteUpdated);
+      return;
+    }
+
+    const favorite: IFavorite = await FavoriteService.createFavorite({
+      userId,
+      ressourceId,
+      isFavorited: true,
+    });
     res.status(201).json(favorite);
   } catch (error) {
     res.status(400).json({ message: "Error creating favorite", error });
