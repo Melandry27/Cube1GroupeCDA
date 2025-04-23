@@ -61,7 +61,6 @@ const Dashboard = () => {
   }, []);
 
   const getUserName = (userId: string) => {
-    console.log("getUserName", userId, usersMap);
     if (!userId) return "Anonyme";
     return usersMap[userId]?.name || "Utilisateur inconnu";
   };

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useAuth } from "../context/AuthContext";
 
 const CreateUser = () => {
   const [user, setUser] = useState({
@@ -19,6 +20,7 @@ const CreateUser = () => {
   const [validatePassword, setValidatePassword] = useState(false); 
   const [validateEmail, setValidateEmail] = useState(false);
   const [roles, setRoles] = useState<string[]>([]);
+  const { user: currentUser } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -82,6 +84,16 @@ const CreateUser = () => {
   const goBack = () => {
     window.history.back();
   };
+
+  const filteredRoles = roles.filter((role: any) => {
+    const currentRole = currentUser?.role;
+  
+    if (currentRole === "Super Admin") return true;
+    if (currentRole === "Administrateur") return !["Administrateur", "Super Admin"].includes(role.name);
+    if (currentRole === "Modérateur") return !["Administrateur", "Super Admin", "Modérateur"].includes(role.name);
+  
+    return false;
+  });
 
   return (
     <>
@@ -162,7 +174,7 @@ const CreateUser = () => {
             required
           >
             <option value="">Sélectionnez un rôle</option>
-            {roles.map((role) => (
+            {filteredRoles.map((role) => (
               <option key={role._id} value={role._id}>
                 {role.name}
               </option>
