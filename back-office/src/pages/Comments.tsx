@@ -1,8 +1,17 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
+interface Comment {
+  _id: string;
+  userId: string;
+  ressourceId: string;
+  content: string;
+  commentStatus?: string;
+  createdAt: string;
+}
+
 const Comments = () => {
-  const [comments, setComments] = useState([]);
+  const [comments, setComments] = useState<Comment[]>([]);
   const [users, setUsers] = useState([]);
   const [ressources, setRessources] = useState([]);
 
@@ -62,6 +71,44 @@ const Comments = () => {
     }
   };
 
+  const handleApprove = async (id: string) => {
+    try {
+      const response = await fetch(`/api/comments/status/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ commentStatus: "Approved" }),
+      });
+      
+      if (response.ok) {
+        const updatedComment = await response.json();
+        setComments(prev => 
+          prev.map(comment => 
+            comment._id === id ? { ...comment, commentStatus: updatedComment.commentStatus } : comment
+          )
+        );
+        toast.success("Commentaire approuvé avec succès.");
+      } else {
+        throw new Error("Erreur lors de l'approbation");
+      }
+    } catch (error) {
+      toast.error("Impossible d'approuver le commentaire.");
+      console.error(error);
+    }
+  };
+
+  const getStatusBadge = (status?: string) => {
+    switch (status) {
+      case "Approved":
+        return <span className="fr-badge fr-badge--success">Approuvé</span>;
+      case "Rejected":
+        return <span className="fr-badge fr-badge--error">Rejeté</span>;
+      default:
+        return <span className="fr-badge fr-badge--info">En attente</span>;
+    }
+  };
+
   return (
     <>
       <div className="fr-grid-row fr-grid-row--middle fr-grid-row--between fr-mb-4w">
@@ -72,10 +119,11 @@ const Comments = () => {
         <table className="fr-table">
           <thead>
             <tr>
-              <th style={{ width: '20%' }}>Auteur</th>
-              <th style={{ width: '40%' }}>Commentaire</th>
-              <th style={{ width: '20%' }}>Article associé</th>
-              <th style={{ width: '20%' }}>Date</th>
+              <th style={{ width: '15%' }}>Auteur</th>
+              <th style={{ width: '30%' }}>Commentaire</th>
+              <th style={{ width: '15%' }}>Article associé</th>
+              <th style={{ width: '10%' }}>Date</th>
+              <th style={{ width: '17%' }}>Statut</th>
               <th style={{ width: '20%' }}>Actions</th>
             </tr>
           </thead>
@@ -87,9 +135,17 @@ const Comments = () => {
                   <td>{comment.content}</td>
                   <td>{getRessourceTitle(comment.ressourceId)}</td>
                   <td>{new Date(comment.createdAt).toLocaleDateString()}</td>
+                  <td>{getStatusBadge(comment.commentStatus)}</td>
                   <td>
                     <div className="fr-btns-group fr-btns-group--inline">
-                      {/* <button className="fr-btn fr-btn--secondary fr-btn--sm fr-mr-2w">Voir</button> */}
+                      {comment.commentStatus !== "Approved" && (
+                        <button 
+                          className="fr-btn fr-btn--secondary fr-btn--sm fr-mr-2w"
+                          onClick={() => handleApprove(comment._id)}
+                        >
+                          Valider
+                        </button>
+                      )}
                       <button
                         className="fr-btn fr-btn--tertiary fr-btn--sm"
                         onClick={() => handleDelete(comment._id)}
@@ -102,7 +158,7 @@ const Comments = () => {
               ))
             ) : (
               <tr>
-                <td colSpan={5}>Aucun commentaire disponible.</td>
+                <td colSpan={6}>Aucun commentaire disponible.</td>
               </tr>
             )}
           </tbody>

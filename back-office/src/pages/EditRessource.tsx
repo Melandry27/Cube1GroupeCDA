@@ -17,65 +17,68 @@ const EditRessource = () => {
       email: "",
     },
     content: "",
-    category: "",
+    categoryId: "",
     type: "",
+    image: "",
   });
 
   const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [users, setUsers] = useState([]);
   const [resourceTypes, setResourceTypes] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchRessource = async () => {
       try {
-        const ressourceResponse = await fetch(`/api/ressources/${id}`);
-        if (!ressourceResponse.ok)
-          throw new Error("Erreur lors de la récupération de la ressource");
-        const ressourceData = await ressourceResponse.json();
-
-        setRessource({
-          _id: ressourceData._id || "",
-          title: ressourceData.title || "",
-          createdBy: ressourceData.createdBy || "",
-          content: ressourceData.content || "",
-          category: ressourceData.category || "",
-          type: ressourceData.type || "",
-        });
-      } catch (error) {
+        const res = await fetch(`/api/ressources/${id}`);
+        if (!res.ok) throw new Error("Erreur lors de la récupération de la ressource");
+        const data = await res.json();
+        setRessource(data);
+      } catch {
         toast.error("Impossible de charger la ressource.");
       }
     };
 
     const fetchCategories = async () => {
       try {
-        const response = await fetch("/api/categories");
-        if (!response.ok)
-          throw new Error("Erreur lors de la récupération des catégories");
-        const data = await response.json();
+        const res = await fetch("/api/categories");
+        if (!res.ok) throw new Error("Erreur lors de la récupération des catégories");
+        const data = await res.json();
         setCategories(data);
-      } catch (error) {
+      } catch {
         toast.error("Erreur lors du chargement des catégories.");
       }
     };
 
-    const fetchResourceTypes = async () => {
+    const fetchUsers = async () => {
       try {
-        const response = await fetch("/api/ressources/types");
-        if (response.ok) {
-          const types = await response.json();
-          setResourceTypes(types);
-        }
-      } catch (error) {
-        toast.error("Failed to fetch resource types");
+        const res = await fetch("/api/users");
+        if (!res.ok) throw new Error("Erreur lors de la récupération des utilisateurs");
+        const data = await res.json();
+        setUsers(data);
+      } catch {
+        toast.error("Erreur lors du chargement des utilisateurs.");
       }
     };
 
-    fetchResourceTypes();
+    const fetchTypes = async () => {
+      try {
+        const res = await fetch("/api/ressources/types");
+        if (!res.ok) throw new Error();
+        const types = await res.json();
+        setResourceTypes(types);
+      } catch {
+        toast.error("Échec du chargement des types de ressources.");
+      }
+    };
 
     if (id) {
-      Promise.all([fetchRessource(), fetchCategories()]).finally(() =>
-        setLoading(false)
-      );
+      Promise.all([
+        fetchRessource(),
+        fetchCategories(),
+        fetchUsers(),
+        fetchTypes(),
+      ]).finally(() => setLoading(false));
     }
   }, [id]);
 
@@ -86,29 +89,56 @@ const EditRessource = () => {
   };
 
   const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
-    setRessource({ ...ressource, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    if (name === "createdBy") {
+      setRessource((prev) => ({
+        ...prev,
+        createdBy: { ...prev.createdBy ?? { _id: "", name: "", email: "" }, _id: value },
+      }));
+    } else {
+      setRessource((prev) => ({ ...prev, [name]: value }));
+    }
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+  
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setRessource((prev) => ({
+        ...prev,
+        image: reader.result as string,
+      }));
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     try {
+      const body = {
+        ...ressource,
+        createdBy: ressource.createdBy?.['_id'] ?? "",
+      };
+
       const response = await fetch(`/api/ressources/${id}`, {
         method: "PUT",
-        body: JSON.stringify(ressource),
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
       });
 
       if (response.ok) {
         toast.success("Ressource modifiée avec succès !");
         setTimeout(() => navigate("/ressources"), 3000);
       } else {
-        throw new Error("Erreur lors de la modification de la ressource");
+        throw new Error();
       }
-    } catch (error) {
+    } catch {
       toast.error("Impossible de modifier la ressource. Veuillez réessayer.");
     }
   };
@@ -122,14 +152,9 @@ const EditRessource = () => {
       {loading ? (
         <p>Chargement...</p>
       ) : (
-        <form
-          onSubmit={handleSubmit}
-          className="fr-grid-row fr-grid-row--gutters"
-        >
+        <form onSubmit={handleSubmit} className="fr-grid-row fr-grid-row--gutters">
           <div className="fr-col-12 fr-col-md-6">
-            <label className="fr-label" htmlFor="title">
-              Titre
-            </label>
+            <label className="fr-label" htmlFor="title">Titre</label>
             <input
               className="fr-input"
               id="title"
@@ -141,21 +166,26 @@ const EditRessource = () => {
           </div>
 
           <div className="fr-col-12 fr-col-md-6">
-            <label className="fr-label" htmlFor="createdBy">
-              Auteur
-            </label>
-            <input
-              className="fr-input"
+            <label className="fr-label" htmlFor="createdBy">Auteur</label>
+            <select
+              className="fr-select"
               id="createdBy"
               name="createdBy"
-              value={ressource?.createdBy?.name}
-            />
+              value={ressource.createdBy?.['_id'] ?? ""}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Sélectionnez un utilisateur</option>
+              {users.map((user: any) => (
+                <option key={user._id} value={user._id}>
+                  {user.name}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="fr-col-12">
-            <label className="fr-label" htmlFor="content">
-              Contenu
-            </label>
+            <label className="fr-label" htmlFor="content">Contenu</label>
             <textarea
               className="fr-input"
               id="content"
@@ -168,14 +198,12 @@ const EditRessource = () => {
           </div>
 
           <div className="fr-col-12 fr-col-md-6">
-            <label className="fr-label" htmlFor="category">
-              Catégorie
-            </label>
+            <label className="fr-label" htmlFor="categoryId">Catégorie</label>
             <select
               className="fr-select"
-              id="category"
-              name="category"
-              value={ressource.category}
+              id="categoryId"
+              name="categoryId"
+              value={ressource.categoryId}
               onChange={handleChange}
               required
             >
@@ -189,9 +217,7 @@ const EditRessource = () => {
           </div>
 
           <div className="fr-col-12 fr-col-md-6">
-            <label className="fr-label" htmlFor="type">
-              Type
-            </label>
+            <label className="fr-label" htmlFor="type">Type</label>
             <select
               className="fr-select"
               id="type"
@@ -209,15 +235,31 @@ const EditRessource = () => {
             </select>
           </div>
 
+          <div className="fr-col-12 fr-col-md-6">
+            <label className="fr-label" htmlFor="image">Image</label>
+            <input
+              type="file"
+              id="image"
+              accept="image/*"
+              className="fr-input"
+              onChange={handleImageChange}
+            />
+            {ressource.image && (
+              <div className="fr-mt-2w">
+                <img
+                  src={ressource.image}
+                  alt="Aperçu de l'image"
+                  style={{ maxHeight: "150px", borderRadius: "4px", border: "1px solid #ccc" }}
+                />
+              </div>
+            )}
+          </div>
+
           <div
             className="fr-col-12 fr-grid-row fr-mt-4w"
             style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}
           >
-            <button
-              type="button"
-              className="fr-btn fr-btn--secondary"
-              onClick={goBack}
-            >
+            <button type="button" className="fr-btn fr-btn--secondary" onClick={goBack}>
               Annuler
             </button>
             <button type="submit" className="fr-btn fr-btn--primary">

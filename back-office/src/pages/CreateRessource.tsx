@@ -10,11 +10,13 @@ const CreateRessource = () => {
     title: "",
     createdBy: "",
     content: "",
-    category: "",
+    categoryId: "",
     type: "",
+    image: "",
   });
 
   const [categories, setCategories] = useState([]);
+  const [users, setUsers] = useState([]);
   const [resourceTypes, setResourceTypes] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -23,10 +25,21 @@ const CreateRessource = () => {
       try {
         const response = await fetch("/api/categories");
         if (!response.ok) throw new Error("Erreur lors de la récupération des catégories");
-        const data = await response.json();
-        setCategories(data);
+        const categories = await response.json();
+        setCategories(categories);
       } catch (error) {
         toast.error("Erreur lors du chargement des catégories.");
+      }
+    };
+
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch("/api/users");
+        if (!response.ok) throw new Error("Erreur lors de la récupération des utilisateurs");
+        const users = await response.json();
+        setUsers(users);
+      } catch (error) {
+        toast.error("Erreur lors du chargement des utilisateurs.");
       }
     };
 
@@ -42,7 +55,8 @@ const CreateRessource = () => {
       }
     };
 
-    Promise.all([fetchCategories(), fetchResourceTypes()]).finally(() => setLoading(false));
+    Promise.all([fetchCategories(), fetchUsers(), fetchResourceTypes()])
+      .finally(() => setLoading(false));
   }, []);
 
   const resourceTypeLabels: { [key: string]: string } = {
@@ -55,6 +69,20 @@ const CreateRessource = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     setRessource({ ...ressource, [e.target.name]: e.target.value });
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setRessource((prev) => ({
+        ...prev,
+        image: reader.result as string,
+      }));
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -104,14 +132,21 @@ const CreateRessource = () => {
 
           <div className="fr-col-12 fr-col-md-6">
             <label className="fr-label" htmlFor="createdBy">Auteur</label>
-            <input
-              className="fr-input"
+            <select
+              className="fr-select"
               id="createdBy"
               name="createdBy"
               value={ressource.createdBy}
               onChange={handleChange}
               required
-            />
+            >
+              <option value="">Sélectionnez un utilisateur</option>
+              {users.map((user: any) => (
+                <option key={user._id} value={user._id}>
+                  {user.name}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="fr-col-12">
@@ -128,12 +163,12 @@ const CreateRessource = () => {
           </div>
 
           <div className="fr-col-12 fr-col-md-6">
-            <label className="fr-label" htmlFor="category">Catégorie</label>
+            <label className="fr-label" htmlFor="categoryId">Catégorie</label>
             <select
               className="fr-select"
-              id="category"
-              name="category"
-              value={ressource.category}
+              id="categoryId"
+              name="categoryId"
+              value={ressource.categoryId}
               onChange={handleChange}
               required
             >
@@ -163,6 +198,16 @@ const CreateRessource = () => {
                 </option>
               ))}
             </select>
+          </div>
+
+          <div className="fr-col-12 fr-col-md-6">
+            <label className="fr-label" htmlFor="image">Image</label>
+            <input type="file" className="fr-input" id="image" accept="image/*" onChange={handleImageChange} />
+            {ressource.image && (
+              <div className="fr-mt-2w">
+                <img src={ressource.image} alt="Aperçu" style={{ maxHeight: "150px", borderRadius: "4px", border: "1px solid #ccc" }} />
+              </div>
+            )}
           </div>
 
           <div

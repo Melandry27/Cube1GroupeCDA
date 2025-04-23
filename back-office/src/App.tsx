@@ -11,7 +11,7 @@ import Dashboard from "./pages/Dashboard";
 import EditCategory from "./pages/EditCategory";
 import EditRessource from "./pages/EditRessource";
 import EditUser from "./pages/EditUser";
-
+import ForgotPassword from "./pages/ForgotPassword";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
@@ -30,6 +30,7 @@ const App = () => {
       <AuthProvider>
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route element={<ProtectedRoute />}>
             <Route path="/" element={<Home />}>
               <Route index element={<Navigate to="/dashboard" replace />} />
