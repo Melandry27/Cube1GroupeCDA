@@ -7,9 +7,7 @@ import { addFavorite, removeFavorite } from '../services/favoritesService';
 
 export default function FavorisButton({ ressourceId }: { ressourceId: string }) {
     const [isFavorited, setIsFavorited] = useState(false);
-    const [favoriId, setFavoriId] = useState<string | null>(null);
     const API_URL = Constants.expoConfig?.extra?.API_URL;
-
 
     const toggleFavoris = async () => {
         try {
@@ -18,15 +16,12 @@ export default function FavorisButton({ ressourceId }: { ressourceId: string }) 
                 return;
             }
 
-            if (isFavorited && favoriId) {
-                await removeFavorite(favoriId);
+            if (isFavorited ) {
                 setIsFavorited(false);
-                setFavoriId(null);
                 ToastAndroid.show('Ressource supprimée des favoris.', ToastAndroid.SHORT);
             } else {
                 const data = await addFavorite(ressourceId, "Joseph", "Truc"); //A modifier nigo
                 setIsFavorited(true);
-                setFavoriId(data._id);
                 ToastAndroid.show('Ressource ajoutée aux favoris !', ToastAndroid.SHORT);
             }
         } catch (error) {

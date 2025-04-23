@@ -1,7 +1,7 @@
 import Favorite, { IFavorite } from "../models/Favorite";
 
 const create = async (favoriteData: IFavorite): Promise<IFavorite> => {
-  return await Favorite.create(favoriteData);
+  return Favorite.create(favoriteData);
 };
 
 const findAll = async (): Promise<IFavorite[]> => {

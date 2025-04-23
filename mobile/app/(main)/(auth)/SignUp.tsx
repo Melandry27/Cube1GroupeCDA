@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity} from 'react-native';
 import Title from "../../components/Title";
 import {signUp} from "../../services/authService";
-import {useNavigation} from "expo-router";
+import {router, useNavigation} from "expo-router";
 
 export default function SignUp() {
   const navigation = useNavigation();
@@ -42,7 +42,7 @@ export default function SignUp() {
       Alert.alert('Succès', 'Compte créé avec succès. Veuillez vérifier votre email pour confirmer votre compte.', [
         {
           text: 'OK',
-          onPress: () => navigation.navigate('(main)/Login'),
+          onPress: () => router.push('Login'),
         },
       ]);
     } catch (error: any) {

@@ -42,17 +42,18 @@ export default function RessourceDetail() {
     if (!ressource) {
         return <Text style={styles.text}>Aucune ressource trouvée pour cet ID.</Text>;
     }
-
-    console.log('ressource', ressource, category);
     return (
         <View style={{ flex: 1 }}>
             <ScrollView style={{ flex: 1 }} contentContainerStyle={styles.scrollContent}>
                 <View style={styles.container}>
                     <Title size={"medium"} style={styles.titleWidth}>{ressource.title}</Title>
-                    <Text style={[styles.author, { backgroundColor: category.color, color: '#fff' }]}>{category.name}</Text>                    <FavorisButton ressourceId={ressource._id} />
+                    <Text style={[styles.author, { backgroundColor: category?.color || '#f0f0f0', color: '#fff' }]}>
+                        {category?.name || 'Unknown Category'}
+                    </Text>
+                    <FavorisButton ressourceId={ressource._id} />
                     <Image source={{ uri: ressource.image }} style={styles.image} />
                     <Text style={styles.text}>{ressource.content}</Text>
-                    <Text style={styles.author}>{ressource.createdBy.name}</Text>
+                    <Text style={styles.author}>{ressource.createdBy?.name || 'Utilisateur inconnu'}</Text>
                 </View>
                 <CommentBar
                     ressourceId={ressource._id}
