@@ -106,14 +106,13 @@ export const login: RequestHandler = async (req, res) => {
 
     const token = generateToken(user, role);
 
-    console.log("token", token);
-
     res.status(200).json({
       message: "Connexion réussie.",
       token,
     });
     return;
   } catch (error) {
+    console.log("Login ERROR: ", error);
     res.status(500).json({ message: "Erreur lors de la connexion.", error });
     return;
   }
