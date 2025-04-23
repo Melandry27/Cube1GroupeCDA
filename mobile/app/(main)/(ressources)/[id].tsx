@@ -1,3 +1,4 @@
+import Constants from "expo-constants";
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
@@ -15,6 +16,8 @@ import FavorisButton from "../../components/FavorisButton";
 import Title from "../../components/Title";
 import { fetchCategoriesById } from "../../services/categoriesService";
 import { fetchRessourceById } from "../../services/ressourcesService";
+
+const API_URL_IMAGE = Constants.expoConfig?.extra?.API_URL_IMAGE;
 
 export default function RessourceDetail() {
   const { id } = useLocalSearchParams();
@@ -86,11 +89,11 @@ export default function RessourceDetail() {
           >
             {category?.name || "Catégorie inconnue"}
           </Text>
-
           <FavorisButton ressourceId={ressource._id} />
-
-          <Image source={{ uri: ressource.image }} style={styles.image} />
-
+          <Image
+            source={{ uri: `${API_URL_IMAGE}/${ressource.image}` }}
+            style={styles.image}
+          />
           <Text style={styles.text}>{ressource.content}</Text>
 
           <Text style={styles.author}>

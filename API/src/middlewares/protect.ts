@@ -22,8 +22,6 @@ export const protect = (
     if (authHeader) {
       const token = authHeader.split(" ")[1];
 
-      console.log("Decoded Token:", token);
-
       const decoded = jwt.verify(token, JWT_SECRET) as { [key: string]: any };
 
       if (decoded && typeof decoded === "object" && decoded.email) {

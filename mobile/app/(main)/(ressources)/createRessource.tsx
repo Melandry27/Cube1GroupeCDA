@@ -1,8 +1,10 @@
+import * as ImagePicker from "expo-image-picker";
 import { useRouter } from "expo-router";
 import { Stack } from "expo-router/stack";
 import React, { useState } from "react";
 import {
   Alert,
+  Image,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -15,7 +17,6 @@ import {
 import { useAuth } from "../../../context/AuthContext";
 import { createRessource } from "../../services/ressourcesService";
 
-// 🧩 Déclaration de l'écran en dehors du composant principal
 export const unstable_settings = {
   initialRouteName: "createRessource",
 };
@@ -34,6 +35,7 @@ const CreateRessource = () => {
   const [formData, setFormData] = useState({
     title: "",
     content: "",
+    image: null, // Ajouter un champ pour l'image
   });
 
   const handleChange = (name: string, value: string) => {
@@ -45,6 +47,32 @@ const CreateRessource = () => {
 
   const router = useRouter();
   const { user, token } = useAuth();
+
+  const handleImagePick = async () => {
+    const permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (!permissionResult.granted) {
+      Alert.alert(
+        "Permission requise",
+        "Vous devez autoriser l'accès à la galerie."
+      );
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setFormData((prev) => ({
+        ...prev,
+        image: result.assets[0], // Ajouter l'image sélectionnée
+      }));
+    }
+  };
 
   const handleSubmit = async () => {
     try {
@@ -59,7 +87,8 @@ const CreateRessource = () => {
           content: formData.content,
           type: "In Progress",
           createdBy: user?._id,
-          categoryId: "68078faa525dd7b117b4e437",
+          categoryId: "defaultCategoryId",
+          image: formData.image, // Inclure l'image dans les données
         },
         token || ""
       );
@@ -111,6 +140,22 @@ const CreateRessource = () => {
           />
         </View>
 
+        <View style={styles.field}>
+          <Text style={styles.label}>Image</Text>
+          <TouchableOpacity
+            style={styles.imageButton}
+            onPress={handleImagePick}
+          >
+            <Text style={styles.imageButtonText}>Choisir une image</Text>
+          </TouchableOpacity>
+          {formData.image && (
+            <Image
+              source={{ uri: formData.image.uri }}
+              style={styles.previewImage}
+            />
+          )}
+        </View>
+
         <TouchableOpacity style={styles.button} onPress={handleSubmit}>
           <Text style={styles.buttonText}>Créer la ressource</Text>
         </TouchableOpacity>
@@ -152,6 +197,23 @@ const styles = StyleSheet.create({
   textarea: {
     height: 120,
     textAlignVertical: "top",
+  },
+  imageButton: {
+    backgroundColor: "#E0E0E0",
+    paddingVertical: 10,
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  imageButtonText: {
+    color: "#000",
+    fontSize: 14,
+    fontWeight: "500",
+  },
+  previewImage: {
+    marginTop: 10,
+    width: "100%",
+    height: 200,
+    borderRadius: 8,
   },
   button: {
     backgroundColor: "#000091",

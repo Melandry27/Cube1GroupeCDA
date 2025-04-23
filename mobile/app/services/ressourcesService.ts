@@ -38,13 +38,29 @@ export const fetchAllRessources = async (token: string) => {
 
 export const createRessource = async (data: any, token: string) => {
   try {
+    const formData = new FormData();
+
+    formData.append("title", data.title);
+    formData.append("content", data.content);
+    formData.append("type", data.type);
+
+    if (data.image) {
+      const imageFile = {
+        uri: data.image.uri,
+        name: data.image.fileName || "image.jpg",
+        type: data.image.type || "image/jpeg",
+      } as unknown as Blob;
+
+      formData?.append("image", imageFile);
+    }
+
     const response = await fetch(`${API_URL}/ressources`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(data),
+      body: formData, // Use formData instead of JSON.stringify(data)
     });
 
     const contentType = response.headers.get("Content-Type");

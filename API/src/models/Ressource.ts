@@ -15,14 +15,25 @@ interface IRessource extends Document {
   image?: string;
 }
 
+interface ResourceInput {
+  title: string;
+  content: string;
+  type?: RessourceType;
+  createdBy: string;
+  categoryId: mongoose.Types.ObjectId;
+  image?: string;
+}
+
 const RessourceSchema = new Schema<IRessource>(
   {
     title: { type: String, required: true },
     content: { type: String, required: true },
+    image: { type: String, required: false },
     type: {
       type: String,
       enum: Object.values(RessourceType),
       required: true,
+      default: RessourceType.NotStarted,
     },
     createdBy: { type: String, required: true, ref: "User" },
     categoryId: {
@@ -30,13 +41,12 @@ const RessourceSchema = new Schema<IRessource>(
       ref: "Category",
       required: true,
     },
-    image: { type: String, required: false },
   },
   {
     timestamps: true,
   }
 );
 
-export { IRessource, RessourceType };
+export { IRessource, ResourceInput, RessourceType };
 
 export default mongoose.model<IRessource>("Ressource", RessourceSchema);
