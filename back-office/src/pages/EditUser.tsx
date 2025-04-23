@@ -2,9 +2,11 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useAuth } from "../context/AuthContext";
 
 const EditUser = () => {
   const { id } = useParams<{ id: string }>();
+  const { user: currentUser } = useAuth();
   const navigate = useNavigate();
 
   const [user, setUser] = useState({
@@ -110,6 +112,16 @@ const EditUser = () => {
     window.history.back();
   };
 
+  const filteredRoles = roles.filter((role: any) => {
+    const currentRole = currentUser?.role;
+  
+    if (currentRole === "Super Admin") return true;
+    if (currentRole === "Administrateur") return !["Administrateur", "Super Admin"].includes(role.name);
+    if (currentRole === "Modérateur") return !["Administrateur", "Super Admin", "Modérateur"].includes(role.name);
+  
+    return false;
+  });
+
   return (
     <>
       <h2 className="fr-h3">Modifier un Utilisateur</h2>
@@ -189,7 +201,7 @@ const EditUser = () => {
             required
           >
             <option value="">Sélectionnez un rôle</option>
-            {roles.map((role) => (
+            {filteredRoles.map((role) => (
               <option key={role._id} value={role._id}>
                 {role.name}
               </option>
