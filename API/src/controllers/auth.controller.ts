@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import { Request, RequestHandler, Response } from "express";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
+import { generateToken } from "../utils";
 
 import User, { CreateUserInput } from "../models/User";
 import * as AuthService from "../services/AuthService";
@@ -9,21 +10,6 @@ import * as RoleServices from "../services/RoleService";
 import * as UserService from "../services/UserService";
 
 const JWT_SECRET = process.env.JWT_SECRET || "default_secret";
-
-const generateToken = (user: any, role: any) => {
-  return jwt.sign(
-    {
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      role: role.name,
-      adress: user.adress,
-      phone: user.phone,
-      isVerified: user.isVerified,
-    },
-    JWT_SECRET
-  );
-};
 
 export const register = async (req: Request, res: Response) => {
   try {
@@ -106,14 +92,13 @@ export const login: RequestHandler = async (req, res) => {
 
     const token = generateToken(user, role);
 
-    console.log("token", token);
-
     res.status(200).json({
       message: "Connexion réussie.",
       token,
     });
     return;
   } catch (error) {
+    console.log("Login ERROR: ", error);
     res.status(500).json({ message: "Erreur lors de la connexion.", error });
     return;
   }
