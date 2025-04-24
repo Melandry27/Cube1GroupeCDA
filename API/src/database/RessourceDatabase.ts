@@ -20,9 +20,7 @@ export const updateRessource = async (
   id: string,
   updateData: Partial<IRessource>
 ): Promise<IRessource | null> => {
-  return Ressource.findOneAndUpdate({ _id: id }, updateData, {
-    new: true,
-  });
+  return Ressource.findOneAndUpdate({ _id: id }, updateData);
 };
 
 export const removeRessource = async (
