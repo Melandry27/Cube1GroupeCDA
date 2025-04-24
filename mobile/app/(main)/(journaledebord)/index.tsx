@@ -18,14 +18,11 @@ export default function App() {
     });
 
     const user= useAuth();
-    if ("_id" in user.user) {
-        console.log(user.user._id);
-    }
 
     useEffect(() => {
-            const ressourceCount = getUserResourcesCount(user.user._id);
-            const commentCount = getUserCommentsCount(user.user._id);
-            const favoriteCount = getUserFavoritesCount(user.user._id);
+        const ressourceCount = user.user?._id ? getUserResourcesCount(user.user._id) : 0;
+        const commentCount = user.user?._id ? getUserCommentsCount(user.user._id) : 0;
+        const favoriteCount = user.user?._id ? getUserFavoritesCount(user.user._id) : 0;
 
         const fetchStats = async () => {
             const data = {
