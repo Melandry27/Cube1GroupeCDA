@@ -8,7 +8,21 @@ import Title from "./Title";
 
 const API_URL_IMAGE = Constants.expoConfig?.extra?.API_URL_IMAGE;
 
-const RessourceCard = ({
+interface CreatedBy {
+  _id: string;
+}
+
+interface RessourceCardProps {
+  title: string;
+  description: string;
+  image: string;
+  categoryName?: string;
+  categoryColor?: string;
+  createdBy: CreatedBy;
+  _id: string;
+}
+
+const RessourceCard: React.FC<RessourceCardProps> = ({
   title,
   description,
   image,

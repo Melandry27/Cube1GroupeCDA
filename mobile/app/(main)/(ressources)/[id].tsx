@@ -59,7 +59,7 @@ export default function RessourceDetail() {
     };
 
     loadRessource();
-  }, [id, handleCommentSubmit]);
+  }, [id]);
 
   if (loading) {
     return (
