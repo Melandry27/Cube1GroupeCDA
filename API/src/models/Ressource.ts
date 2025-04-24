@@ -1,4 +1,5 @@
 import mongoose, { Document, Schema } from "mongoose";
+import { FileInput } from "./File";
 
 enum RessourceType {
   InProgress = "In Progress",
@@ -13,6 +14,7 @@ interface IRessource extends Document {
   createdBy: string;
   categoryId: mongoose.Types.ObjectId;
   image?: string;
+  file?: Object;
 }
 
 interface ResourceInput {
@@ -22,6 +24,7 @@ interface ResourceInput {
   createdBy: string;
   categoryId: mongoose.Types.ObjectId;
   image?: string;
+  file?: FileInput;
 }
 
 const RessourceSchema = new Schema<IRessource>(
@@ -41,6 +44,7 @@ const RessourceSchema = new Schema<IRessource>(
       ref: "Category",
       required: true,
     },
+    file: { type: Object, required: false },
   },
   {
     timestamps: true,

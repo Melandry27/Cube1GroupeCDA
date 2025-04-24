@@ -29,7 +29,6 @@ export default function FavorisButton({
         token
       );
 
-      console.log("_getFavoritesByRessourceId", _getFavoritesByRessourceId);
       if (_getFavoritesByRessourceId) {
         setIsFavorited(_getFavoritesByRessourceId.isFavorited);
       }

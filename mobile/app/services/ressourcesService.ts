@@ -43,24 +43,31 @@ export const createRessource = async (data: any, token: string) => {
     formData.append("title", data.title);
     formData.append("content", data.content);
     formData.append("type", data.type);
+    formData.append("createdBy", data.createdBy);
+    formData.append("categoryId", data.categoryId);
 
     if (data.image) {
-      const imageFile = {
+      formData.append("image", {
         uri: data.image.uri,
         name: data.image.fileName || "image.jpg",
         type: data.image.type || "image/jpeg",
-      } as unknown as Blob;
+      } as any);
+    }
 
-      formData?.append("image", imageFile);
+    if (data.file) {
+      formData.append("file", {
+        uri: data.file.uri,
+        name: data.file.name || "document.pdf",
+        type: "application/pdf",
+      } as any);
     }
 
     const response = await fetch(`${API_URL}/ressources`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: formData, // Use formData instead of JSON.stringify(data)
+      body: formData,
     });
 
     const contentType = response.headers.get("Content-Type");

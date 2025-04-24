@@ -1,3 +1,4 @@
+import * as DocumentPicker from "expo-document-picker";
 import * as ImagePicker from "expo-image-picker";
 import { useRouter } from "expo-router";
 import { Stack } from "expo-router/stack";
@@ -32,17 +33,20 @@ export const ScreenOptions = () => (
 );
 
 const CreateRessource = () => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    title: string;
+    content: string;
+    image: ImagePicker.ImagePickerAsset | null;
+    file: DocumentPicker.DocumentPickerAsset | null;
+  }>({
     title: "",
     content: "",
-    image: null, // Ajouter un champ pour l'image
+    image: null,
+    file: null,
   });
 
   const handleChange = (name: string, value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const router = useRouter();
@@ -51,12 +55,8 @@ const CreateRessource = () => {
   const handleImagePick = async () => {
     const permissionResult =
       await ImagePicker.requestMediaLibraryPermissionsAsync();
-
     if (!permissionResult.granted) {
-      Alert.alert(
-        "Permission requise",
-        "Vous devez autoriser l'accès à la galerie."
-      );
+      Alert.alert("Permission requise", "Autorisez l'accès à la galerie.");
       return;
     }
 
@@ -67,10 +67,7 @@ const CreateRessource = () => {
     });
 
     if (!result.canceled) {
-      setFormData((prev) => ({
-        ...prev,
-        image: result.assets[0], // Ajouter l'image sélectionnée
-      }));
+      setFormData((prev) => ({ ...prev, image: result.assets[0] }));
     }
   };
 
@@ -88,7 +85,8 @@ const CreateRessource = () => {
           type: "In Progress",
           createdBy: user?._id,
           categoryId: "defaultCategoryId",
-          image: formData.image, // Inclure l'image dans les données
+          image: formData.image,
+          file: formData.file,
         },
         token || ""
       );
@@ -101,6 +99,17 @@ const CreateRessource = () => {
       } else {
         Alert.alert("Erreur inconnue", "Une erreur est survenue.");
       }
+    }
+  };
+
+  const handleFilePick = async () => {
+    const result = await DocumentPicker.getDocumentAsync({
+      type: "application/pdf",
+      copyToCacheDirectory: true,
+    });
+
+    if (!result.canceled) {
+      setFormData((prev) => ({ ...prev, file: result.assets[0] }));
     }
   };
 
@@ -153,6 +162,16 @@ const CreateRessource = () => {
               source={{ uri: formData.image.uri }}
               style={styles.previewImage}
             />
+          )}
+        </View>
+
+        <View style={styles.field}>
+          <Text style={styles.label}>Fichier PDF</Text>
+          <TouchableOpacity style={styles.imageButton} onPress={handleFilePick}>
+            <Text style={styles.imageButtonText}>Choisir un fichier PDF</Text>
+          </TouchableOpacity>
+          {formData.file && (
+            <Text style={{ marginTop: 10 }}>{formData.file.name}</Text>
           )}
         </View>
 
@@ -220,11 +239,6 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     borderRadius: 8,
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
   },
   buttonText: {
     color: "#fff",

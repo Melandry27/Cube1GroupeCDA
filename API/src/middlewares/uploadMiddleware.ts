@@ -18,14 +18,9 @@ const storage = multer.diskStorage({
   },
 });
 
-const fileFilter = (req: any, file: any, cb: any) => {
-  if (file.mimetype.startsWith("image/")) {
-    cb(null, true);
-  } else {
-    cb(new Error("Only image files are allowed!"), false);
-  }
-};
+const uploadFiles = multer({ storage });
 
-const uploadImage = multer({ storage, fileFilter });
-
-export default uploadImage;
+export const uploadRessourceFields = uploadFiles.fields([
+  { name: "image", maxCount: 1 },
+  { name: "file", maxCount: 1 },
+]);

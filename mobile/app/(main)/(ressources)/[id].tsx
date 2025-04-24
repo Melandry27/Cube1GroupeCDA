@@ -7,8 +7,10 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from "react-native";
+import { WebView } from "react-native-webview";
 import { useAuth } from "../../../context/AuthContext";
 import CommentBar from "../../components/CommentBar";
 import Comments from "../../components/Comments";
@@ -24,6 +26,7 @@ export default function RessourceDetail() {
   const [ressource, setRessource] = useState(null);
   const [category, setCategory] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showPdf, setShowPdf] = useState(false);
 
   const { token } = useAuth();
 
@@ -70,6 +73,8 @@ export default function RessourceDetail() {
     );
   }
 
+  const togglePdf = () => setShowPdf((prev) => !prev);
+
   return (
     <View style={{ flex: 1 }}>
       <ScrollView
@@ -89,16 +94,51 @@ export default function RessourceDetail() {
           >
             {category?.name || "Catégorie inconnue"}
           </Text>
+
           <FavorisButton ressourceId={ressource._id} />
-          <Image
-            source={{ uri: `${API_URL_IMAGE}/${ressource.image}` }}
-            style={styles.image}
-          />
+
+          {ressource.image && (
+            <Image
+              source={{ uri: `${API_URL_IMAGE}/${ressource.image}` }}
+              style={styles.image}
+            />
+          )}
+
           <Text style={styles.text}>{ressource.content}</Text>
 
           <Text style={styles.author}>
             {ressource.createdBy?.name || "Utilisateur inconnu"}
           </Text>
+
+          {ressource.file && (
+            <View style={styles.pdfContainer}>
+              <Text style={styles.sectionTitle}>Document :</Text>
+              <TouchableOpacity style={styles.badge} onPress={togglePdf}>
+                <Text style={styles.badgeText}>
+                  {ressource.file.originalName}
+                </Text>
+              </TouchableOpacity>
+
+              {showPdf && (
+                <View style={{ height: 400, marginTop: 10 }}>
+                  <WebView
+                    originWhitelist={["*"]}
+                    source={{
+                      uri: `${API_URL_IMAGE}/${ressource.file.path.replace(
+                        /\\/g,
+                        "/"
+                      )}`,
+                    }}
+                    style={{ flex: 1 }}
+                    startInLoadingState
+                    renderLoading={() => (
+                      <ActivityIndicator size="large" color="#000091" />
+                    )}
+                  />
+                </View>
+              )}
+            </View>
+          )}
         </View>
 
         <CommentBar
@@ -158,5 +198,26 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#D10000",
     textAlign: "center",
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  pdfContainer: {
+    marginTop: 10,
+    marginBottom: 30,
+  },
+  badge: {
+    backgroundColor: "#000091",
+    alignSelf: "flex-start",
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 20,
+  },
+  badgeText: {
+    color: "#fff",
+    fontSize: 14,
   },
 });

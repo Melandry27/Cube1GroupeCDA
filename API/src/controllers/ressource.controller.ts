@@ -1,28 +1,44 @@
 import { Request, Response } from "express";
 import path from "path";
+import { FileInput } from "../models/File";
 import { IRessource } from "../models/Ressource";
 import * as CategoryService from "../services/CategoryService";
 import * as RessourceService from "../services/RessourceService";
 
 export const create = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { title, content, categoryId } = req.body;
+    const { title, content, categoryId, type } = req.body;
 
     const category = await CategoryService.getCategoryByIdOrCreateOne(
       categoryId
     );
 
-    const imagePath = req.file
-      ? path.join("uploads", req.file.filename)
+    const image = (req.files as { [fieldname: string]: Express.Multer.File[] })
+      ?.image?.[0];
+    const file = (req.files as { [fieldname: string]: Express.Multer.File[] })
+      ?.file?.[0];
+
+    const fileInfo: FileInput | undefined = file
+      ? {
+          originalName: file.originalname,
+          mimeType: file.mimetype,
+          size: file.size,
+          path: path.join("uploads", file.filename),
+          ressourceId: "",
+          uploadedBy: req.user._id,
+        }
       : undefined;
+
+    const imagePath = image ? path.join("uploads", image.filename) : undefined;
 
     const ressource: IRessource = await RessourceService.create({
       title,
       content,
       categoryId: category._id || categoryId,
       createdBy: req.user._id,
-      type: req.body.type || "Not Started",
+      type: type || "Not Started",
       image: imagePath,
+      file: fileInfo,
     });
 
     if (!ressource) {
