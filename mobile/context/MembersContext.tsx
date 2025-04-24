@@ -56,7 +56,7 @@ export const MembersProvider: React.FC<{ children: ReactNode }> = ({
         );
 
         const filteredDecodedMembers = decodedMembers.filter(
-          (member: any) => member._id !== user?._id
+          (member: any) => user && member._id !== user._id
         );
 
         setMembers(filteredDecodedMembers);
@@ -66,7 +66,7 @@ export const MembersProvider: React.FC<{ children: ReactNode }> = ({
     };
 
     fetchMembers();
-  }, []);
+  }, [user, token]);
 
   const addMember = (member: Member) => {
     setMembers((prevMembers) => [...prevMembers, member]);

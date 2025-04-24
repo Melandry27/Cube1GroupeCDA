@@ -49,32 +49,43 @@ export default function App() {
     <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />
       <Header />
-      <Title size={"medium"} style={styles.sectionTitle}>
-        Statistiques
-      </Title>
-      <View style={styles.statsContainer}>
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Ressources créées</Text>
-          <Text style={styles.cardNumber}>{stats.resourcesCreated}</Text>
+      {token && (
+        <>
+          <Title size={"medium"} style={styles.sectionTitle}>
+            Statistiques
+          </Title>
+          <View style={styles.statsContainer}>
+            <View style={styles.card}>
+              <Text style={styles.cardTitle}>Ressources créées</Text>
+              <Text style={styles.cardNumber}>{stats.resourcesCreated}</Text>
+            </View>
+            <View style={styles.card}>
+              <Text style={styles.cardTitle}>Favoris</Text>
+              <Text style={styles.cardNumber}>{stats.favorites}</Text>
+            </View>
+            <View style={styles.card}>
+              <Text style={styles.cardTitle}>Commentaires</Text>
+              <Text style={styles.cardNumber}>{stats.comments}</Text>
+            </View>
+          </View>
+          <TouchableOpacity
+            style={styles.rectangleButton}
+            onPress={() => router.push("/createRessource")}
+          >
+            <FontAwesome6 name="plus" color={"#000091"} size={32} />
+            <Title size={"small"} style={styles.rectangleTitle}>
+              Créer une ressource
+            </Title>
+          </TouchableOpacity>
+        </>
+      )}
+      {!token && (
+        <View style={styles.buttonContainer}>
+          <Text style={styles.memberName}>
+            Connecte-toi pour pouvoir accéder aux statistiques
+          </Text>
         </View>
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Favoris</Text>
-          <Text style={styles.cardNumber}>{stats.favorites}</Text>
-        </View>
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Commentaires</Text>
-          <Text style={styles.cardNumber}>{stats.comments}</Text>
-        </View>
-      </View>
-      <TouchableOpacity
-        style={styles.rectangleButton}
-        onPress={() => router.push("/createRessource")}
-      >
-        <FontAwesome6 name="plus" color={"#000091"} size={32} />
-        <Title size={"small"} style={styles.rectangleTitle}>
-          Créer une ressource
-        </Title>
-      </TouchableOpacity>
+      )}
     </SafeAreaView>
   );
 }
@@ -156,5 +167,16 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     color: "#000",
+  },
+  buttonContainer: {
+    marginTop: 20,
+    alignItems: "center",
+  },
+  memberName: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#000091",
+    textAlign: "center",
+    marginBottom: 10,
   },
 });

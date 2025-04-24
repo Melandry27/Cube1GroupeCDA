@@ -21,7 +21,6 @@ export const fetchMembers = async (token: string) => {
 
 export const fetchUserById = async (userId: string) => {
   try {
-    console.log("Fetching user by ID:", userId);
     const response = await fetch(`${API_URL}/users/${userId}`);
     if (!response.ok) {
       throw new Error("Failed to fetch user");
@@ -31,4 +30,4 @@ export const fetchUserById = async (userId: string) => {
     console.error("Error fetching user:", error);
     throw error;
   }
-}
+};

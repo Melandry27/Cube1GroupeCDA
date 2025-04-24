@@ -14,32 +14,50 @@ import Title from "../../components/Title";
 
 const Index = () => {
   const navigation = useNavigation();
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const { members, selectMember } = useMembers();
 
   return (
     <>
-    <Header />
-    <View style={styles.container}>
-      <Title size={"large"} style={styles.title}>Liste des membres</Title>
-
-      <FlatList
-        data={members}
-        keyExtractor={(item) => item._id}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.memberCard}
-            onPress={() => {
-              selectMember(item._id);
-              navigation.navigate("ChatScreen");
-            }}
-          >
-            <Text style={styles.memberName}>{item.name}</Text>
-            <Text style={styles.memberEmail}>{item.email}</Text>
-          </TouchableOpacity>
+      <Header />
+      <View style={styles.container}>
+        {token && (
+          <>
+            <Title size={"large"} style={styles.title}>
+              Liste des membres
+            </Title>
+            {members.length === 0 ? (
+              <Text style={styles.memberName}>
+                Aucun membre disponible pour le moment.
+              </Text>
+            ) : (
+              <FlatList
+                data={members}
+                keyExtractor={(item) => item._id}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    style={styles.memberCard}
+                    onPress={() => {
+                      selectMember(item._id);
+                      navigation.navigate("ChatScreen");
+                    }}
+                  >
+                    <Text style={styles.memberName}>{item.name}</Text>
+                    <Text style={styles.memberEmail}>{item.email}</Text>
+                  </TouchableOpacity>
+                )}
+              />
+            )}
+          </>
         )}
-      />
-    </View>
+        {!token && (
+          <View style={styles.buttonContainer}>
+            <Text style={styles.memberName}>
+              Connecte-toi pour pouvoir accéder au message
+            </Text>
+          </View>
+        )}
+      </View>
     </>
   );
 };
@@ -47,28 +65,38 @@ const Index = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
-    backgroundColor: "#fafafa",
+    padding: 20,
+    backgroundColor: "#f0f4f8",
   },
   title: {
-    fontSize: 22,
-    marginBottom: 12,
+    fontSize: 24,
+    marginBottom: 16,
     textAlign: "center",
+    fontWeight: "bold",
+    color: "#333",
   },
   memberCard: {
-    backgroundColor: "#fff",
-    padding: 16,
-    borderRadius: 12,
-    marginBottom: 10,
-    elevation: 2,
+    backgroundColor: "#ffffff",
+    padding: 20,
+    borderRadius: 16,
+    marginBottom: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
   memberName: {
-    fontSize: 18,
-    fontWeight: "600",
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#2c3e50",
+    alignContent: "center",
+    textAlign: "center",
+    margin: 25,
   },
   memberEmail: {
-    fontSize: 14,
-    color: "gray",
+    fontSize: 16,
+    color: "#7f8c8d",
   },
   buttonContainer: {
     marginTop: 20,

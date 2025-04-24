@@ -2,7 +2,7 @@ import * as DocumentPicker from "expo-document-picker";
 import * as ImagePicker from "expo-image-picker";
 import { useRouter } from "expo-router";
 import { Stack } from "expo-router/stack";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Alert,
   Image,
@@ -15,7 +15,9 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import RNPickerSelect from "react-native-picker-select";
 import { useAuth } from "../../../context/AuthContext";
+import { fetchCategories } from "../../services/categoriesService";
 import { createRessource } from "../../services/ressourcesService";
 
 export const unstable_settings = {
@@ -37,20 +39,43 @@ const CreateRessource = () => {
     title: string;
     content: string;
     image: ImagePicker.ImagePickerAsset | null;
-    file: DocumentPicker.DocumentPickerAsset | null;
+    file: DocumentPicker.DocumentPickerResult | null;
+    categoryId: string;
+    categories: { _id: string; name: string }[];
   }>({
     title: "",
     content: "",
     image: null,
     file: null,
+    categoryId: "",
+    categories: [],
   });
+
+  const router = useRouter();
+  const { user, token } = useAuth();
+
+  useEffect(() => {
+    const _fetchCategories = async () => {
+      try {
+        const categories = await fetchCategories(token || "");
+        setFormData((prev) => ({
+          ...prev,
+          categories,
+          categoryId: categories.length > 0 ? categories[0]._id : "",
+        }));
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    if (token) {
+      _fetchCategories();
+    }
+  }, [token]);
 
   const handleChange = (name: string, value: string) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
-
-  const router = useRouter();
-  const { user, token } = useAuth();
 
   const handleImagePick = async () => {
     const permissionResult =
@@ -84,7 +109,7 @@ const CreateRessource = () => {
           content: formData.content,
           type: "In Progress",
           createdBy: user?._id,
-          categoryId: "defaultCategoryId",
+          categoryId: formData.categoryId,
           image: formData.image,
           file: formData.file,
         },
@@ -109,9 +134,11 @@ const CreateRessource = () => {
     });
 
     if (!result.canceled) {
-      setFormData((prev) => ({ ...prev, file: result.assets[0] }));
+      setFormData((prev) => ({ ...prev, file: result }));
     }
   };
+
+  console.log("FormData:", formData.categories);
 
   return (
     <KeyboardAvoidingView
@@ -146,6 +173,32 @@ const CreateRessource = () => {
             placeholderTextColor="#666"
             multiline
             numberOfLines={4}
+          />
+        </View>
+
+        <View style={styles.field}>
+          <Text style={styles.label}>Catégorie</Text>
+          <RNPickerSelect
+            onValueChange={(value) =>
+              setFormData((prev) => ({ ...prev, categoryId: value }))
+            }
+            value={formData.categoryId} // string uniquement
+            placeholder={{ label: "Sélectionner une catégorie", value: "" }}
+            items={(formData.categories || []).map((category) => ({
+              label: category.name,
+              value: category._id,
+            }))}
+            style={{
+              inputIOS: styles.pickerInput,
+              inputAndroid: styles.pickerInput,
+              iconContainer: { top: 10, right: 12 },
+            }}
+            useNativeAndroidPickerStyle={false}
+            Icon={() => (
+              <View style={{ marginRight: 10 }}>
+                <Text style={{ fontSize: 18, color: "#666" }}>▼</Text>
+              </View>
+            )}
           />
         </View>
 
@@ -244,6 +297,32 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontSize: 16,
     fontWeight: "600",
+  },
+  pickerInput: {
+    backgroundColor: "#fff",
+    borderColor: "#CECECE",
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 16,
+    color: "#161616",
+  },
+  pickerPlaceholder: {
+    color: "#666",
+  },
+  pickerView: {
+    backgroundColor: "#fff",
+    borderColor: "#CECECE",
+    borderWidth: 1,
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 16,
+    color: "#161616",
+  },
+  pickerText: {
+    color: "#161616",
+    fontSize: 16,
+    fontWeight: "500",
   },
 });
 

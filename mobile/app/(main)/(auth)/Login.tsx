@@ -27,10 +27,8 @@ export default function Login() {
     try {
       const data: boolean = await login(email, password);
 
-      if (!data) {
-        Alert.alert("Erreur", "Identifiants invalides.");
-        return;
-      }
+      if (!data) return;
+
       Alert.alert("Succès", "Connexion réussie", [
         {
           text: "OK",
