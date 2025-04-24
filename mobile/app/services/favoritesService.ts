@@ -46,3 +46,19 @@ export const getUserFavoritesCount = async (userId: string): Promise<number> => 
         throw error;
     }
 };
+
+export const fetchFavoritesByUserId = async (userId: string) => {
+    try {
+        const response = await fetch(`${API_URL}/ressources`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch resources');
+        }
+        const allResources = await response.json();
+        return allResources.filter(resource =>
+          resource.favorites?.some(favorite => favorite.createdBy?._id === userId)
+        );
+    } catch (error) {
+        console.error("Error fetching resources by user ID:", error);
+        throw error;
+    }
+}
