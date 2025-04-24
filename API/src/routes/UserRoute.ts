@@ -48,6 +48,28 @@ router.get("/members", UserController.getAllMembers);
 
 /**
  * @swagger
+ * /users/members/me:
+ *   put:
+ *     summary: Met à jour les informations du membre connecté
+ *     tags: [Users]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UserInput'
+ *     responses:
+ *       200:
+ *         description: Informations du membre mises à jour avec succès
+ *       401:
+ *         description: Non autorisé
+ *       500:
+ *         description: Erreur lors de la mise à jour
+ */
+router.put("/me", UserController.updateMe);
+
+/**
+ * @swagger
  * /users/{id}:
  *   get:
  *     summary: Récupère un utilisateur par ID

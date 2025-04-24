@@ -97,3 +97,23 @@ export const changePassword = async (
     throw error;
   }
 };
+
+export const updateUserProfile = async (
+  token: string,
+  data: { name: string; email: string; adress: string; phone: string }
+) => {
+  const response = await fetch(`${API_URL}/users/me`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (response.status !== 200) {
+    throw new Error("Erreur lors de la mise à jour du profil.");
+  }
+
+  return response.status === 200;
+};

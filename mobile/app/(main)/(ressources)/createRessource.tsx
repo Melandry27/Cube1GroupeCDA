@@ -138,8 +138,6 @@ const CreateRessource = () => {
     }
   };
 
-  console.log("FormData:", formData.categories);
-
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}

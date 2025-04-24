@@ -129,3 +129,26 @@ export const getAllMembers = async (
     res.status(500).json({ message: "Error fetching members", error });
   }
 };
+
+export const updateMe = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const userId = req.user._id;
+
+    if (!userId) {
+      res.status(400).json({ message: "User ID is required" });
+      return;
+    }
+
+    const updatedUser: IUser | null = await UserService.update(
+      userId,
+      req.body
+    );
+    if (!updatedUser) {
+      res.status(404).json({ message: "User not found" });
+      return;
+    }
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    res.status(500).json({ message: "Error updating user", error });
+  }
+};

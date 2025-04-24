@@ -35,6 +35,14 @@ export default function Index() {
             >
               <Text style={styles.buttonText}>Changer mon mots de passe</Text>
             </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => router.push("(main)/UpdateUser")}
+            >
+              <Text style={styles.buttonText}>
+                Mettre à jour les informations
+              </Text>
+            </TouchableOpacity>
           </>
         ) : (
           <>
