@@ -14,3 +14,17 @@ export const fetchMembers = async () => {
     throw error;
   }
 };
+
+export const fetchUserById = async (userId: string) => {
+  try {
+    console.log("Fetching user by ID:", userId);
+    const response = await fetch(`${API_URL}/users/${userId}`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch user");
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    throw error;
+  }
+}
