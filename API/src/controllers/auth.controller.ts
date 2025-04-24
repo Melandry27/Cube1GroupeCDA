@@ -2,20 +2,28 @@ import bcrypt from "bcrypt";
 import { Request, RequestHandler, Response } from "express";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
-import { generateToken } from "../utils";
-
 import User, { CreateUserInput } from "../models/User";
 import * as AuthService from "../services/AuthService";
 import * as RoleServices from "../services/RoleService";
 import * as UserService from "../services/UserService";
+import { generateToken } from "../utils";
 
 const JWT_SECRET = process.env.JWT_SECRET || "default_secret";
 
 export const register = async (req: Request, res: Response) => {
   try {
-    const { name, email, password, roleId, adress, phone } = req.body;
+    const { name, email, password, adress, phone } = req.body;
 
-    const existingUser = await UserService.getByEmail(email);
+    const emailToLowerCase = email.toLowerCase();
+
+    const role = await RoleServices.getRoleBySlug("citoyen-connecte");
+
+    if (!role) {
+      res.status(400).json({ message: "Rôle introuvable." });
+      return;
+    }
+
+    const existingUser = await UserService.getByEmail(emailToLowerCase);
     if (existingUser) {
       res.status(400).json({ message: "Cet email est déjà utilisé." });
       return;
@@ -25,9 +33,9 @@ export const register = async (req: Request, res: Response) => {
 
     const user: CreateUserInput = await UserService.create({
       name,
-      email,
+      email: emailToLowerCase,
       password: hashedPassword,
-      roleId,
+      roleId: role._id as string,
       adress,
       phone,
       isVerified: false,
@@ -192,5 +200,53 @@ export const verifyEmail = async (req: Request, res: Response) => {
     `);
   } catch (error) {
     res.status(400).json({ message: "Lien invalide ou expiré.", error });
+  }
+};
+
+export const changePassword = async (req: Request, res: Response) => {
+  try {
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      res.status(400).json({ message: "Tous les champs sont requis." });
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      res
+        .status(400)
+        .json({ message: "Les mots de passe ne correspondent pas." });
+      return;
+    }
+
+    const userId = req.user._id;
+
+    const user = await UserService.getById(userId);
+
+    if (!user) {
+      res.status(404).json({ message: "Utilisateur non trouvé." });
+      return;
+    }
+
+    const isOldPasswordValid = await bcrypt.compare(
+      currentPassword,
+      user.password
+    );
+
+    if (!isOldPasswordValid) {
+      res.status(400).json({ message: "Ancien mot de passe incorrect." });
+      return;
+    }
+
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+    await UserService.update(user.id, { password: hashedNewPassword });
+
+    res.status(200).json({ message: "Mot de passe changé avec succès." });
+  } catch (error) {
+    console.error("Change Password ERROR: ", error);
+    res
+      .status(500)
+      .json({ message: "Erreur lors du changement de mot de passe.", error });
   }
 };

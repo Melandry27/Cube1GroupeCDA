@@ -29,11 +29,10 @@ export const signUp = async (
   phone: string
 ) => {
   try {
-    const roleId = "68074f31756fe56563cb1e95";
     const response = await fetch(`${API_URL}/auth/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password, roleId, adress, phone }),
+      body: JSON.stringify({ name, email, password, adress, phone }),
     });
 
     if (!response.ok) {
@@ -64,6 +63,37 @@ export const forgotPassword = async (email: string) => {
     return response.status === 200;
   } catch (error: any) {
     console.error("Error during password reset:", error.message || error);
+    throw error;
+  }
+};
+
+export const changePassword = async (
+  currentPassword: string,
+  newPassword: string,
+  confirmPassword: string,
+  token: string
+) => {
+  try {
+    const response = await fetch(`${API_URL}/auth/change-password`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        currentPassword,
+        newPassword,
+        confirmPassword,
+      }),
+    });
+
+    if (response.status !== 200) {
+      throw new Error("Password change failed");
+    }
+
+    return response.status === 200;
+  } catch (error: any) {
+    console.error("Error during password change:", error.message || error);
     throw error;
   }
 };
