@@ -1,4 +1,5 @@
 import Constants from 'expo-constants';
+import {fetchAllRessources} from "./ressourcesService";
 
 const API_URL = Constants.expoConfig.extra?.API_URL;
 
@@ -30,4 +31,18 @@ export const removeFavorite = async (favoriId: string) => {
     }
 
     return await response.json();
+};
+
+
+export const getUserFavoritesCount = async (userId: string): Promise<number> => {
+    try {
+        const allResources = await fetchAllRessources();
+        const userFavorites = allResources.filter(resource =>
+          resource.favorites?.some(favorite => favorite.createdBy?._id === userId)
+        );
+        return userFavorites.length;
+    } catch (error) {
+        console.error("Error in getUserFavoritesCount:", error);
+        throw error;
+    }
 };
