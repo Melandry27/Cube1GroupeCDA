@@ -25,7 +25,7 @@ export default function RessourceList() {
 
     return (
       <SafeAreaView style={styles.container}>
-          <Header searchText={searchText} setSearchText={setSearchText} />
+          <Header searchText={searchText} setSearchText={setSearchText} showSearchIcon ={true}/>
           <StatusBar style="auto" />
           <ScrollView>
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>

@@ -2,6 +2,7 @@ import { router, useNavigation } from "expo-router";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useAuth } from "../../../context/AuthContext";
+import Header from "../../components/Header";
 
 export default function Index() {
   const navigation = useNavigation();
@@ -19,6 +20,8 @@ export default function Index() {
   };
 
   return (
+    <>
+      <Header />
     <View style={styles.container}>
       {user ? (
         <>
@@ -44,6 +47,7 @@ export default function Index() {
         </>
       )}
     </View>
+    </>
   );
 }
 
