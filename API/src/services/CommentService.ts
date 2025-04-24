@@ -22,6 +22,13 @@ export const update = async (
   return await CommentDatabase.update(id, updateData);
 };
 
+export const updateStatus = async (
+  id: string,
+  commentStatus: string
+): Promise<IComment | null> => {
+  return await CommentDatabase.updateStatus(id, commentStatus);
+};
+
 export const remove = async (id: string): Promise<IComment | null> => {
   return await CommentDatabase.remove(id);
 };

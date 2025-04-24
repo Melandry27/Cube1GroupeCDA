@@ -41,12 +41,12 @@ export const MembersProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [members, setMembers] = useState<Member[]>([]);
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
-  const { user } = useAuth();
+  const { user, token } = useAuth();
 
   useEffect(() => {
     const fetchMembers = async () => {
       try {
-        const membersData = await UserService.fetchMembers();
+        const membersData = await UserService.fetchMembers(token || "");
 
         if (!membersData) {
           throw new Error("Failed to fetch members data");

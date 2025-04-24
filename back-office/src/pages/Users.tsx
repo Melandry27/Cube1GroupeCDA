@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
+import { useAuth } from "../context/AuthContext";
 
 const Users = () => {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [roles, setRoles] = useState([]);
   const [search, setSearch] = useState("");
+  const { user: currentUser } = useAuth();
+  const currentRole = currentUser?.role;
+
   useEffect(() => {
     const fetchUsersAndRoles = async () => {
       try {
@@ -52,11 +56,31 @@ const Users = () => {
     return role ? role.name : "Rôle inconnu";
   };
 
-  const filteredUsers = users.filter(
-    (user) =>
+  const filteredUsers = users.filter((user) => {
+    const userRoleName = getRoleName(user.roleId);
+  
+    if (currentRole === "Modérateur" && ["Modérateur", "Administrateur", "Super Admin"].includes(userRoleName)) {
+      return false;
+    }
+  
+    if (currentRole === "Administrateur" && ["Administrateur", "Super Admin"].includes(userRoleName)) {
+      return false;
+    }
+  
+    return (
       user.name.toLowerCase().includes(search.toLowerCase()) ||
       user.email.toLowerCase().includes(search.toLowerCase())
-  );
+    );
+  });
+
+  const canManage = (targetRoleName: string) => {
+    if (!currentRole) return false;
+
+    if (currentRole === "Super Admin") return true;
+    if ((currentRole === "Modérateur" && !["Administrateur", "Super Admin"].includes(targetRoleName)) || (currentRole === "Administrateur" && !["Administrateur", "Super Admin"].includes(targetRoleName))) return true;
+
+    return false;
+  };
 
   return (
     <>
@@ -103,18 +127,22 @@ const Users = () => {
                   <td>{new Date(user.createdAt).toLocaleDateString()}</td>
                   <td>
                     <div className="fr-btns-group fr-btns-group--inline">
-                      <button
-                        className="fr-btn fr-btn--secondary fr-btn--sm fr-mr-2w"
-                        onClick={() => handleEdit(user._id)}
-                      >
-                        Modifier
-                      </button>
-                      <button
-                        className="fr-btn fr-btn--tertiary fr-btn--sm"
-                        onClick={() => handleDelete(user._id)}
-                      >
-                        Supprimer
-                      </button>
+                      {canManage(getRoleName(user.roleId)) && (
+                        <>
+                          <button
+                            className="fr-btn fr-btn--secondary fr-btn--sm fr-mr-2w"
+                            onClick={() => handleEdit(user._id)}
+                          >
+                            Modifier
+                          </button>
+                          <button
+                            className="fr-btn fr-btn--tertiary fr-btn--sm"
+                            onClick={() => handleDelete(user._id)}
+                          >
+                            Supprimer
+                          </button>
+                        </>
+                      )}
                     </div>
                   </td>
                 </tr>

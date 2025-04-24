@@ -10,6 +10,15 @@ interface IFile extends Document {
   uploadedBy?: mongoose.Types.ObjectId;
 }
 
+interface FileInput {
+  originalName: string;
+  mimeType: string;
+  size: number;
+  path: string;
+  ressourceId: string;
+  uploadedBy?: mongoose.Types.ObjectId;
+}
+
 const FileSchema = new Schema<IFile>(
   {
     originalName: { type: String, required: true },
@@ -24,6 +33,6 @@ const FileSchema = new Schema<IFile>(
   }
 );
 
-export { IFile };
+export { FileInput, IFile };
 
 export default mongoose.model<IFile>("File", FileSchema);

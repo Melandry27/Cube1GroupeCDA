@@ -15,11 +15,12 @@ export interface Ressource {
   title: string;
   createdBy?: CreatedBy;
   content: string;
-  category: string;
+  categoryId: string;
   views?: number;
   status?: string;
   type?: string;
   createdAt?: string;
+  image?: string;
 }
 
 export interface Category {

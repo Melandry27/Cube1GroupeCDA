@@ -19,6 +19,17 @@ export const update = async (
   return Comment.findOneAndUpdate({ _id: id }, updateData, { new: true });
 };
 
+export const updateStatus = async (
+  id: string,
+  commentStatus: string
+): Promise<IComment | null> => {
+  return Comment.findOneAndUpdate(
+    { _id: id },
+    { commentStatus: commentStatus },
+    { new: true }
+  );
+};
+
 export const remove = async (id: string): Promise<IComment | null> => {
   return Comment.findOneAndDelete({ _id: id });
 };

@@ -115,7 +115,7 @@ const Ressources = () => {
                   <td>{ressource.title}</td>
                   <td>{ressource.createdBy?.name || "Auteur inconnu"}</td>
                   <td>{ressource.content.slice(0, 60)}...</td>
-                  <td>{getCategoryName(ressource.category)}</td>
+                  <td>{getCategoryName(ressource.categoryId)}</td>
                   <td>{ressource.views || 0}</td>
                   <td>
                     {resourceTypeLabels[

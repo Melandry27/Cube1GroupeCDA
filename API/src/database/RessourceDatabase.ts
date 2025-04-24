@@ -1,4 +1,4 @@
-import Ressource, { IRessource } from "../models/Ressource";
+import Ressource, { IRessource, ResourceInput } from "../models/Ressource";
 
 export const getAllRessources = async (): Promise<IRessource[]> => {
   return Ressource.find().populate("createdBy");
@@ -11,7 +11,7 @@ export const getRessourceById = async (
 };
 
 export const createRessource = async (
-  ressourceData: IRessource
+  ressourceData: ResourceInput
 ): Promise<IRessource> => {
   return Ressource.create(ressourceData);
 };
