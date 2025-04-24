@@ -121,7 +121,7 @@ const UpdateRessource = () => {
       );
 
       Alert.alert("Succès", "La ressource a été mise à jour avec succès.");
-      router.back();
+      router.push('(main)');
     } catch (error) {
       if (error instanceof Error) {
         Alert.alert("Erreur", error.message);
