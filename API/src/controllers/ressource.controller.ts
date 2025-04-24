@@ -41,7 +41,7 @@ export const create = async (req: Request, res: Response): Promise<void> => {
       type: type || "Not Started",
       image: imagePath,
       file: fileInfo,
-      quiz: parsedQuiz.questions,
+      quiz: parsedQuiz?.questions || [],
     });
 
     if (!ressource) {
