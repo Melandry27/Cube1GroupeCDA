@@ -1,5 +1,5 @@
-import Constants from 'expo-constants';
-import {fetchAllRessources} from "./ressourcesService";
+import Constants from "expo-constants";
+import { fetchAllRessources } from "./ressourcesService";
 
 const API_URL = Constants.expoConfig.extra?.API_URL;
 
@@ -45,32 +45,34 @@ export const getFavoritesByRessourceId = async (
   return await response.json();
 };
 
-
-export const getUserFavoritesCount = async (userId: string): Promise<number> => {
-    try {
-        const allResources = await fetchAllRessources();
-        const userFavorites = allResources.filter(resource =>
-          resource.favorites?.some(favorite => favorite.createdBy?._id === userId)
-        );
-        return userFavorites.length;
-    } catch (error) {
-        console.error("Error in getUserFavoritesCount:", error);
-        throw error;
-    }
+export const getUserFavoritesCount = async (
+  userId: string,
+  token: string
+): Promise<number> => {
+  try {
+    const allResources = await fetchAllRessources(token);
+    const userFavorites = allResources.filter((resource) =>
+      resource.favorites?.some((favorite) => favorite.createdBy?._id === userId)
+    );
+    return userFavorites.length;
+  } catch (error) {
+    console.error("Error in getUserFavoritesCount:", error);
+    throw error;
+  }
 };
 
 export const fetchFavoritesByUserId = async (userId: string) => {
-    try {
-        const response = await fetch(`${API_URL}/ressources`);
-        if (!response.ok) {
-            throw new Error('Failed to fetch resources');
-        }
-        const allResources = await response.json();
-        return allResources.filter(resource =>
-          resource.favorites?.some(favorite => favorite.createdBy?._id === userId)
-        );
-    } catch (error) {
-        console.error("Error fetching resources by user ID:", error);
-        throw error;
+  try {
+    const response = await fetch(`${API_URL}/ressources`);
+    if (!response.ok) {
+      throw new Error("Failed to fetch resources");
     }
-}
+    const allResources = await response.json();
+    return allResources.filter((resource) =>
+      resource.favorites?.some((favorite) => favorite.createdBy?._id === userId)
+    );
+  } catch (error) {
+    console.error("Error fetching resources by user ID:", error);
+    throw error;
+  }
+};
