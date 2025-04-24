@@ -1,0 +1,19 @@
+meta {
+  name: Update Comments
+  type: http
+  seq: 6
+}
+
+put {
+  url: {{BASE_URL}}/comments/id
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "userId": "id",
+      "ressourceId": "id",
+      "content": "J'adore cet article !"
+  }
+}

@@ -1,0 +1,18 @@
+meta {
+  name: Update Categorie
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{BASE_URL}}/categories/id
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Politique",
+    "description": "Une catégorie qui parle de truc nazes"
+  }
+}

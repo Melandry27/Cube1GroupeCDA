@@ -9,18 +9,31 @@ enum RoleName {
 }
 
 interface IRole extends Document {
-  id: number;
   name: RoleName;
+  slug: string;
+}
+
+interface IRoleInput {
+  name: RoleName;
+  slug: string;
 }
 
 const RoleSchema = new Schema<IRole>(
   {
-    id: { type: Number, required: true },
     name: { type: String, enum: Object.values(RoleName), required: true },
+    slug: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
   },
   {
     timestamps: true,
   }
 );
 
-export default mongoose.model<IRole>("User", RoleSchema);
+export { IRole, IRoleInput, RoleName };
+
+export default mongoose.model<IRole>("Role", RoleSchema);

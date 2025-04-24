@@ -1,0 +1,21 @@
+meta {
+  name: Register
+  type: http
+  seq: 1
+}
+
+post {  url: {{BASE_URL}}/auth/register
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Jean Dupont",
+    "email": "joseph.maujean@gmail.com",
+    "password": "motdepasse123",
+    "roleId": "6600bc5d197b15350a1bde64",
+    "adress": "123 rue du Test",
+    "phone": "612345678"
+  }
+}

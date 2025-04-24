@@ -1,0 +1,19 @@
+meta {
+  name: Create Favorite
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{BASE_URL}}/favorites/
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "userId": "id",
+      "ressourceId": "67fd70a44eb452d7b6782735",
+      "type": "Truc"
+  }
+}

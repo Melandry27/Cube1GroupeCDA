@@ -1,0 +1,19 @@
+meta {
+  name: Update Favorite
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{BASE_URL}}/favorites/id
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "userId": "id",
+      "ressourceId": "id",
+      "type": "Truc 2"
+  }
+}

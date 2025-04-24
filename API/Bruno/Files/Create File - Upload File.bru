@@ -1,0 +1,21 @@
+meta {
+  name: Create File / Upload File
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{BASE_URL}}/files/upload
+  body: multipartForm
+  auth: inherit
+}
+
+body:multipart-form {
+  file: @file(C:\Users\melan\Downloads\MelandryMARCHAND_EN_Resume_2025.pdf) @contentType(File)
+  ressourceId: 680623424e3f5e78d3e992bf
+  uploadedBy: 68027835303f5b43a4931557
+}
+
+body:file {
+  file: @file(C:\Users\melan\Downloads\MelandryMARCHAND_FR_Resume_2025.pdf) @contentType(application/pdf)
+}

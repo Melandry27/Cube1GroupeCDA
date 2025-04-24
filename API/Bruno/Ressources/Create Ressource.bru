@@ -1,0 +1,23 @@
+meta {
+  name: Create Ressource
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{BASE_URL}}/ressources/
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "title": "Une petite ressource de test",
+    "content": "Cette ressource explore les principaux axes de la réforme éducative 2025.",
+    "type": "In Progress",
+    "createdBy": "67eee2b27b066acad7220d97",
+    "categoryId": "68040195aa08e719d8ce6238",
+    "image": "https://sud.mutualite.fr/content/uploads/sites/40/2022/10/Sante-mentale-positive_3-1-scaled-1280x560.jpg"
+  }
+  
+}

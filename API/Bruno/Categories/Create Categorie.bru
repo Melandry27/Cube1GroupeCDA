@@ -1,0 +1,23 @@
+meta {
+  name: Create Categorie
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{BASE_URL}}/categories/
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Dépression",
+    "description": "Une catégorie qui parle de truc nazes",
+    "color" :"#000091"
+  }
+}
+
+vars:pre-request {
+  : 
+}

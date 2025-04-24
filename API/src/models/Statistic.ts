@@ -1,7 +1,7 @@
 import mongoose, { Document, Schema } from "mongoose";
 
 interface IStatistic extends Document {
-  id: number;
+  id: string;
   ressourceId: string;
   views: number;
   favorites: number;
@@ -10,7 +10,7 @@ interface IStatistic extends Document {
 
 const StatisticSchema = new Schema<IStatistic>(
   {
-    id: { type: Number, required: true },
+    id: { type: String, required: true },
     ressourceId: { type: String, required: true },
     views: { type: Number, required: true },
     favorites: { type: Number, required: true },
@@ -21,4 +21,10 @@ const StatisticSchema = new Schema<IStatistic>(
   }
 );
 
-export default mongoose.model<IStatistic>("Statistic", StatisticSchema);
+const Statistic =
+  mongoose.models.Statistic ||
+  mongoose.model<IStatistic>("Statistic", StatisticSchema);
+
+export { IStatistic };
+
+export default Statistic;

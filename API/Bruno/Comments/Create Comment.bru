@@ -1,0 +1,20 @@
+meta {
+  name: Create Comments
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{BASE_URL}}/comments/
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "userId": "67eee2b27b066acad7220d97",
+      "ressourceId": "67fd715a4eb452d7b678273c",
+      "content": "Commentaire de joseph",
+      "commentStatus": "Pending"
+  }
+}

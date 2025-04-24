@@ -1,0 +1,22 @@
+meta {
+  name: Create User
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{BASE_URL}}/auth/register
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "name": "Test",
+      "email": "test1@test.com",
+      "password": "password",
+      "roleId": "67f7cde021c305ce287173df",
+      "adress": "test 10",
+      "phone": "03 03 03 03 03"
+  }
+}

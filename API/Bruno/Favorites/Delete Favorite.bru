@@ -1,0 +1,11 @@
+meta {
+  name: Delete Favorite
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{BASE_URL}}/favorites/id
+  body: none
+  auth: inherit
+}
