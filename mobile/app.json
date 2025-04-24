@@ -8,8 +8,9 @@
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "extra": {
-      "API_URL": "http://10.176.130.12:5000/api",
-      "API_URL_IMAGE": "http://10.176.130.12:5000"
+      "API_URL": "http://192.168.1.80:5000/api",
+      "API_URL_IMAGE": "http://192.168.1.80:5000",
+      "SOCKET_URL": "http://192.168.1.80:3001"
     },
     "splash": {
       "image": "./assets/splash-icon.png",

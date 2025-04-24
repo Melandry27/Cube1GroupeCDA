@@ -166,8 +166,11 @@ export const verifyEmail = async (req: Request, res: Response) => {
   try {
     const { token } = req.params;
 
+    console.log("Token: ", token);
+
     const decoded = jwt.verify(token, JWT_SECRET) as { email: string };
-    const user = await User.findOne({ email: decoded.email });
+
+    const user = await User.findOne({ email: decoded.email.toLowerCase() });
 
     if (!user) {
       res.status(404).json({ message: "Utilisateur non trouvé." });

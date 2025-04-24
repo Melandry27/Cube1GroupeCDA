@@ -17,6 +17,7 @@ import Comments from "../../components/Comments";
 import FavorisButton from "../../components/FavorisButton";
 import Title from "../../components/Title";
 import { fetchCategoriesById } from "../../services/categoriesService";
+import { createComment } from "../../services/commentsService";
 import { fetchRessourceById } from "../../services/ressourcesService";
 
 const API_URL_IMAGE = Constants.expoConfig?.extra?.API_URL_IMAGE;
@@ -31,6 +32,10 @@ export default function RessourceDetail() {
   const [quizResults, setQuizResults] = useState({});
 
   const { token, user } = useAuth();
+
+  const handleCommentSubmit = (comment) => {
+    createComment(ressource?._id, comment, user?._id, token || "");
+  };
 
   useEffect(() => {
     const loadRessource = async () => {
@@ -54,7 +59,7 @@ export default function RessourceDetail() {
     };
 
     loadRessource();
-  }, [id]);
+  }, [id, handleCommentSubmit]);
 
   if (loading) {
     return (
@@ -250,7 +255,7 @@ export default function RessourceDetail() {
           {token && (
             <CommentBar
               ressourceId={ressource._id}
-              onSubmit={(comment) => console.log(comment)}
+              onSubmit={handleCommentSubmit}
             />
           )}
 

@@ -40,9 +40,9 @@ const RessourceCard = ({
           </View>
         )}
         <Text style={styles.description}>{description}</Text>
-        {user._id === createdBy._id && (
+        {user?._id === createdBy._id && (
           <TouchableOpacity style={styles.editIcon} asChild>
-            <Link href={`/(edit)/${_id}`}>
+            <Link href={`/(edit)/${_id || ""}`} replace>
               <Ionicons name="create-outline" size={40} color="#000" />
             </Link>
           </TouchableOpacity>

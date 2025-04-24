@@ -152,7 +152,7 @@ const CreateRessource = () => {
     });
 
     if (!result.canceled) {
-      setFormData((prev) => ({ ...prev, file: result }));
+      setFormData((prev) => ({ ...prev, file: result.assets[0] }));
     }
   };
 
@@ -289,7 +289,9 @@ const CreateRessource = () => {
             <Text style={styles.imageButtonText}>Choisir un fichier PDF</Text>
           </TouchableOpacity>
           {formData.file && (
-            <Text style={{ marginTop: 10 }}>{formData.file?.name}</Text>
+            <Text style={{ marginTop: 10, color: "#000" }}>
+              {formData.file.name}
+            </Text>
           )}
         </View>
 
