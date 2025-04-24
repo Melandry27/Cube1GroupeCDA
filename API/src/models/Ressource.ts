@@ -15,7 +15,7 @@ interface IRessource extends Document {
   categoryId: mongoose.Types.ObjectId;
   image?: string;
   file?: Object;
-  _quiz?: any;
+  quiz?: any;
 }
 
 interface ResourceInput {

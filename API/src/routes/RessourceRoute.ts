@@ -106,7 +106,7 @@ router.post("/", uploadRessourceFields, RessourceController.create);
  *       404:
  *         description: Ressource non trouvée
  */
-router.put("/:id", RessourceController.update);
+router.put("/:id", RessourceController.updateRessource);
 
 /**
  * @swagger
