@@ -1,5 +1,6 @@
 import mongoose, { Document, Schema } from "mongoose";
 import { FileInput } from "./File";
+// import {IQuiz} from "./Quizz";
 
 enum RessourceType {
   InProgress = "In Progress",
@@ -15,6 +16,8 @@ interface IRessource extends Document {
   categoryId: mongoose.Types.ObjectId;
   image?: string;
   file?: Object;
+  quizId?: mongoose.Types.ObjectId; // Référence facultative à un quiz
+  // quiz?: IQuiz;
 }
 
 interface ResourceInput {
@@ -45,6 +48,11 @@ const RessourceSchema = new Schema<IRessource>(
       required: true,
     },
     file: { type: Object, required: false },
+    quizId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Quiz",
+      required: false, // Facultatif
+    },
   },
   {
     timestamps: true,

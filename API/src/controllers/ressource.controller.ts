@@ -4,6 +4,7 @@ import { FileInput } from "../models/File";
 import { IRessource } from "../models/Ressource";
 import * as CategoryService from "../services/CategoryService";
 import * as RessourceService from "../services/RessourceService";
+import Quiz from "../models/Quiz";
 
 export const create = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -80,13 +81,9 @@ export const getById = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    ressource.image = ressource.image
-      ? path
-          .join(process.env.BASE_URL || "", ressource.image)
-          .replace(/\\/g, "/")
-      : undefined;
+    const quiz = await Quiz.findOne({ resourceId: ressource._id });
 
-    res.status(200).json(ressource);
+    res.status(200).json({ ...ressource.toObject(), quiz });
   } catch (error) {
     res.status(500).json({ message: "Error fetching resource", error });
   }
@@ -131,3 +128,4 @@ export const remove = async (req: Request, res: Response): Promise<void> => {
     res.status(500).json({ message: "Error deleting resource", error });
   }
 };
+
