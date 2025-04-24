@@ -33,9 +33,9 @@ export default function RessourceDetail() {
 
   const { token, user } = useAuth();
 
-  const handleCommentSubmit = (comment) => {
-    createComment(ressource?._id, comment, user?._id, token || "");
-  };
+  // const handleCommentSubmit = (comment) => {
+  //   createComment(ressource?._id, comment, user?._id, token || "");
+  // };
 
   useEffect(() => {
     const loadRessource = async () => {
@@ -255,7 +255,6 @@ export default function RessourceDetail() {
           {token && (
             <CommentBar
               ressourceId={ressource._id}
-              onSubmit={handleCommentSubmit}
             />
           )}
 
