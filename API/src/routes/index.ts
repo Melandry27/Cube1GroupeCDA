@@ -10,6 +10,7 @@ import ressourceRoutes from "./RessourceRoute";
 import roleRoutes from "./RoleRoute";
 import statisticRoutes from "./StatisticRoute";
 import userRoutes from "./UserRoute";
+import quizRoutes from "./QuizRoute";
 
 const router = Router();
 
@@ -26,5 +27,6 @@ router.use("/ressources", ressourceRoutes);
 router.use("/roles", roleRoutes);
 router.use("/statistics", statisticRoutes);
 router.use("/users", userRoutes);
+router.use("/quizzes", quizRoutes);
 
 export default router;
