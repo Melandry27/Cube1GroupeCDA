@@ -87,3 +87,16 @@ export const remove = async (req: Request, res: Response): Promise<void> => {
     res.status(500).json({ message: "Error deleting favorite", error });
   }
 };
+
+export const getByUser = async (req: Request, res: Response): Promise<void> => {
+  const { user } = req;
+
+  try {
+    const favorites: IFavorite[] = await FavoriteService.getFavoritesByUserId(
+      user._id
+    );
+    res.status(200).json(favorites);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching favorites", error });
+  }
+};

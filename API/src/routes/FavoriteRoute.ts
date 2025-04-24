@@ -30,6 +30,33 @@ router.get("/", FavoriteController.getAll);
 
 /**
  * @swagger
+ * /favorites/getByUser:
+ *   get:
+ *     summary: Récupère les favoris d'un utilisateur
+ *     tags: [Favorites]
+ *     parameters:
+ *       - in: query
+ *         name: userId
+ *         required: true
+ *         description: ID de l'utilisateur
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Liste des favoris de l'utilisateur
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Favorite'
+ *       400:
+ *         description: Requête invalide
+ */
+router.get("/getByUser", FavoriteController.getByUser);
+
+/**
+ * @swagger
  * /favorites/{id}:
  *   get:
  *     summary: Récupère un favori par son ID

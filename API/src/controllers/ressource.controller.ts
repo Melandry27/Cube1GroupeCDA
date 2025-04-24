@@ -7,7 +7,7 @@ import * as RessourceService from "../services/RessourceService";
 
 export const create = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { title, content, categoryId, type } = req.body;
+    const { title, content, categoryId, type, quiz } = req.body;
 
     const category = await CategoryService.getCategoryByIdOrCreateOne(
       categoryId
@@ -31,6 +31,10 @@ export const create = async (req: Request, res: Response): Promise<void> => {
 
     const imagePath = image ? path.join("uploads", image.filename) : undefined;
 
+    const parsedQuiz = quiz ? JSON.parse(quiz) : undefined;
+
+    console.log("parsedQuiz", parsedQuiz);
+
     const ressource: IRessource = await RessourceService.create({
       title,
       content,
@@ -39,6 +43,7 @@ export const create = async (req: Request, res: Response): Promise<void> => {
       type: type || "Not Started",
       image: imagePath,
       file: fileInfo,
+      quiz: parsedQuiz.questions,
     });
 
     if (!ressource) {
@@ -48,6 +53,7 @@ export const create = async (req: Request, res: Response): Promise<void> => {
 
     res.status(201).json(ressource);
   } catch (error) {
+    console.error("Error creating resource:", error);
     res.status(500).json({ message: "Error creating resource", error });
   }
 };

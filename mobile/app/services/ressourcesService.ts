@@ -45,6 +45,7 @@ export const createRessource = async (data: any, token: string) => {
     formData.append("type", data.type);
     formData.append("createdBy", data.createdBy);
     formData.append("categoryId", data.categoryId);
+    formData.append("quiz", JSON.stringify(data.quiz));
 
     if (data.image) {
       formData.append("image", {
