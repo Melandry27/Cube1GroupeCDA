@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import Title from "./Title";
 import SearchBar from "./SearchBar";
 
-const Header = ({ searchText, setSearchText }) => {
+const Header = ({ searchText, setSearchText, showSearchIcon }) => {
     const [searchVisible, setSearchVisible] = useState(false);
 
     return (
@@ -13,9 +13,11 @@ const Header = ({ searchText, setSearchText }) => {
           <View style={styles.header}>
               <Image source={require('../../assets/Ministère_des_Solidarités_et_de_la_Santé.png')} style={styles.logo} />
 
-              <TouchableOpacity style={styles.searchButton} onPress={() => setSearchVisible(!searchVisible)}>
-                  <Ionicons name="search" size={24} color="#000091" />
-              </TouchableOpacity>
+              {showSearchIcon && (
+                <TouchableOpacity style={styles.searchButton} onPress={() => setSearchVisible(!searchVisible)}>
+                    <Ionicons name="search" size={24} color="#000091" />
+                </TouchableOpacity>
+              )}
           </View>
           <View style={styles.grayBar} />
           <Title style={styles.title} size={"medium"}>(Re)sources Relationnelles</Title>

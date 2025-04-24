@@ -31,29 +31,29 @@ export default function RessourceList() {
     setSelectedCategory(categoryId === selectedCategory ? null : categoryId);
   };
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <Header searchText={searchText} setSearchText={setSearchText} />
-      <StatusBar style="auto" />
-      <ScrollView>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {categories.map((category) => (
-            <TouchableOpacity
-              key={category._id}
-              onPress={() => handleCategorySelect(category._id)}
-            >
-              <Title
-                size={"small"}
-                style={[
-                  styles.tag,
-                  selectedCategory === category._id && styles.selectedTag,
-                ]}
-              >
-                {category.name}
-              </Title>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
+    return (
+      <SafeAreaView style={styles.container}>
+          <Header searchText={searchText} setSearchText={setSearchText} showSearchIcon ={true}/>
+          <StatusBar style="auto" />
+          <ScrollView>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                  {categories.map((category) => (
+                    <TouchableOpacity
+                      key={category._id}
+                      onPress={() => handleCategorySelect(category._id)}
+                    >
+                        <Title
+                          size={"small"}
+                          style={[
+                              styles.tag,
+                              selectedCategory === category._id && styles.selectedTag,
+                          ]}
+                        >
+                            {category.name}
+                        </Title>
+                    </TouchableOpacity>
+                  ))}
+              </ScrollView>
 
         <Title size={"small"} style={styles.sectionTitle}>
           Ressources

@@ -1,8 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import {
-  Alert,
-  Button,
   FlatList,
   StyleSheet,
   Text,
@@ -11,6 +9,8 @@ import {
 } from "react-native";
 import { useAuth } from "../../../context/AuthContext";
 import { useMembers } from "../../../context/MembersContext";
+import Header from "../../components/Header";
+import Title from "../../components/Title";
 
 const Index = () => {
   const navigation = useNavigation();
@@ -18,8 +18,10 @@ const Index = () => {
   const { members, selectMember } = useMembers();
 
   return (
+    <>
+    <Header />
     <View style={styles.container}>
-      <Text style={styles.title}>Liste des membres</Text>
+      <Title size={"large"} style={styles.title}>Liste des membres</Title>
 
       <FlatList
         data={members}
@@ -37,18 +39,8 @@ const Index = () => {
           </TouchableOpacity>
         )}
       />
-
-      <View style={styles.buttonContainer}>
-        <Button
-          title="Go to Chat"
-          onPress={() =>
-            user
-              ? navigation.navigate("ChatScreen")
-              : Alert.alert("Connectez-vous d'abord")
-          }
-        />
-      </View>
     </View>
+    </>
   );
 };
 
@@ -56,11 +48,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#fafafa",
   },
   title: {
     fontSize: 22,
-    fontWeight: "bold",
     marginBottom: 12,
     textAlign: "center",
   },

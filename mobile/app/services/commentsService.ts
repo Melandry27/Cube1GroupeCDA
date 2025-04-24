@@ -1,4 +1,5 @@
 import Constants from "expo-constants";
+import {fetchAllRessources} from "./ressourcesService";
 
 const API_URL = Constants.expoConfig.extra?.API_URL;
 
@@ -26,37 +27,9 @@ export const createComment = async (
   }
 };
 
-export const editComment = async (
-  commentId: string,
-  content: string,
-  token: string
-) => {
+export const deleteComment = async (commentId: string) => {
   try {
     const response = await fetch(`${API_URL}/comments/${commentId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ content }),
-    });
-    if (!response.ok) {
-      throw new Error("Failed to edit comment");
-    }
-    return await response.json();
-  } catch (error) {
-    console.error("Error editing comment:", error);
-    throw error;
-  }
-};
-
-export const deleteComment = async (commentId: string, token: string) => {
-  try {
-    const response = await fetch(`${API_URL}/comments/${commentId}`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
       method: "DELETE",
     });
     if (!response.ok) {
@@ -88,6 +61,19 @@ export const fetchCommentsByRessourceId = async (
     return await response.json();
   } catch (error) {
     console.error("Error fetching comments:", error);
+    throw error;
+  }
+};
+
+export const getUserCommentsCount = async (userId: string): Promise<number> => {
+  try {
+    const allResources = await fetchAllRessources();
+    const userComments = allResources.filter(resource =>
+      resource.comments?.some(comment => comment.createdBy?._id === userId)
+    );
+    return userComments.reduce((count, resource) => count + resource.comments.length, 0);
+  } catch (error) {
+    console.error("Error in getUserCommentsCount:", error);
     throw error;
   }
 };

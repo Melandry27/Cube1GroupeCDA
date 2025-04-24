@@ -86,3 +86,29 @@ export const createRessource = async (data: any, token: string) => {
     throw error;
   }
 };
+
+
+export const getUserResourcesCount = async (userId: string): Promise<number> => {
+    try {
+        const allResources = await fetchAllRessources();
+        console.log(allResources.createdBy?._id)
+        const userResources = allResources.filter(resource => resource.createdBy?._id === userId);
+        return userResources.length;
+    } catch (error) {
+        console.error("Error in getUserResourcesCount:", error);
+        throw error;
+    }
+};
+
+export const fetchRessourcesByUser = async (userId: string) => {
+    try {
+        const response = await fetch(`${API_URL}/ressources?createdBy=${userId}`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return await response.json();
+    } catch (error) {
+        console.error('Error in fetchRessourcesByUser:', error);
+        throw error;
+    }
+};

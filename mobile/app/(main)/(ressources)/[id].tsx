@@ -18,15 +18,18 @@ import FavorisButton from "../../components/FavorisButton";
 import Title from "../../components/Title";
 import { fetchCategoriesById } from "../../services/categoriesService";
 import { fetchRessourceById } from "../../services/ressourcesService";
+import {fetchCategoriesById} from "../../services/categoriesService";
+import {useAuth} from "../../../context/AuthContext";
 
 const API_URL_IMAGE = Constants.expoConfig?.extra?.API_URL_IMAGE;
 
 export default function RessourceDetail() {
-  const { id } = useLocalSearchParams();
-  const [ressource, setRessource] = useState(null);
-  const [category, setCategory] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [showPdf, setShowPdf] = useState(false);
+    const { id } = useLocalSearchParams();
+    const [ressource, setRessource] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [category, setCategory] = useState(null);
+    const user = useAuth();
+    const [showPdf, setShowPdf] = useState(false);
 
   const { token } = useAuth();
 
@@ -137,19 +140,18 @@ export default function RessourceDetail() {
                   />
                 </View>
               )}
-            </View>
-          )}
+
+                {user.token && (
+                  <CommentBar
+                    ressourceId={ressource._id}
+                    onSubmit={(comment) => console.log(comment)}
+                  />
+                )}
+
+                <Comments ressourceId={ressource._id} />
+            </ScrollView>
         </View>
-
-        <CommentBar
-          ressourceId={ressource._id}
-          onSubmit={(comment) => console.log(comment)}
-        />
-
-        <Comments ressourceId={ressource._id} />
-      </ScrollView>
-    </View>
-  );
+    );
 }
 
 const styles = StyleSheet.create({
