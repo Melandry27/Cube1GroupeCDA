@@ -33,7 +33,7 @@ export default function App() {
             <View style={styles.buttonContainer}>
               <TouchableOpacity
                 style={styles.squareButton}
-                onPress={() => router.push("pages/myFavoritesPages")}
+                onPress={() => router.push("/pages/MyFavoritesPages")}
               >
                 <Ionicons size={32} color={"#000091"} name={"heart"} />
                 <Title size={"small"} style={styles.squareTitle}>
@@ -41,7 +41,10 @@ export default function App() {
                 </Title>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.squareButton}>
+              <TouchableOpacity
+                style={styles.squareButton}
+                onPress={() => router.push("/pages/MyRessourcesPages")}
+              >
                 <FontAwesome6 name="book" color={"#000091"} size={32} />
                 <Title size={"small"} style={styles.squareTitle}>
                   Mes Ressources
