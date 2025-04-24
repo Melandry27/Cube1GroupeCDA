@@ -105,7 +105,7 @@ export default function RessourceDetail() {
       // Trouver l'option correcte
       const correctOption = question.options.find((option) => option.isCorrect);
 
-      if (userAnswer === correctOption.text) {
+      if (userAnswer === correctOption?.text) {
         updatedResults[index] = true; // Réponse correcte
       } else {
         updatedResults[index] = false; // Réponse incorrecte
