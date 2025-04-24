@@ -1,10 +1,11 @@
 import { Tabs } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
-import {AuthProvider} from "../../context/AuthContext";
+import {AuthProvider, useAuth} from "../../context/AuthContext";
 import {MembersProvider} from "../../context/MembersContext";
 
 export default function MainLayout() {
+ const user = useAuth();
   return (
     <AuthProvider>
       <MembersProvider>
@@ -39,20 +40,20 @@ export default function MainLayout() {
               ),
             }}
           />
-          <Tabs.Screen
-            name="(message)"
-            options={{
-              title: "Messages",
-              headerShown: false,
-              tabBarIcon: ({ color, size}) => (
-                <FontAwesome6 name="message" color={color} size={size} />
-              ),
-            }}
-          />
+            <Tabs.Screen
+              name="(message)"
+              options={{
+                title: "Messages",
+                headerShown: false,
+                tabBarIcon: ({ color, size }) => (
+                  <FontAwesome6 name="message" color={color} size={size} />
+                ),
+              }}
+            />
           <Tabs.Screen
             name="(auth)"
             options={{
-              title: "Connexion",
+              title: "Utilisateur",
               headerShown: false,
               tabBarIcon: ({ color, size }) => (
                 <FontAwesome6 name="user" color={color} size={size} />
