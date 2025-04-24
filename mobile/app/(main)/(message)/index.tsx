@@ -1,8 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import {
-  Alert,
-  Button,
   FlatList,
   StyleSheet,
   Text,
@@ -50,11 +48,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#fafafa",
   },
   title: {
     fontSize: 22,
-    fontWeight: "bold",
     marginBottom: 12,
     textAlign: "center",
   },
