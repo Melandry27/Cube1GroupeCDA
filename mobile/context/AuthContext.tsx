@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { jwtDecode } from "jwt-decode";
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { Alert } from "react-native";
 import * as AuthService from "../app/services/authService";
 
 interface User {
@@ -31,6 +32,7 @@ interface DecodedToken {
   role: string;
   adress: string;
   phone: string;
+  isVerified: boolean;
 }
 
 const initializeAuthState = async (): Promise<{
@@ -87,6 +89,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
     await AsyncStorage.setItem(TOKEN_KEY, res.token);
     const decoded = jwtDecode<DecodedToken>(res.token);
+
+    if (!decoded.isVerified) {
+      await AsyncStorage.removeItem(TOKEN_KEY);
+      return Alert.alert(
+        "Erreur",
+        "Votre compte n'est pas encore vérifié. Veuillez vérifier votre adresse e-mail."
+      );
+    }
 
     setAuthState({
       token: res.token,

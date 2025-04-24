@@ -70,7 +70,7 @@ const RessourceSection = ({ itemCount, type, filterCategory, searchText }) => {
     };
 
     loadRessources();
-  }, [type, filterCategory]);
+  }, [type, filterCategory, token]);
 
   const displayedArticles = articles
     .filter((article) =>

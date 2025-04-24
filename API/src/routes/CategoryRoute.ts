@@ -53,6 +53,8 @@ router.get("/", CategoryController.getAll);
  */
 router.get("/:id", CategoryController.getById);
 
+router.post("/generate10categories", CategoryController.generate10Categories);
+
 /**
  * @swagger
  * /categories:

@@ -2,20 +2,28 @@ import bcrypt from "bcrypt";
 import { Request, RequestHandler, Response } from "express";
 import jwt from "jsonwebtoken";
 import nodemailer from "nodemailer";
-import { generateToken } from "../utils";
-
 import User, { CreateUserInput } from "../models/User";
 import * as AuthService from "../services/AuthService";
 import * as RoleServices from "../services/RoleService";
 import * as UserService from "../services/UserService";
+import { generateToken } from "../utils";
 
 const JWT_SECRET = process.env.JWT_SECRET || "default_secret";
 
 export const register = async (req: Request, res: Response) => {
   try {
-    const { name, email, password, roleId, adress, phone } = req.body;
+    const { name, email, password, adress, phone } = req.body;
 
-    const existingUser = await UserService.getByEmail(email);
+    const emailToLowerCase = email.toLowerCase();
+
+    const role = await RoleServices.getRoleBySlug("citoyen-connecte");
+
+    if (!role) {
+      res.status(400).json({ message: "Rôle introuvable." });
+      return;
+    }
+
+    const existingUser = await UserService.getByEmail(emailToLowerCase);
     if (existingUser) {
       res.status(400).json({ message: "Cet email est déjà utilisé." });
       return;
@@ -25,9 +33,9 @@ export const register = async (req: Request, res: Response) => {
 
     const user: CreateUserInput = await UserService.create({
       name,
-      email,
+      email: emailToLowerCase,
       password: hashedPassword,
-      roleId,
+      roleId: role._id as string,
       adress,
       phone,
       isVerified: false,
@@ -108,15 +116,23 @@ export const forgotPassword = async (req: Request, res: Response) => {
   try {
     const { email } = req.body;
 
-    const user = await User.findOne({ email });
+    if (!email) {
+      res.status(400).json({ message: "Email requis." });
+      return;
+    }
+
+    const user = await UserService.getByEmail(email.toLowerCase());
+
     if (!user) {
       res.status(404).json({ message: "Utilisateur non trouvé." });
       return;
     }
 
-    const role = await RoleServices.getRole(user.roleId);
+    const newPassword = AuthService.generateNewPassword();
 
-    const resetToken = generateToken(user?.id, role);
+    await UserService.update(user.id, {
+      password: await bcrypt.hash(newPassword, 10),
+    });
 
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
@@ -132,9 +148,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
       to: email,
       subject: "Réinitialisation du mot de passe",
       html: `<p>Bonjour ${user?.name},</p>
-             <p>Veuillez cliquer sur le lien ci-dessous pour réinitialiser votre mot de passe :</p>
-             <a href="http://localhost:3000/reset-password/${resetToken}">Réinitialiser mon mot de passe</a>
-             <p>Ce lien est valide pendant une heure.</p>`,
+             <p>Voici votre nouveau mot de passe: "${newPassword}"</p>`,
     });
 
     res.status(200).json({
@@ -186,5 +200,53 @@ export const verifyEmail = async (req: Request, res: Response) => {
     `);
   } catch (error) {
     res.status(400).json({ message: "Lien invalide ou expiré.", error });
+  }
+};
+
+export const changePassword = async (req: Request, res: Response) => {
+  try {
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      res.status(400).json({ message: "Tous les champs sont requis." });
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      res
+        .status(400)
+        .json({ message: "Les mots de passe ne correspondent pas." });
+      return;
+    }
+
+    const userId = req.user._id;
+
+    const user = await UserService.getById(userId);
+
+    if (!user) {
+      res.status(404).json({ message: "Utilisateur non trouvé." });
+      return;
+    }
+
+    const isOldPasswordValid = await bcrypt.compare(
+      currentPassword,
+      user.password
+    );
+
+    if (!isOldPasswordValid) {
+      res.status(400).json({ message: "Ancien mot de passe incorrect." });
+      return;
+    }
+
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+    await UserService.update(user.id, { password: hashedNewPassword });
+
+    res.status(200).json({ message: "Mot de passe changé avec succès." });
+  } catch (error) {
+    console.error("Change Password ERROR: ", error);
+    res
+      .status(500)
+      .json({ message: "Erreur lors du changement de mot de passe.", error });
   }
 };

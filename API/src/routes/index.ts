@@ -13,9 +13,9 @@ import userRoutes from "./UserRoute";
 
 const router = Router();
 
-router.use("/auth", authRoutes);
-
 router.use(protect as express.RequestHandler);
+
+router.use("/auth", authRoutes);
 
 router.use("/files", fileRoutes);
 router.use("/categories", categoryRoutes);

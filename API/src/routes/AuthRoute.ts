@@ -110,6 +110,38 @@ router.post("/forgot-password", AuthController.forgotPassword);
 
 /**
  * @swagger
+ * /auth/change-password:
+ *   post:
+ *     summary: Changement de mot de passe
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - oldPassword
+ *               - newPassword
+ *             properties:
+ *               oldPassword:
+ *                 type: string
+ *                 example: ancienMotDePasse123
+ *               newPassword:
+ *                 type: string
+ *                 example: nouveauMotDePasse456
+ *     responses:
+ *       200:
+ *         description: Mot de passe changé avec succès
+ *       400:
+ *         description: Ancien mot de passe incorrect ou nouvelle validation échouée
+ *       401:
+ *         description: Non autorisé
+ */
+router.post("/change-password", AuthController.changePassword);
+
+/**
+ * @swagger
  * /auth/verify-email/{token}:
  *   get:
  *     summary: Vérifie l'email de l'utilisateur via un token

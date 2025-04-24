@@ -22,31 +22,45 @@ export default function Index() {
   return (
     <>
       <Header />
-    <View style={styles.container}>
-      {user ? (
-        <>
-          <Text style={styles.text}>Bienvenue, {user.name}!</Text>
-          <TouchableOpacity style={styles.button} onPress={handleLogout}>
-            <Text style={styles.buttonText}>Se déconnecter</Text>
-          </TouchableOpacity>
-        </>
-      ) : (
-        <>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => router.push("(auth)/Login")}
-          >
-            <Text style={styles.buttonText}>Se connecter</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => router.push("(auth)/SignUp")}
-          >
-            <Text style={styles.buttonText}>Créer un compte</Text>
-          </TouchableOpacity>
-        </>
-      )}
-    </View>
+      <View style={styles.container}>
+        {user ? (
+          <>
+            <Text style={styles.text}>Bienvenue, {user.name}!</Text>
+            <TouchableOpacity style={styles.button} onPress={handleLogout}>
+              <Text style={styles.buttonText}>Se déconnecter</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => router.push("(main)/ChangePassword")}
+            >
+              <Text style={styles.buttonText}>Changer mon mots de passe</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => router.push("(main)/UpdateUser")}
+            >
+              <Text style={styles.buttonText}>
+                Mettre à jour les informations
+              </Text>
+            </TouchableOpacity>
+          </>
+        ) : (
+          <>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => router.push("(auth)/Login")}
+            >
+              <Text style={styles.buttonText}>Se connecter</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => router.push("(auth)/SignUp")}
+            >
+              <Text style={styles.buttonText}>Créer un compte</Text>
+            </TouchableOpacity>
+          </>
+        )}
+      </View>
     </>
   );
 }
@@ -73,5 +87,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "#fff",
     fontSize: 16,
+
+    textAlign: "center",
   },
 });

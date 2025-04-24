@@ -80,3 +80,17 @@ export const remove = async (req: Request, res: Response): Promise<void> => {
     res.status(500).json({ message: "Error deleting category", error });
   }
 };
+
+export const generate10Categories = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const categories: ICategory[] =
+      await CategoryService.generate10Categories();
+
+    res.status(201).json(categories);
+  } catch (error) {
+    res.status(500).json({ message: "Error generating categories", error });
+  }
+};

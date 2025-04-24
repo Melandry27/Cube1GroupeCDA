@@ -13,7 +13,9 @@ import Title from "../../components/Title";
 import { fetchCategories } from "../../services/categoriesService";
 
 export default function RessourceList() {
-  const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState<
+    { _id: string; name: string; color: string }[]
+  >([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [searchText, setSearchText] = useState("");
 
@@ -31,30 +33,52 @@ export default function RessourceList() {
     setSelectedCategory(categoryId === selectedCategory ? null : categoryId);
   };
 
-    return (
-      <SafeAreaView style={styles.container}>
-          <Header searchText={searchText} setSearchText={setSearchText} showSearchIcon ={true}/>
-          <StatusBar style="auto" />
-          <ScrollView>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                  {categories.map((category) => (
-                    <TouchableOpacity
-                      key={category._id}
-                      onPress={() => handleCategorySelect(category._id)}
-                    >
-                        <Title
-                          size={"small"}
-                          style={[
-                              styles.tag,
-                              selectedCategory === category._id && styles.selectedTag,
-                          ]}
-                        >
-                            {category.name}
-                        </Title>
-                    </TouchableOpacity>
-                  ))}
-              </ScrollView>
-
+  return (
+    <SafeAreaView style={styles.container}>
+      <Header
+        searchText={searchText}
+        setSearchText={setSearchText}
+        showSearchIcon={true}
+      />
+      <StatusBar style="auto" />
+      <ScrollView>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          {categories.map((category) => (
+            <TouchableOpacity
+              key={category._id}
+              onPress={() => handleCategorySelect(category._id)}
+            >
+              <Title
+                size={"small"}
+                style={[
+                  styles.tag,
+                  selectedCategory === category._id && styles.selectedTag,
+                  {
+                    backgroundColor: category.color,
+                  },
+                ]}
+              >
+                {category.name}
+              </Title>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+        {selectedCategory && (
+          <Title
+            size={"small"}
+            style={{
+              ...styles.sectionTitle,
+              backgroundColor:
+                categories.find((cat) => cat._id === selectedCategory)?.color ||
+                "#FFFFFF",
+            }}
+          >
+            Category séléctionnée :{" "}
+            {selectedCategory
+              ? categories.find((cat) => cat._id === selectedCategory)?.name
+              : "None"}
+          </Title>
+        )}
         <Title size={"small"} style={styles.sectionTitle}>
           Ressources
         </Title>
@@ -74,8 +98,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   sectionTitle: {
-    paddingHorizontal: 20,
-    paddingTop: 20,
+    marginLeft: 15,
+    width: "75%",
+    marginVertical: 2,
+    padding: 2,
+    borderRadius: 5,
   },
   tag: {
     marginVertical: 20,

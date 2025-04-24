@@ -27,10 +27,8 @@ export default function Login() {
     try {
       const data: boolean = await login(email, password);
 
-      if (!data) {
-        Alert.alert("Erreur", "Identifiants invalides.");
-        return;
-      }
+      if (!data) return;
+
       Alert.alert("Succès", "Connexion réussie", [
         {
           text: "OK",
@@ -70,6 +68,11 @@ export default function Login() {
           Se connecter
         </Title>
       </TouchableOpacity>
+      <TouchableOpacity onPress={() => router.push("(auth)/ForgotPassword")}>
+        <Title size={"xsmall"} style={styles.forgotText}>
+          Mot de passe oublié ?
+        </Title>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -96,4 +99,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   buttonText: { color: "#fff", fontSize: 16 },
+  forgotText: {
+    marginTop: 15,
+    color: "#000091",
+    textAlign: "center",
+    textDecorationLine: "underline",
+  },
 });
