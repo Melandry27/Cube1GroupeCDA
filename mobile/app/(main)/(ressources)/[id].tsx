@@ -7,12 +7,15 @@ import Comments from "../../components/Comments";
 import FavorisButton from "../../components/FavorisButton";
 import { fetchRessourceById } from "../../services/ressourcesService";
 import {fetchCategoriesById} from "../../services/categoriesService";
+import {useAuth} from "../../../context/AuthContext";
 
 export default function RessourceDetail() {
     const { id } = useLocalSearchParams();
     const [ressource, setRessource] = useState(null);
     const [loading, setLoading] = useState(true);
     const [category, setCategory] = useState(null);
+    const user = useAuth();
+    console.log('user', user);
 
     useEffect(() => {
         const loadRessource = async () => {
@@ -55,10 +58,14 @@ export default function RessourceDetail() {
                     <Text style={styles.text}>{ressource.content}</Text>
                     <Text style={styles.author}>{ressource.createdBy?.name || 'Utilisateur inconnu'}</Text>
                 </View>
-                <CommentBar
+
+                {user.token && (
+                  <CommentBar
                     ressourceId={ressource._id}
                     onSubmit={(comment) => console.log(comment)}
-                />
+                  />
+                )}
+
                 <Comments ressourceId={ressource._id} />
             </ScrollView>
         </View>
