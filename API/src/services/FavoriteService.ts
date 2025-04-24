@@ -34,3 +34,9 @@ export const getFavoriteByRessourceId = async (
 ): Promise<IFavorite | null> => {
   return await FavoriteDatabase.getFavoriteByRessourceId(ressourceId, userId);
 };
+
+export const getFavoritesByUserId = async (
+  userId: string
+): Promise<IFavorite[]> => {
+  return await FavoriteDatabase.getFavoritesByUserId(userId);
+};

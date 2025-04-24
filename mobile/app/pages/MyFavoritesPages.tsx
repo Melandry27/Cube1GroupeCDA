@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import {FlatList, StyleSheet, View, Text} from "react-native";
-import {fetchFavoritesByUserId, fetchRessourcesByUserId} from "../services/favoritesService";
+import { FlatList, StyleSheet, Text, View } from "react-native";
 import { useAuth } from "../../context/AuthContext";
 import Title from "../components/Title";
+import { fetchFavoritesByUserId } from "../services/favoritesService";
 
 const MyFavoritesPage = () => {
-  const { user } = useAuth();
+  const { user, token } = useAuth();
   const [favorites, setFavorites] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -13,7 +13,7 @@ const MyFavoritesPage = () => {
     const loadFavorites = async () => {
       if (!user || !user._id) return;
       try {
-        const data = await fetchFavoritesByUserId(user._id);
+        const data = await fetchFavoritesByUserId(token || "");
         setFavorites(data);
       } catch (error) {
         console.error("Error fetching favorites:", error);
@@ -24,6 +24,17 @@ const MyFavoritesPage = () => {
 
     loadFavorites();
   }, [user]);
+
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
+
+  console.log("favorites", favorites);
+
   return (
     <View style={styles.container}>
       <Title size="medium" style={styles.title}>
@@ -32,16 +43,18 @@ const MyFavoritesPage = () => {
       {favorites && favorites.length > 0 ? (
         <FlatList
           data={favorites}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item) => item._id}
           renderItem={({ item }) => (
             <View style={styles.item}>
-              <Text style={styles.itemTitle}>{item.title}</Text>
-              <Text style={styles.itemDescription}>{item.description}</Text>
+              <Text style={styles.itemTitle}>{item.ressource.title}</Text>
+              <Text style={styles.itemDescription}>{item.user.name}</Text>
             </View>
           )}
         />
       ) : (
-        <Text style={styles.emptyText}>Vous n'avez aucun favori pour le moment.</Text>
+        <Text style={styles.emptyText}>
+          Vous n'avez aucun favori pour le moment.
+        </Text>
       )}
     </View>
   );

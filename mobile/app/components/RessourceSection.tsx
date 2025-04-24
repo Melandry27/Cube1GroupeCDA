@@ -94,9 +94,7 @@ const RessourceSection = ({ itemCount, type, filterCategory, searchText }) => {
             onPress={() => router.push(`/${String(article._id)}`)}
           >
             <RessourceCard
-              image={article.image}
-              title={article.title}
-              description={article.description}
+              {...article}
               categoryName={categories[article.categoryId]?.name}
               categoryColor={categories[article.categoryId]?.color}
             />

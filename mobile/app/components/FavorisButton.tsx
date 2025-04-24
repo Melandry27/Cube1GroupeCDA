@@ -50,7 +50,6 @@ export default function FavorisButton({
 
       const data = await addFavorite(ressourceId, user._id, token || "");
       setIsFavorited(data?.isFavorited);
-      Alert.alert("Favoris", "Ressource supprimée des favoris.");
     } catch (error) {
       console.error("Erreur lors de la gestion des favoris :", error);
       Alert.alert("Erreur", error.message || "Une erreur est survenue.");

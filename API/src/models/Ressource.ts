@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from "mongoose";
+import mongoose, { Document } from "mongoose";
 import { FileInput } from "./File";
 
 enum RessourceType {
@@ -15,6 +15,7 @@ interface IRessource extends Document {
   categoryId: mongoose.Types.ObjectId;
   image?: string;
   file?: Object;
+  quiz?: any;
 }
 
 interface ResourceInput {
@@ -25,31 +26,44 @@ interface ResourceInput {
   categoryId: mongoose.Types.ObjectId;
   image?: string;
   file?: FileInput;
+  quiz?: any;
 }
 
-const RessourceSchema = new Schema<IRessource>(
-  {
-    title: { type: String, required: true },
-    content: { type: String, required: true },
-    image: { type: String, required: false },
-    type: {
-      type: String,
-      enum: Object.values(RessourceType),
-      required: true,
-      default: RessourceType.NotStarted,
-    },
-    createdBy: { type: String, required: true, ref: "User" },
-    categoryId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Category",
-      required: true,
-    },
-    file: { type: Object, required: false },
+const RessourceSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  content: { type: String, required: true },
+  type: { type: String, default: "Not Started" },
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
   },
-  {
-    timestamps: true,
-  }
-);
+  categoryId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Category",
+    required: true,
+  },
+  image: { type: String },
+  file: {
+    originalName: String,
+    mimeType: String,
+    size: Number,
+    path: String,
+    ressourceId: String,
+    uploadedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  },
+  quiz: [
+    {
+      text: { type: String, required: true },
+      options: [
+        {
+          text: { type: String, required: true },
+          isCorrect: { type: Boolean, required: true },
+        },
+      ],
+    },
+  ],
+});
 
 export { IRessource, ResourceInput, RessourceType };
 
