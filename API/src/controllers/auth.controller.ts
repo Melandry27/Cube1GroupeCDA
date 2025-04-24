@@ -108,15 +108,23 @@ export const forgotPassword = async (req: Request, res: Response) => {
   try {
     const { email } = req.body;
 
-    const user = await User.findOne({ email });
+    if (!email) {
+      res.status(400).json({ message: "Email requis." });
+      return;
+    }
+
+    const user = await UserService.getByEmail(email.toLowerCase());
+
     if (!user) {
       res.status(404).json({ message: "Utilisateur non trouvé." });
       return;
     }
 
-    const role = await RoleServices.getRole(user.roleId);
+    const newPassword = AuthService.generateNewPassword();
 
-    const resetToken = generateToken(user?.id, role);
+    await UserService.update(user.id, {
+      password: await bcrypt.hash(newPassword, 10),
+    });
 
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
@@ -132,9 +140,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
       to: email,
       subject: "Réinitialisation du mot de passe",
       html: `<p>Bonjour ${user?.name},</p>
-             <p>Veuillez cliquer sur le lien ci-dessous pour réinitialiser votre mot de passe :</p>
-             <a href="http://localhost:3000/reset-password/${resetToken}">Réinitialiser mon mot de passe</a>
-             <p>Ce lien est valide pendant une heure.</p>`,
+             <p>Voici votre nouveau mot de passe: "${newPassword}"</p>`,
     });
 
     res.status(200).json({

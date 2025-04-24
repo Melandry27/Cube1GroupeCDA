@@ -48,3 +48,22 @@ export const signUp = async (
     throw error;
   }
 };
+
+export const forgotPassword = async (email: string) => {
+  try {
+    const response = await fetch(`${API_URL}/auth/forgot-password`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+
+    if (response.status !== 200) {
+      throw new Error("Password reset failed");
+    }
+
+    return response.status === 200;
+  } catch (error: any) {
+    console.error("Error during password reset:", error.message || error);
+    throw error;
+  }
+};
