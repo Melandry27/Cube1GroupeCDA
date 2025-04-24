@@ -1,8 +1,8 @@
-import { FontAwesome } from "@expo/vector-icons";
-import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { Tabs } from "expo-router";
-import { AuthProvider } from "../../context/AuthContext";
-import { MembersProvider } from "../../context/MembersContext";
+import { FontAwesome } from "@expo/vector-icons";
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import {AuthProvider} from "../../context/AuthContext";
+import {MembersProvider} from "../../context/MembersContext";
 
 export default function MainLayout() {
   return (
@@ -40,20 +40,23 @@ export default function MainLayout() {
             }}
           />
           <Tabs.Screen
-            name="(message)/index"
+            name="(message)"
             options={{
-              title: "Message",
+              title: "Messages",
               headerShown: false,
-              tabBarIcon: ({ color, size }) => (
+              tabBarIcon: ({ color, size}) => (
                 <FontAwesome6 name="message" color={color} size={size} />
               ),
             }}
           />
           <Tabs.Screen
-            name="(main)/profile"
+            name="(auth)"
             options={{
-              title: "Profile",
+              title: "Connexion",
               headerShown: false,
+              tabBarIcon: ({ color, size }) => (
+                <FontAwesome6 name="user" color={color} size={size} />
+              ),
             }}
           />
         </Tabs>
