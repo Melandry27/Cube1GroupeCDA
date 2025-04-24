@@ -1,8 +1,11 @@
+import * as DocumentPicker from "expo-document-picker";
+import * as ImagePicker from "expo-image-picker";
 import { useRouter } from "expo-router";
 import { Stack } from "expo-router/stack";
 import React, { useState } from "react";
 import {
   Alert,
+  Image,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -15,7 +18,6 @@ import {
 import { useAuth } from "../../../context/AuthContext";
 import { createRessource } from "../../services/ressourcesService";
 
-// 🧩 Déclaration de l'écran en dehors du composant principal
 export const unstable_settings = {
   initialRouteName: "createRessource",
 };
@@ -31,20 +33,43 @@ export const ScreenOptions = () => (
 );
 
 const CreateRessource = () => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    title: string;
+    content: string;
+    image: ImagePicker.ImagePickerAsset | null;
+    file: DocumentPicker.DocumentPickerAsset | null;
+  }>({
     title: "",
     content: "",
+    image: null,
+    file: null,
   });
 
   const handleChange = (name: string, value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, token } = useAuth();
+
+  const handleImagePick = async () => {
+    const permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permissionResult.granted) {
+      Alert.alert("Permission requise", "Autorisez l'accès à la galerie.");
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setFormData((prev) => ({ ...prev, image: result.assets[0] }));
+    }
+  };
 
   const handleSubmit = async () => {
     try {
@@ -53,13 +78,18 @@ const CreateRessource = () => {
         return;
       }
 
-      await createRessource({
-        title: formData.title,
-        content: formData.content,
-        type: "In Progress",
-        createdBy: user?._id,
-        categoryId: "68078faa525dd7b117b4e437",
-      });
+      await createRessource(
+        {
+          title: formData.title,
+          content: formData.content,
+          type: "In Progress",
+          createdBy: user?._id,
+          categoryId: "defaultCategoryId",
+          image: formData.image,
+          file: formData.file,
+        },
+        token || ""
+      );
 
       Alert.alert("Succès", "La ressource a été créée.");
       router.push("/");
@@ -69,6 +99,17 @@ const CreateRessource = () => {
       } else {
         Alert.alert("Erreur inconnue", "Une erreur est survenue.");
       }
+    }
+  };
+
+  const handleFilePick = async () => {
+    const result = await DocumentPicker.getDocumentAsync({
+      type: "application/pdf",
+      copyToCacheDirectory: true,
+    });
+
+    if (!result.canceled) {
+      setFormData((prev) => ({ ...prev, file: result.assets[0] }));
     }
   };
 
@@ -106,6 +147,32 @@ const CreateRessource = () => {
             multiline
             numberOfLines={4}
           />
+        </View>
+
+        <View style={styles.field}>
+          <Text style={styles.label}>Image</Text>
+          <TouchableOpacity
+            style={styles.imageButton}
+            onPress={handleImagePick}
+          >
+            <Text style={styles.imageButtonText}>Choisir une image</Text>
+          </TouchableOpacity>
+          {formData.image && (
+            <Image
+              source={{ uri: formData.image.uri }}
+              style={styles.previewImage}
+            />
+          )}
+        </View>
+
+        <View style={styles.field}>
+          <Text style={styles.label}>Fichier PDF</Text>
+          <TouchableOpacity style={styles.imageButton} onPress={handleFilePick}>
+            <Text style={styles.imageButtonText}>Choisir un fichier PDF</Text>
+          </TouchableOpacity>
+          {formData.file && (
+            <Text style={{ marginTop: 10 }}>{formData.file.name}</Text>
+          )}
         </View>
 
         <TouchableOpacity style={styles.button} onPress={handleSubmit}>
@@ -150,16 +217,28 @@ const styles = StyleSheet.create({
     height: 120,
     textAlignVertical: "top",
   },
+  imageButton: {
+    backgroundColor: "#E0E0E0",
+    paddingVertical: 10,
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  imageButtonText: {
+    color: "#000",
+    fontSize: 14,
+    fontWeight: "500",
+  },
+  previewImage: {
+    marginTop: 10,
+    width: "100%",
+    height: 200,
+    borderRadius: 8,
+  },
   button: {
     backgroundColor: "#000091",
     paddingVertical: 14,
     borderRadius: 8,
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
   },
   buttonText: {
     color: "#fff",

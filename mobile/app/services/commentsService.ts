@@ -5,13 +5,15 @@ const API_URL = Constants.expoConfig.extra?.API_URL;
 export const createComment = async (
   ressourceId: string,
   content: string,
-  userId: string
+  userId: string,
+  token: string
 ) => {
   try {
     const response = await fetch(`${API_URL}/comments/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ ressourceId, content, userId }),
     });
@@ -24,12 +26,17 @@ export const createComment = async (
   }
 };
 
-export const editComment = async (commentId: string, content: string) => {
+export const editComment = async (
+  commentId: string,
+  content: string,
+  token: string
+) => {
   try {
     const response = await fetch(`${API_URL}/comments/${commentId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ content }),
     });
@@ -43,9 +50,13 @@ export const editComment = async (commentId: string, content: string) => {
   }
 };
 
-export const deleteComment = async (commentId: string) => {
+export const deleteComment = async (commentId: string, token: string) => {
   try {
     const response = await fetch(`${API_URL}/comments/${commentId}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
       method: "DELETE",
     });
     if (!response.ok) {
@@ -58,10 +69,18 @@ export const deleteComment = async (commentId: string) => {
   }
 };
 
-export const fetchCommentsByRessourceId = async (ressourceId: string) => {
+export const fetchCommentsByRessourceId = async (
+  ressourceId: string,
+  token: string
+) => {
   try {
     const response = await fetch(
-      `${API_URL}/comments/ressource/${ressourceId}`
+      `${API_URL}/comments/ressource/${ressourceId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
     );
     if (!response.ok) {
       throw new Error("Failed to fetch comments");

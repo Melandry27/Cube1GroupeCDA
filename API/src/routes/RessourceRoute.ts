@@ -1,8 +1,8 @@
 import { Router } from "express";
 import * as RessourceController from "../controllers/ressource.controller";
+import { uploadRessourceFields } from "../middlewares/uploadMiddleware";
 
 const router = Router();
-
 
 /**
  * @swagger
@@ -78,7 +78,8 @@ router.get("/:id", RessourceController.getById);
  *       500:
  *         description: Erreur lors de la création
  */
-router.post("/", RessourceController.create);
+
+router.post("/", uploadRessourceFields, RessourceController.create);
 
 /**
  * @swagger

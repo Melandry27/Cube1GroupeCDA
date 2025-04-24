@@ -1,4 +1,5 @@
-import { Router } from "express";
+import express, { Router } from "express";
+import { protect } from "../middlewares/protect";
 import authRoutes from "./AuthRoute";
 import categoryRoutes from "./CategoryRoute";
 import commentRoutes from "./CommentRoute";
@@ -13,6 +14,8 @@ import userRoutes from "./UserRoute";
 const router = Router();
 
 router.use("/auth", authRoutes);
+
+router.use(protect as express.RequestHandler);
 
 router.use("/files", fileRoutes);
 router.use("/categories", categoryRoutes);
