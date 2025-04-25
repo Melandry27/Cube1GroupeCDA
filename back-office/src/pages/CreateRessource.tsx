@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useAuth } from "../context/AuthContext";
 
 const CreateRessource = () => {
   const navigate = useNavigate();
@@ -20,11 +21,14 @@ const CreateRessource = () => {
   const [resourceTypes, setResourceTypes] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const { token } = useAuth();
+
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const response = await fetch("/api/categories");
-        if (!response.ok) throw new Error("Erreur lors de la récupération des catégories");
+        if (!response.ok)
+          throw new Error("Erreur lors de la récupération des catégories");
         const categories = await response.json();
         setCategories(categories);
       } catch (error) {
@@ -35,7 +39,8 @@ const CreateRessource = () => {
     const fetchUsers = async () => {
       try {
         const response = await fetch("/api/users");
-        if (!response.ok) throw new Error("Erreur lors de la récupération des utilisateurs");
+        if (!response.ok)
+          throw new Error("Erreur lors de la récupération des utilisateurs");
         const users = await response.json();
         setUsers(users);
       } catch (error) {
@@ -55,18 +60,23 @@ const CreateRessource = () => {
       }
     };
 
-    Promise.all([fetchCategories(), fetchUsers(), fetchResourceTypes()])
-      .finally(() => setLoading(false));
+    Promise.all([
+      fetchCategories(),
+      fetchUsers(),
+      fetchResourceTypes(),
+    ]).finally(() => setLoading(false));
   }, []);
 
   const resourceTypeLabels: { [key: string]: string } = {
     "In Progress": "En cours",
-    "Completed": "Terminé",
+    Completed: "Terminé",
     "Not Started": "Non commencé",
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     setRessource({ ...ressource, [e.target.name]: e.target.value });
   };
@@ -92,7 +102,10 @@ const CreateRessource = () => {
       const response = await fetch(`/api/ressources`, {
         method: "POST",
         body: JSON.stringify(ressource),
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       if (response.ok) {
@@ -117,9 +130,14 @@ const CreateRessource = () => {
       {loading ? (
         <p>Chargement...</p>
       ) : (
-        <form onSubmit={handleSubmit} className="fr-grid-row fr-grid-row--gutters">
+        <form
+          onSubmit={handleSubmit}
+          className="fr-grid-row fr-grid-row--gutters"
+        >
           <div className="fr-col-12 fr-col-md-6">
-            <label className="fr-label" htmlFor="title">Titre</label>
+            <label className="fr-label" htmlFor="title">
+              Titre
+            </label>
             <input
               className="fr-input"
               id="title"
@@ -131,7 +149,9 @@ const CreateRessource = () => {
           </div>
 
           <div className="fr-col-12 fr-col-md-6">
-            <label className="fr-label" htmlFor="createdBy">Auteur</label>
+            <label className="fr-label" htmlFor="createdBy">
+              Auteur
+            </label>
             <select
               className="fr-select"
               id="createdBy"
@@ -150,7 +170,9 @@ const CreateRessource = () => {
           </div>
 
           <div className="fr-col-12">
-            <label className="fr-label" htmlFor="content">Contenu</label>
+            <label className="fr-label" htmlFor="content">
+              Contenu
+            </label>
             <textarea
               className="fr-input"
               id="content"
@@ -163,7 +185,9 @@ const CreateRessource = () => {
           </div>
 
           <div className="fr-col-12 fr-col-md-6">
-            <label className="fr-label" htmlFor="categoryId">Catégorie</label>
+            <label className="fr-label" htmlFor="categoryId">
+              Catégorie
+            </label>
             <select
               className="fr-select"
               id="categoryId"
@@ -182,7 +206,9 @@ const CreateRessource = () => {
           </div>
 
           <div className="fr-col-12 fr-col-md-6">
-            <label className="fr-label" htmlFor="type">Type</label>
+            <label className="fr-label" htmlFor="type">
+              Type
+            </label>
             <select
               className="fr-select"
               id="type"
@@ -201,11 +227,27 @@ const CreateRessource = () => {
           </div>
 
           <div className="fr-col-12 fr-col-md-6">
-            <label className="fr-label" htmlFor="image">Image</label>
-            <input type="file" className="fr-input" id="image" accept="image/*" onChange={handleImageChange} />
+            <label className="fr-label" htmlFor="image">
+              Image
+            </label>
+            <input
+              type="file"
+              className="fr-input"
+              id="image"
+              accept="image/*"
+              onChange={handleImageChange}
+            />
             {ressource.image && (
               <div className="fr-mt-2w">
-                <img src={ressource.image} alt="Aperçu" style={{ maxHeight: "150px", borderRadius: "4px", border: "1px solid #ccc" }} />
+                <img
+                  src={ressource.image}
+                  alt="Aperçu"
+                  style={{
+                    maxHeight: "150px",
+                    borderRadius: "4px",
+                    border: "1px solid #ccc",
+                  }}
+                />
               </div>
             )}
           </div>
@@ -214,7 +256,11 @@ const CreateRessource = () => {
             className="fr-col-12 fr-grid-row fr-mt-4w"
             style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}
           >
-            <button type="button" className="fr-btn fr-btn--secondary" onClick={goBack}>
+            <button
+              type="button"
+              className="fr-btn fr-btn--secondary"
+              onClick={goBack}
+            >
               Annuler
             </button>
             <button type="submit" className="fr-btn fr-btn--primary">

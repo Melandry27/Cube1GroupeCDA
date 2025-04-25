@@ -42,6 +42,12 @@ const CreateRessource = () => {
     file: DocumentPicker.DocumentPickerResult | null;
     categoryId: string;
     categories: { _id: string; name: string }[];
+    quiz: {
+      questions: {
+        text: string;
+        options: { text: string; isCorrect: boolean }[];
+      }[];
+    };
   }>({
     title: "",
     content: "",
@@ -49,6 +55,17 @@ const CreateRessource = () => {
     file: null,
     categoryId: "",
     categories: [],
+    quiz: {
+      questions: [
+        {
+          text: "",
+          options: [
+            { text: "", isCorrect: false },
+            { text: "", isCorrect: false },
+          ],
+        },
+      ],
+    },
   });
 
   const router = useRouter();
@@ -112,6 +129,7 @@ const CreateRessource = () => {
           categoryId: formData.categoryId,
           image: formData.image,
           file: formData.file,
+          quiz: formData.quiz,
         },
         token || ""
       );
@@ -134,7 +152,56 @@ const CreateRessource = () => {
     });
 
     if (!result.canceled) {
-      setFormData((prev) => ({ ...prev, file: result }));
+      setFormData((prev) => ({ ...prev, file: result.assets[0] }));
+    }
+  };
+
+  const addQuestion = () => {
+    setFormData((prev) => ({
+      ...prev,
+      quiz: {
+        questions: [
+          ...prev.quiz.questions,
+          {
+            text: "",
+            options: [
+              { text: "", isCorrect: false },
+              { text: "", isCorrect: false },
+            ],
+          },
+        ],
+      },
+    }));
+  };
+
+  const updateQuestionText = (qIndex: number, text: string) => {
+    const questions = [...formData.quiz.questions];
+    questions[qIndex].text = text;
+    setFormData((prev) => ({ ...prev, quiz: { questions } }));
+  };
+
+  const updateOptionText = (qIndex: number, oIndex: number, text: string) => {
+    const questions = [...formData.quiz.questions];
+    questions[qIndex].options[oIndex].text = text;
+    setFormData((prev) => ({ ...prev, quiz: { questions } }));
+  };
+
+  const toggleCorrect = (qIndex: number, oIndex: number) => {
+    const questions = [...formData.quiz.questions];
+    questions[qIndex].options = questions[qIndex].options.map(
+      (option, idx) => ({
+        ...option,
+        isCorrect: idx === oIndex, // une seule bonne réponse par question
+      })
+    );
+    setFormData((prev) => ({ ...prev, quiz: { questions } }));
+  };
+
+  const addOption = (qIndex: number) => {
+    const questions = [...formData.quiz.questions];
+    if (questions[qIndex].options.length < 4) {
+      questions[qIndex].options.push({ text: "", isCorrect: false });
+      setFormData((prev) => ({ ...prev, quiz: { questions } }));
     }
   };
 
@@ -222,7 +289,64 @@ const CreateRessource = () => {
             <Text style={styles.imageButtonText}>Choisir un fichier PDF</Text>
           </TouchableOpacity>
           {formData.file && (
-            <Text style={{ marginTop: 10 }}>{formData.file.name}</Text>
+            <Text style={{ marginTop: 10, color: "#000" }}>
+              {formData.file.name}
+            </Text>
+          )}
+        </View>
+
+        <View style={styles.field}>
+          <Text style={styles.label}>Quiz (jusqu'à 4 questions)</Text>
+          {formData.quiz.questions.map((question, qIndex) => (
+            <View key={qIndex} style={{ marginBottom: 20 }}>
+              <TextInput
+                style={styles.input}
+                placeholder={`Question ${qIndex + 1}`}
+                value={question.text}
+                onChangeText={(text) => updateQuestionText(qIndex, text)}
+              />
+              {question.options.map((option, oIndex) => (
+                <View
+                  key={oIndex}
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    marginTop: 8,
+                  }}
+                >
+                  <TextInput
+                    style={[styles.input, { flex: 1, marginRight: 8 }]}
+                    placeholder={`Option ${oIndex + 1}`}
+                    value={option.text}
+                    onChangeText={(text) =>
+                      updateOptionText(qIndex, oIndex, text)
+                    }
+                  />
+                  <TouchableOpacity
+                    onPress={() => toggleCorrect(qIndex, oIndex)}
+                    style={{
+                      backgroundColor: option.isCorrect ? "#4CAF50" : "#ccc",
+                      padding: 8,
+                      borderRadius: 4,
+                    }}
+                  >
+                    <Text style={{ color: "#fff" }}>✔</Text>
+                  </TouchableOpacity>
+                </View>
+              ))}
+              {question.options.length < 4 && (
+                <TouchableOpacity onPress={() => addOption(qIndex)}>
+                  <Text style={{ color: "#000091", marginTop: 8 }}>
+                    + Ajouter une option
+                  </Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          ))}
+          {formData.quiz.questions.length < 4 && (
+            <TouchableOpacity onPress={addQuestion}>
+              <Text style={{ color: "#000091" }}>+ Ajouter une question</Text>
+            </TouchableOpacity>
           )}
         </View>
 

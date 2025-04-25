@@ -1,17 +1,38 @@
+import { Ionicons } from "@expo/vector-icons";
 import Constants from "expo-constants";
+import { Link } from "expo-router";
 import React from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useAuth } from "../../context/AuthContext";
 import Title from "./Title";
 
 const API_URL_IMAGE = Constants.expoConfig?.extra?.API_URL_IMAGE;
 
-const RessourceCard = ({
+interface CreatedBy {
+  _id: string;
+}
+
+interface RessourceCardProps {
+  title: string;
+  description: string;
+  image: string;
+  categoryName?: string;
+  categoryColor?: string;
+  createdBy: CreatedBy;
+  _id: string;
+}
+
+const RessourceCard: React.FC<RessourceCardProps> = ({
   title,
   description,
   image,
   categoryName,
   categoryColor,
+  createdBy,
+  _id,
 }) => {
+  const { user } = useAuth();
+
   return (
     <View style={styles.card}>
       <Image
@@ -33,6 +54,13 @@ const RessourceCard = ({
           </View>
         )}
         <Text style={styles.description}>{description}</Text>
+        {user?._id === createdBy._id && (
+          <TouchableOpacity style={styles.editIcon} asChild>
+            <Link href={`/(edit)/${_id || ""}`} replace>
+              <Ionicons name="create-outline" size={40} color="#000" />
+            </Link>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
@@ -57,6 +85,7 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     padding: 10,
+    position: "relative",
   },
   title: {
     fontSize: 16,
@@ -71,13 +100,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 15,
-    // backgroundColor: '#E0E0E0',
     alignSelf: "flex-start",
   },
   categoryText: {
     color: "#fff",
     fontSize: 12,
     fontWeight: "bold",
+  },
+  editIcon: {
+    position: "absolute",
+    top: 10,
+    right: 10,
   },
 });
 

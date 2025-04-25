@@ -23,6 +23,23 @@ const FavoriteSchema = new Schema<IFavorite>(
   }
 );
 
+FavoriteSchema.virtual("ressource", {
+  ref: "Ressource",
+  localField: "ressourceId",
+  foreignField: "_id",
+  justOne: true,
+});
+
+FavoriteSchema.virtual("user", {
+  ref: "User",
+  localField: "userId",
+  foreignField: "_id",
+  justOne: true,
+});
+
+FavoriteSchema.set("toObject", { virtuals: true });
+FavoriteSchema.set("toJSON", { virtuals: true });
+
 export { IFavorite, IFavoriteInput };
 
 export default mongoose.model<IFavorite>("Favorite", FavoriteSchema);

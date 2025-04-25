@@ -1,4 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
+import Constants from "expo-constants";
 import React, { useEffect, useRef, useState } from "react";
 import {
   Alert,
@@ -15,7 +16,7 @@ import { io, Socket } from "socket.io-client";
 import { useAuth } from "../../../context/AuthContext";
 import { useMembers } from "../../../context/MembersContext";
 
-const SOCKET_URL = "http://10.176.130.12:3001";
+const SOCKET_URL = Constants.expoConfig?.extra?.SOCKET_URL;
 
 type MessageType = {
   _id?: string;

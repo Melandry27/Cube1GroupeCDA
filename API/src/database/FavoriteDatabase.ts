@@ -33,4 +33,10 @@ export const getFavoriteByRessourceId = async (
   return await Favorite.findOne({ ressourceId, userId });
 };
 
+export const getFavoritesByUserId = async (
+  userId: string
+): Promise<IFavorite[]> => {
+  return await Favorite.find({ userId }).populate("user").populate("ressource");
+};
+
 export { create, findAll, findById, remove, update };

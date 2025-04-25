@@ -43,7 +43,6 @@ const Index = () => {
                     }}
                   >
                     <Text style={styles.memberName}>{item.name}</Text>
-                    <Text style={styles.memberEmail}>{item.email}</Text>
                   </TouchableOpacity>
                 )}
               />

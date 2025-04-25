@@ -17,6 +17,7 @@ import Comments from "../../components/Comments";
 import FavorisButton from "../../components/FavorisButton";
 import Title from "../../components/Title";
 import { fetchCategoriesById } from "../../services/categoriesService";
+import { createComment } from "../../services/commentsService";
 import { fetchRessourceById } from "../../services/ressourcesService";
 
 const API_URL_IMAGE = Constants.expoConfig?.extra?.API_URL_IMAGE;
@@ -26,10 +27,15 @@ export default function RessourceDetail() {
   const [ressource, setRessource] = useState(null);
   const [loading, setLoading] = useState(true);
   const [category, setCategory] = useState(null);
-  const user = useAuth();
   const [showPdf, setShowPdf] = useState(false);
+  const [userAnswers, setUserAnswers] = useState({});
+  const [quizResults, setQuizResults] = useState({});
 
-  const { token } = useAuth();
+  const { token, user } = useAuth();
+
+  // const handleCommentSubmit = (comment) => {
+  //   createComment(ressource?._id, comment, user?._id, token || "");
+  // };
 
   useEffect(() => {
     const loadRessource = async () => {
@@ -74,7 +80,40 @@ export default function RessourceDetail() {
     );
   }
 
+  const handleSelectAnswer = (questionIndex, optionText) => {
+    setUserAnswers((prev) => ({
+      ...prev,
+      [questionIndex]: optionText,
+    }));
+  };
+
   const togglePdf = () => setShowPdf((prev) => !prev);
+
+  const calculateProgress = () => {
+    const totalQuestions = ressource.quiz?.length || 0;
+    const answeredQuestions = Object.keys(userAnswers).length;
+    return (answeredQuestions / totalQuestions) * 100;
+  };
+
+  const progress = calculateProgress();
+
+  const handleValidateAnswers = () => {
+    const updatedResults = {};
+
+    ressource.quiz.forEach((question, index) => {
+      const userAnswer = userAnswers[index];
+      // Trouver l'option correcte
+      const correctOption = question.options.find((option) => option.isCorrect);
+
+      if (userAnswer === correctOption?.text) {
+        updatedResults[index] = true; // Réponse correcte
+      } else {
+        updatedResults[index] = false; // Réponse incorrecte
+      }
+    });
+
+    setQuizResults(updatedResults);
+  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -87,9 +126,20 @@ export default function RessourceDetail() {
             {ressource.title}
           </Title>
 
+          {ressource.quiz && ressource.quiz.length > 0 && (
+            <View style={styles.progressContainer}>
+              <Text style={styles.progressText}>
+                {Math.round(progress)}% Complété
+              </Text>
+              <View style={styles.progressBarBackground}>
+                <View style={[styles.progressBar, { width: `${progress}%` }]} />
+              </View>
+            </View>
+          )}
+
           <Text
             style={[
-              styles.author,
+              styles.categoryTag,
               { backgroundColor: category?.color || "#f0f0f0", color: "#fff" },
             ]}
           >
@@ -141,10 +191,70 @@ export default function RessourceDetail() {
             </View>
           )}
 
-          {user.token && (
+          {ressource.quiz && ressource.quiz.length > 0 && (
+            <View style={styles.quizContainer}>
+              <Text style={styles.sectionTitle}>Quiz</Text>
+
+              {ressource.quiz.map((question, index) => (
+                <View key={index} style={styles.questionContainer}>
+                  <Text style={styles.questionText}>
+                    {index + 1}. {question.text}
+                  </Text>
+                  {question.options.map((option, optIndex) => {
+                    const isSelected = userAnswers[index] === option.text;
+                    const hasResults = quizResults[index] !== undefined;
+                    const isCorrect = quizResults[index] === true && isSelected;
+                    const isIncorrect =
+                      quizResults[index] === false && isSelected;
+
+                    let optionStyle = styles.optionContainer;
+                    if (isSelected) {
+                      if (hasResults) {
+                        optionStyle = isCorrect
+                          ? styles.correctOption
+                          : styles.incorrectOption;
+                      } else {
+                        optionStyle = styles.selectedOption;
+                      }
+                    }
+
+                    return (
+                      <TouchableOpacity
+                        key={optIndex}
+                        style={optionStyle}
+                        onPress={() =>
+                          !hasResults && handleSelectAnswer(index, option.text)
+                        }
+                        disabled={hasResults} // Désactive après validation
+                      >
+                        <Text style={styles.optionText}>
+                          {isSelected ? "✓ " : "• "}
+                          {option.text}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
+              ))}
+
+              <TouchableOpacity
+                onPress={handleValidateAnswers}
+                style={[
+                  styles.submitButton,
+                  progress < 100 && styles.disabledButton,
+                ]}
+                disabled={progress < 100}
+              >
+                <Text style={styles.submitButtonText}>
+                  Valider les réponses
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+
+          {token && (
             <CommentBar
               ressourceId={ressource._id}
-              onSubmit={(comment) => console.log(comment)}
             />
           )}
 
@@ -165,6 +275,8 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 18,
+    lineHeight: 26,
+    marginVertical: 15,
   },
   author: {
     fontSize: 16,
@@ -175,6 +287,16 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     borderRadius: 15,
     marginTop: 10,
+  },
+  categoryTag: {
+    fontSize: 16,
+    fontStyle: "italic",
+    alignSelf: "flex-start",
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 15,
+    marginTop: 10,
+    marginBottom: 15,
   },
   titleWidth: {
     width: "80%",
@@ -222,5 +344,92 @@ const styles = StyleSheet.create({
   badgeText: {
     color: "#fff",
     fontSize: 14,
+  },
+  quizContainer: {
+    marginTop: 20,
+    paddingBottom: 30,
+  },
+  questionContainer: {
+    marginBottom: 20,
+  },
+  questionText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 8,
+  },
+  optionContainer: {
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    marginVertical: 5,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#e0e0e0",
+  },
+  optionText: {
+    fontSize: 15,
+  },
+  selectedOption: {
+    backgroundColor: "#d1e7ff",
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 10,
+    marginVertical: 5,
+    borderWidth: 1,
+    borderColor: "#88bbff",
+  },
+  correctOption: {
+    backgroundColor: "#ccffcc",
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 10,
+    marginVertical: 5,
+    borderWidth: 1,
+    borderColor: "#88dd88",
+  },
+  incorrectOption: {
+    backgroundColor: "#ffcccc",
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 10,
+    marginVertical: 5,
+    borderWidth: 1,
+    borderColor: "#dd8888",
+  },
+  progressContainer: {
+    marginTop: 20,
+    marginBottom: 10,
+    alignItems: "center",
+  },
+  progressText: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  progressBarBackground: {
+    width: "100%",
+    height: 10,
+    backgroundColor: "#e0e0e0",
+    borderRadius: 5,
+    marginTop: 5,
+  },
+  progressBar: {
+    height: "100%",
+    backgroundColor: "#000091",
+    borderRadius: 5,
+  },
+  submitButton: {
+    backgroundColor: "#000091",
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    alignItems: "center",
+    marginTop: 20,
+  },
+  disabledButton: {
+    backgroundColor: "#ccccdd",
+  },
+  submitButtonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "500",
   },
 });

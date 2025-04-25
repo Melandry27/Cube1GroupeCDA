@@ -45,6 +45,7 @@ export const createRessource = async (data: any, token: string) => {
     formData.append("type", data.type);
     formData.append("createdBy", data.createdBy);
     formData.append("categoryId", data.categoryId);
+    formData.append("quiz", JSON.stringify(data.quiz));
 
     if (data.image) {
       formData.append("image", {
@@ -112,6 +113,36 @@ export const fetchRessourcesByUser = async (userId: string) => {
     return await response.json();
   } catch (error) {
     console.error("Error in fetchRessourcesByUser:", error);
+    throw error;
+  }
+};
+
+export const updateRessource = async (
+  id: string,
+  data: {
+    title: string;
+    content: string;
+    categoryId: string;
+    quiz: { questions: any[] };
+  },
+  token: string
+) => {
+  try {
+    const response = await fetch(`${API_URL}/ressources/${id}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error("Error in updateRessource:", error);
     throw error;
   }
 };

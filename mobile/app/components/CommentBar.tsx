@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import React, { useState } from "react";
-import { StyleSheet, TextInput, ToastAndroid, View } from "react-native";
+import { Alert, StyleSheet, TextInput, View } from "react-native";
 import { useAuth } from "../../context/AuthContext";
 import { createComment } from "../services/commentsService";
 
@@ -13,24 +13,17 @@ const CommentBar = ({
 }) => {
   const [comment, setComment] = useState("");
 
-  const { token } = useAuth();
+  const { token, user } = useAuth();
 
   const handleSend = async () => {
     if (comment.trim()) {
       try {
-        const userId = "646f3a2b4c1d4e2f8b5e0c9a";
-        await createComment(ressourceId, comment, userId, token || "");
+        await createComment(ressourceId, comment, user?._id, token || "");
         onSubmit(comment);
         setComment("");
-        ToastAndroid.show(
-          "Commentaire ajouté, en attente de validation",
-          ToastAndroid.SHORT
-        );
+        Alert.alert("Succés", "Commentaire ajouté, en attente de validation");
       } catch (error) {
-        ToastAndroid.show(
-          "Erreur lors de l'ajout du commentaire",
-          ToastAndroid.SHORT
-        );
+        Alert.alert("Erreur", "Erreur lors de l'ajout du commentaire");
         console.error("Error creating comment:", error);
       }
     }

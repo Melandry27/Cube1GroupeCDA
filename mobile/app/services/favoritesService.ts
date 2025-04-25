@@ -61,16 +61,21 @@ export const getUserFavoritesCount = async (
   }
 };
 
-export const fetchFavoritesByUserId = async (userId: string) => {
+export const fetchFavoritesByUserId = async (token: string) => {
   try {
-    const response = await fetch(`${API_URL}/ressources`);
+    const response = await fetch(`${API_URL}/favorites/getByUser`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
     if (!response.ok) {
       throw new Error("Failed to fetch resources");
     }
-    const allResources = await response.json();
-    return allResources.filter((resource) =>
-      resource.favorites?.some((favorite) => favorite.createdBy?._id === userId)
-    );
+
+    const data = await response.json();
+    return data;
   } catch (error) {
     console.error("Error fetching resources by user ID:", error);
     throw error;
