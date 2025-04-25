@@ -13,6 +13,7 @@ import {
   deleteComment,
   fetchCommentsByRessourceId,
 } from "../services/commentsService";
+import {fetchUserById} from "../services/usersService";
 
 const Comments = ({ ressourceId }: { ressourceId: string }) => {
   const [comments, setComments] = useState<
@@ -30,7 +31,19 @@ const Comments = ({ ressourceId }: { ressourceId: string }) => {
     const loadComments = async () => {
       try {
         const data = await fetchCommentsByRessourceId(ressourceId, token || "");
-        setComments(data);
+
+        // Récupérer les noms des utilisateurs pour chaque commentaire
+        const commentsWithUserNames = await Promise.all(
+          data.map(async (comment: any) => {
+            const user = await fetchUserById(comment.userId);
+            return {
+              ...comment,
+              userName: user?.name || "Utilisateur inconnu",
+            };
+          })
+        );
+
+        setComments(commentsWithUserNames);
       } catch (error) {
         console.error("Error fetching comments:", error);
       } finally {
