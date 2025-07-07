@@ -3,7 +3,6 @@ FROM node:22-alpine3.22 AS api
 LABEL org.opencontainers.image.source=https://github.com/Melandry27/Cube1GroupeCDA
 WORKDIR /app
 COPY package*.json ./
-COPY src/database ./database
 
 RUN npm install
 
