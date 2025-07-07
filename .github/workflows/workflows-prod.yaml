@@ -14,12 +14,10 @@ jobs:
       #      - name: Mise en place Node.js
       #        uses: actions/setup-node@v2
 
-      - name: CD API
+      - name: LS du répertoire
         run: |
           cd API
-
-      - name: LS du répertoire
-        run: ls -la
+          ls -la
 
       - name: Clean install des dépendances
         run: npm clean-install
