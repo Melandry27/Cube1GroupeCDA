@@ -13,17 +13,11 @@ jobs:
 
       #      - name: Mise en place Node.js
       #        uses: actions/setup-node@v2
-
-      - name: LS du répertoire
-        run: |
-          ls -la
-          cd API
-          ls -la
-
       - name: Clean install des dépendances
         run: npm install
 
       - name: Build du projet
+        working-directory: ./API
         run: npm run build
 
       - name: Enregister le cache
@@ -42,10 +36,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
-      - name: CD API
-        run: |
-          cd API
 
       - name: Connection à DockerHub
         uses: docker/login-action@v3
@@ -68,14 +58,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: CD API
-        run: |
-          cd API
-
       - name: Install dependencies
+        working-directory: ./API
         run: npm install
 
-      - name: Run unit tests
+      - name: Run unit test
+        working-directory: ./API
         run: npm test
         continue-on-error: true
 
@@ -86,14 +74,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: CD API
-        run: |
-          cd API
-
       - name: Install dependencies
+        working-directory: ./API
         run: npm install
 
       - name: Run audit
+        working-directory: ./API
         run: npm audit --audit-level=moderate
         continue-on-error: true
 
