@@ -14,7 +14,8 @@ jobs:
       #      - name: Mise en place Node.js
       #        uses: actions/setup-node@v2
       - name: Clean install des dépendances
-        run: npm install
+        working-directory: ./API
+        run: npm ci
 
       - name: Build du projet
         working-directory: ./API
