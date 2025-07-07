@@ -5,11 +5,29 @@ import {
 } from "recharts";
 import { toast } from "react-toastify";
 
+interface User {
+  createdAt: string;
+}
+
+interface Ressource {
+  createdAt: string;
+  category: string;
+}
+
+interface Comment {
+  createdAt: string;
+}
+
+interface MonthlyStat {
+  name: string;
+  utilisateurs: number;
+  articles: number;
+  commentaires: number;
+}
 const StatsAvancees = () => {
-  const [userStats, setUserStats] = useState([]);
-  const [commentStats, setCommentStats] = useState([]);
-  const [resourceStats, setResourceStats] = useState([]);
-  const [engagementStats, setEngagementStats] = useState([]);
+  const [userStats, setUserStats] = useState<MonthlyStat[]>([]);
+  const [commentStats, setCommentStats] = useState<MonthlyStat[]>([]);
+  const [engagementStats, setEngagementStats] = useState<MonthlyStat[]>([]);
 
   const [kpis, setKpis] = useState({
     users: 0,
@@ -37,10 +55,10 @@ const StatsAvancees = () => {
           throw new Error("Une des requêtes a échoué");
         }
 
-        const users = await usersRes.json();
+        const users: User[] = await usersRes.json();
         const roles = await rolesRes.json();
-        const comments = await commentsRes.json();
-        const ressources = await ressourcesRes.json();
+        const comments: Comment[] = await commentsRes.json();
+        const ressources: Ressource[] = await ressourcesRes.json();
         const categories = await categoriesRes.json();
 
         setKpis({
@@ -51,7 +69,7 @@ const StatsAvancees = () => {
           categories: categories.length,
         });
 
-        const monthlyStats: Record<string, any> = {};
+        const monthlyStats: Record<string, MonthlyStat> = {};
 
         const getMonthKey = (dateStr: string) => {
           const date = new Date(dateStr);
@@ -60,28 +78,28 @@ const StatsAvancees = () => {
           return `${month}-${date.getFullYear()}`;
         };
 
-        users.forEach(user => {
+        users.forEach((user: User) => {
           const key = getMonthKey(user.createdAt);
           if (!key) return;
           if (!monthlyStats[key]) monthlyStats[key] = { name: key, utilisateurs: 0, articles: 0, commentaires: 0 };
           monthlyStats[key].utilisateurs++;
         });
 
-        ressources.forEach(ressource => {
+        ressources.forEach((ressource: Ressource) => {
           const key = getMonthKey(ressource.createdAt);
           if (!key) return;
           if (!monthlyStats[key]) monthlyStats[key] = { name: key, utilisateurs: 0, articles: 0, commentaires: 0 };
           monthlyStats[key].articles++;
         });
 
-        comments.forEach(comment => {
+        comments.forEach((comment: Comment) => {
           const key = getMonthKey(comment.createdAt);
           if (!key) return;
           if (!monthlyStats[key]) monthlyStats[key] = { name: key, utilisateurs: 0, articles: 0, commentaires: 0 };
           monthlyStats[key].commentaires++;
         });
 
-        const monthMap = {
+        const monthMap: Record<string, string> = {
           "janvier": "January",
           "février": "February",
           "mars": "March",
@@ -96,7 +114,7 @@ const StatsAvancees = () => {
           "décembre": "December",
         };
 
-        const sortedMonthly = Object.values(monthlyStats).sort((a: any, b: any) => {
+        const sortedMonthly = Object.values(monthlyStats).sort((a, b) => {
           const [monthA, yearA] = a.name.split("-");
           const [monthB, yearB] = b.name.split("-");
           const dateA = new Date(`${monthMap[monthA.toLowerCase()]} 1, ${yearA}`);
@@ -108,12 +126,10 @@ const StatsAvancees = () => {
         setCommentStats(sortedMonthly);
         setEngagementStats(sortedMonthly);
 
-        const catCount = {};
-        ressources.forEach((r) => {
+        const catCount: Record<string, number> = {};
+        ressources.forEach((r: Ressource) => {
           catCount[r.category] = (catCount[r.category] || 0) + 1;
         });
-        setResourceStats(Object.entries(catCount).map(([cat, val]) => ({ name: cat, value: val })));
-
       } catch (error) {
         toast.error("Erreur lors du chargement des statistiques");
       }

@@ -10,10 +10,20 @@ interface Comment {
   createdAt: string;
 }
 
+interface User {
+  _id: string;
+  name: string;
+}
+
+interface Ressource {
+  _id: string;
+  title: string;
+}
+
 const Comments = () => {
   const [comments, setComments] = useState<Comment[]>([]);
-  const [users, setUsers] = useState([]);
-  const [ressources, setRessources] = useState([]);
+  const [users, setUsers] = useState<User[]>([]);
+  const [ressources, setRessources] = useState<Ressource[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {

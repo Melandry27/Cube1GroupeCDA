@@ -18,6 +18,7 @@ interface DecodedUser {
 interface AuthContextType {
   isAuthenticated: boolean;
   user: DecodedUser | null;
+  token: string | null;
   loginUser: (credentials: { email: string; password: string }) => void;
   logout: () => void;
 }

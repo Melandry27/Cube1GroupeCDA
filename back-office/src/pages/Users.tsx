@@ -3,10 +3,22 @@ import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import { useAuth } from "../context/AuthContext";
 
+interface User {
+  _id: string;
+  name: string;
+  email: string;
+  roleId: string;
+  createdAt: string;
+}
+
+interface Role {
+  _id: string;
+  name: string;
+}
 const Users = () => {
   const navigate = useNavigate();
-  const [users, setUsers] = useState([]);
-  const [roles, setRoles] = useState([]);
+  const [users, setUsers] = useState<User[]>([]);
+  const [roles, setRoles] = useState<Role[]>([]);
   const [search, setSearch] = useState("");
   const { user: currentUser } = useAuth();
   const currentRole = currentUser?.role;

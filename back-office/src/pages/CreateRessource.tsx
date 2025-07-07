@@ -21,7 +21,8 @@ const CreateRessource = () => {
   const [resourceTypes, setResourceTypes] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const { token } = useAuth();
+  const { user } = useAuth();
+  const token = (user as { token?: string })?.token;
 
   useEffect(() => {
     const fetchCategories = async () => {

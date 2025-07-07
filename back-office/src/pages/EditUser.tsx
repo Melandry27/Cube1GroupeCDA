@@ -3,6 +3,10 @@ import { useParams, useNavigate } from "react-router";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "../context/AuthContext";
+interface Role {
+  _id: string;
+  name: string;
+}
 
 const EditUser = () => {
   const { id } = useParams<{ id: string }>();
@@ -22,14 +26,14 @@ const EditUser = () => {
   const [confirmPassword, setConfirmPassword] = useState(""); 
   const [validatePassword, setValidatePassword] = useState(false); 
   const [validateEmail, setValidateEmail] = useState(false);
-  const [roles, setRoles] = useState<string[]>([]);
+  const [roles, setRoles] = useState<Role[]>([]);
 
   useEffect(() => {
     const fetchRoles = async () => {
       try {
         const response = await fetch("/api/roles");
         if (response.ok) {
-          const data = await response.json();
+          const data: Role[] = await response.json();
           setRoles(data);
         } else {
           throw new Error("Erreur lors de la récupération des rôles");
@@ -112,13 +116,11 @@ const EditUser = () => {
     window.history.back();
   };
 
-  const filteredRoles = roles.filter((role: any) => {
+  const filteredRoles = roles.filter((role) => {
     const currentRole = currentUser?.role;
-  
     if (currentRole === "Super Admin") return true;
     if (currentRole === "Administrateur") return !["Administrateur", "Super Admin"].includes(role.name);
     if (currentRole === "Modérateur") return !["Administrateur", "Super Admin", "Modérateur"].includes(role.name);
-  
     return false;
   });
 

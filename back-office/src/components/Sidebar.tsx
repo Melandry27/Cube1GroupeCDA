@@ -16,9 +16,8 @@ const Sidebar = () => {
   ];
 
   const visibleItems = menuItems.filter(
-    (item) => !item.hideFor || !item.hideFor.includes(role)
+    (item) => !item.hideFor || (role && !item.hideFor.includes(role))
   );
-
   return (
     <nav className="fr-sidemenu fr-col-2">
       <ul className="fr-sidemenu__list">
