@@ -4,7 +4,7 @@ import { IRessource, RessourceType } from "../models/Ressource";
 
 jest.mock("../database/RessourceDatabase");
 
-const mockRessource: IRessource = {
+const mockRessource = {
   _id: "mock-id",
   title: "Test Ressource",
   content: "Contenu de test",
@@ -14,7 +14,14 @@ const mockRessource: IRessource = {
   image: "image.jpg",
   createdAt: new Date(),
   updatedAt: new Date(),
-} as unknown as IRessource;
+  file: {
+    originalName: "test.pdf",
+    mimeType: "application/pdf",
+    size: 12345,
+    path: "/tmp/test.pdf",
+    ressourceId: "mock-id"
+  }
+};
 
 describe("RessourceService", () => {
   afterEach(() => {
