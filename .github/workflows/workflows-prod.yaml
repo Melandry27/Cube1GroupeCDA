@@ -102,5 +102,5 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd ressource-prod
-            sudo docker compose -f docker-compose.prod.yaml pull
-            sudo docker compose -f docker-compose.prod.yaml up -d
+            sudo docker-compose -f docker-compose.prod.yaml pull
+            sudo docker-compose -f docker-compose.prod.yaml up -d
