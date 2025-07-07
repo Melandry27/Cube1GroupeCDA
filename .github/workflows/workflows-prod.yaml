@@ -21,7 +21,7 @@ jobs:
           ls -la
 
       - name: Clean install des dépendances
-        run: npm clean-install
+        run: npm install
 
       - name: Build du projet
         run: npm run build
