@@ -8,7 +8,6 @@ import Route from "./routes/index";
 import { setupSwagger } from "./swagger";
 
 dotenv.config({ path: "/app/.env" });
-dotenv.config();
 
 const app = express();
 
