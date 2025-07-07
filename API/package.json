@@ -18,7 +18,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node dist/server.ts",
+    "start": "node dist/server.js",
     "dev": "concurrently -n API,SOCKET -c blue,green \"npx nodemon src/server.ts --exec ts-node\" \"npx nodemon src/serverSocket.ts --exec ts-node\"",
     "build": "tsc",
     "test": "jest",
