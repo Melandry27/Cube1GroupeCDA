@@ -44,10 +44,11 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build et push de l'image Docker
         uses: docker/build-push-action@v6
         with:
-          context: .
+          context: ./API
           push: true
           target: api
           tags: ghcr.io/melandry27/cube1groupecda/api:${{ github.ref_name}}
