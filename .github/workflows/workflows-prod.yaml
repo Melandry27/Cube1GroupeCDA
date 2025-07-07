@@ -16,6 +16,7 @@ jobs:
 
       - name: LS du répertoire
         run: |
+          ls -la
           cd API
           ls -la
 
