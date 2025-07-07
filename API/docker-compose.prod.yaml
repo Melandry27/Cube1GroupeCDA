@@ -12,9 +12,9 @@ services:
   mongo:
     image: mongo
     restart: unless-stopped
-    volumes:
-      -
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=${{MONGO_INITDB_ROOT_USERNAME}}
-      - MONGO_INITDB_ROOT_PASSWORD=${{MONGO_INITDB_ROOT_PASSWORD}}
-      - MONGO_INITDB_DATABASE=${{MONGO_INITDB_DATABASE}}
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+      - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
+    volumes:
+      - mongo_data:/data/db
