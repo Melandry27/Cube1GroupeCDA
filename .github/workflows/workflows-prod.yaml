@@ -1,5 +1,5 @@
 name: "Construction du workflow de production"
-run-name: ${github.actor} A lancé le github workflow de production
+run-name: ${{github.actor}} A lancé le github workflow de production
 on: [push]
 
 # ------------------------------CI------------------------------
@@ -17,6 +17,9 @@ jobs:
       - name: CD API
         run: |
           cd API
+
+      - name: LS du répertoire
+        run: ls -la
 
       - name: Clean install des dépendances
         run: npm clean-install
