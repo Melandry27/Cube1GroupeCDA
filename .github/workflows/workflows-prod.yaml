@@ -93,7 +93,7 @@ jobs:
     if: ${{github.ref_name == 'main'}}
     environment:
       name: prod
-      url: http://ec2-34-224-12-85.compute-1.amazonaws.com/
+      url: 34.224.12.85
     needs: build-push-docker
     steps:
       - uses: appleboy/ssh-action@v1

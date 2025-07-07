@@ -8,3 +8,19 @@ services:
       - "3000:3000"
     volumes:
       - .env:/app/.env
+    networks:
+      - prodnet
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo
+    restart: unless-stopped
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=admin
+      - MONGO_INITDB_DATABASE=cube1groupecda
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - prodnet

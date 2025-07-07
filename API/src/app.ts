@@ -7,7 +7,7 @@ import connectDB from "./config/db";
 import Route from "./routes/index";
 import { setupSwagger } from "./swagger";
 
-dotenv.config();
+dotenv.config({ path: "/app/.env" });
 
 const app = express();
 
