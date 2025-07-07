@@ -50,7 +50,7 @@ jobs:
           context: .
           push: true
           target: api
-          tags: ghcr.io/Melandry27/Cube1GroupeCDA/api:${{ github.ref_name}}
+          tags: ghcr.io/melandry27/cube1groupecda/api:${{ github.ref_name}}
 
   unit-tests:
     runs-on: ubuntu-latest
