@@ -8,7 +8,7 @@ COPY src/database ./database
 RUN npm install
 
 COPY . .
-RUN npm run build
+RUN npm build
 
 EXPOSE 3000
 # COPY docker/express/entrypoint.sh /usr/local/bin/entrypoint
