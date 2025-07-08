@@ -3,7 +3,7 @@ run-name: ${{github.actor}} A lancé le github workflow de production
 on:
   push:
     paths:
-      - 'API/**'
+      - "API/**"
 
 # ------------------------------CI------------------------------
 

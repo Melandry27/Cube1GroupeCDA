@@ -22,7 +22,9 @@
     "dev": "concurrently -n API,SOCKET -c blue,green \"npx nodemon src/server.ts --exec ts-node\" \"npx nodemon src/serverSocket.ts --exec ts-node\"",
     "build": "tsc",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "lint": "eslint . --ext .js,.ts,.tsx",
+    "lint:fix": "eslint . --ext .js,.ts,.tsx --fix"
   },
   "keywords": [],
   "author": "",
@@ -42,11 +44,17 @@
     "@types/supertest": "^6.0.3",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "concurrently": "^9.1.2",
+    "eslint": "^8.57.1",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-airbnb-typescript": "^18.0.0",
+    "eslint-plugin-import": "^2.32.0",
     "jest": "^29.7.0",
     "nodemon": "^3.1.9",
     "supertest": "^7.1.0",
     "ts-jest": "^29.3.2",
-    "concurrently": "^9.1.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.2"
   }
