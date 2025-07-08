@@ -90,5 +90,5 @@ jobs:
           script: |
             cd ressource-prod
             cd back-office
-            sudo docker compose -f docker-compose.prod.yaml pull
-            sudo docker compose -f docker-compose.prod.yaml up -d
+            sudo docker compose -f docker-compose.prod.yml pull
+            sudo docker compose -f docker-compose.prod.yml up -d
