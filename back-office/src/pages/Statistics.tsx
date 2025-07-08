@@ -164,7 +164,7 @@ const StatsAvancees = () => {
           catCount[r.category] = (catCount[r.category] || 0) + 1;
         });
       } catch (error) {
-        toast.error("Erreur lors du chargement des statistiques", error);
+        toast.error("Erreur lors du chargement des statistiques");
       }
     };
 
