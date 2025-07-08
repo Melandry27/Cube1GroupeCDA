@@ -45,6 +45,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   });
 
+  console.log("user.role", user?.role);
+
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
     return (
       !!token &&
@@ -59,6 +61,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     onSuccess: (data) => {
       try {
         const decoded = jwtDecode<DecodedUser>(data.token);
+
+        console.log("Decoded token:", decoded);
+        console.log("User role 2:", decoded?.role);
 
         if (allowedRoles.includes(decoded.role) && decoded.isVerified) {
           localStorage.setItem("token", data.token);
