@@ -10,5 +10,13 @@ export const login = async (credentials: {
     body: JSON.stringify(credentials),
   });
 
+  const contentType = res.headers.get("content-type") ?? "";
+  if (!res.ok || !contentType.includes("application/json")) {
+    const txt = await res.text();
+    throw new Error(
+      `HTTP ${res.status} – réponse inattendue : ${txt.slice(0, 100)}`
+    );
+  }
+
   return await res.json();
 };
