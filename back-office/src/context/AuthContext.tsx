@@ -25,7 +25,12 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const allowedRoles = ["Modérateur", "Administrateur", "Super Admin"];
+const allowedRoles = [
+  "Modérateur",
+  "Administrateur",
+  "Super Admin",
+  "Citoyen Connecté",
+];
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
@@ -45,15 +50,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   });
 
-  console.log("user.role", user?.role);
-
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    return (
-      !!token &&
-      user !== null &&
-      allowedRoles.includes(user.role) &&
-      user.isVerified
-    );
+    return !!token && user !== null && user.isVerified;
   });
 
   const mutation = useMutation({
@@ -61,9 +59,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     onSuccess: (data) => {
       try {
         const decoded = jwtDecode<DecodedUser>(data.token);
-
-        console.log("Decoded token:", decoded);
-        console.log("User role 2:", decoded?.role);
 
         if (allowedRoles.includes(decoded.role) && decoded.isVerified) {
           localStorage.setItem("token", data.token);
