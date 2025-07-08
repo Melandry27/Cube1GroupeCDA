@@ -65,7 +65,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: ./back-office
-        run: npm install
+        run: npm install --legacy-peer-deps
 
       - name: Run audit
         working-directory: ./back-office
