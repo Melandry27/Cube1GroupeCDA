@@ -5,13 +5,13 @@ meta {
 }
 
 post {
-  url: {{BASE_URL}}/roles/
+  url: {{EC2}}/roles/
   body: json
   auth: inherit
 }
 
 body:json {
   {
-    "name" : "Citoyen non connecté"
+    "name" : "Admin"
   }
 }

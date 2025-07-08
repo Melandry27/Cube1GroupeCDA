@@ -5,7 +5,11 @@ meta {
 }
 
 delete {
-  url: {{BASE_URL}}/users/id
+  url: {{EC2}}/users/:id
   body: none
   auth: inherit
+}
+
+params:path {
+  id: 
 }
