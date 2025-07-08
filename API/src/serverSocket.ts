@@ -70,7 +70,7 @@ io.on("connection", (socket) => {
       ([, socketId]) => socketId === socket.id
     )?.[0];
 
-    if (userId) connectedUsers.delete(userId);
+    if (userId) {connectedUsers.delete(userId);}
   });
 });
 

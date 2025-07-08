@@ -64,7 +64,7 @@ describe("Ressource Controller", () => {
   it("should return 404 if ressource not found", async () => {
     (RessourceService.getById as jest.Mock).mockResolvedValue(null);
 
-    const res = await request(app).get(`/api/ressources/unknown-id`);
+    const res = await request(app).get("/api/ressources/unknown-id");
 
     expect(res.status).toBe(404);
     expect(res.body.message).toBe("Resource not found");

@@ -21,17 +21,24 @@ describe("Progress Controller", () => {
   });
 
   it("POST /api/progress - should create a progress", async () => {
-    (ProgressService.createProgress as jest.Mock).mockResolvedValue(mockProgress);
+    (ProgressService.createProgress as jest.Mock).mockResolvedValue(
+      mockProgress
+    );
 
     const res = await request(app).post("/api/progress").send(mockProgress);
 
     expect(res.statusCode).toBe(201);
-    expect(res.body).toMatchObject({ userId: "user123", status: ProgressStatus.InProgress });
+    expect(res.body).toMatchObject({
+      userId: "user123",
+      status: ProgressStatus.InProgress,
+    });
     expect(ProgressService.createProgress).toHaveBeenCalled();
   });
 
   it("GET /api/progress - should return all progress", async () => {
-    (ProgressService.getAllProgress as jest.Mock).mockResolvedValue([mockProgress]);
+    (ProgressService.getAllProgress as jest.Mock).mockResolvedValue([
+      mockProgress,
+    ]);
 
     const res = await request(app).get("/api/progress");
 
@@ -41,7 +48,9 @@ describe("Progress Controller", () => {
   });
 
   it("GET /api/progress/:id - should return progress by ID", async () => {
-    (ProgressService.getProgressById as jest.Mock).mockResolvedValue(mockProgress);
+    (ProgressService.getProgressById as jest.Mock).mockResolvedValue(
+      mockProgress
+    );
 
     const res = await request(app).get(`/api/progress/${mockProgress._id}`);
 
@@ -53,7 +62,9 @@ describe("Progress Controller", () => {
     const updated = { ...mockProgress, status: ProgressStatus.Completed };
     (ProgressService.updateProgress as jest.Mock).mockResolvedValue(updated);
 
-    const res = await request(app).put(`/api/progress/${mockProgress._id}`).send({ status: ProgressStatus.Completed });
+    const res = await request(app)
+      .put(`/api/progress/${mockProgress._id}`)
+      .send({ status: ProgressStatus.Completed });
 
     expect(res.statusCode).toBe(200);
     expect(res.body.status).toBe(ProgressStatus.Completed);
@@ -61,19 +72,23 @@ describe("Progress Controller", () => {
   });
 
   it("DELETE /api/progress/:id - should delete a progress", async () => {
-    (ProgressService.deleteProgress as jest.Mock).mockResolvedValue(mockProgress);
+    (ProgressService.deleteProgress as jest.Mock).mockResolvedValue(
+      mockProgress
+    );
 
     const res = await request(app).delete(`/api/progress/${mockProgress._id}`);
 
     expect(res.statusCode).toBe(200);
     expect(res.body.message).toBe("Progress deleted successfully");
-    expect(ProgressService.deleteProgress).toHaveBeenCalledWith(mockProgress._id);
+    expect(ProgressService.deleteProgress).toHaveBeenCalledWith(
+      mockProgress._id
+    );
   });
 
   it("GET /api/progress/:id - should return 404 if progress not found", async () => {
     (ProgressService.getProgressById as jest.Mock).mockResolvedValue(null);
 
-    const res = await request(app).get(`/api/progress/unknown-id`);
+    const res = await request(app).get("/api/progress/unknown-id");
 
     expect(res.statusCode).toBe(404);
     expect(res.body.message).toBe("Progress not found");

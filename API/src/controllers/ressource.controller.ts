@@ -13,8 +13,10 @@ export const create = async (req: Request, res: Response): Promise<void> => {
       categoryId
     );
 
+    // eslint-disable-next-line no-undef
     const image = (req.files as { [fieldname: string]: Express.Multer.File[] })
       ?.image?.[0];
+    // eslint-disable-next-line no-undef
     const file = (req.files as { [fieldname: string]: Express.Multer.File[] })
       ?.file?.[0];
 

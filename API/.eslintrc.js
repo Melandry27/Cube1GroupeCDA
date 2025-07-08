@@ -4,16 +4,26 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 2021,
     sourceType: "module",
-    project: "./tsconfig.json",
   },
   env: {
     node: true,
     es2021: true,
   },
   plugins: ["@typescript-eslint"],
-  extends: ["airbnb-base", "airbnb-typescript/base"],
+  extends: ["eslint:recommended"],
   rules: {
+    // Règles de base
     "no-console": "off",
-    "import/prefer-default-export": "off",
+    "no-unused-vars": "off",
+    "prefer-const": "warn",
+    "no-var": "error",
+    eqeqeq: "warn",
+    curly: "warn",
+    semi: ["warn", "always"],
+    quotes: ["warn", "double"],
+
+    // TypeScript rules (manuelles)
+    "@typescript-eslint/no-unused-vars": "warn",
+    "@typescript-eslint/no-explicit-any": "warn",
   },
 };

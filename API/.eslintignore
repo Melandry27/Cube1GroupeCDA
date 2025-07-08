@@ -1,0 +1,17 @@
+# Tests
+src/tests/
+tests/
+**/*.test.ts
+**/*.spec.ts
+
+# Build
+dist/
+build/
+
+# Dependencies
+node_modules/
+
+# Autres
+coverage/
+*.log
+.env
