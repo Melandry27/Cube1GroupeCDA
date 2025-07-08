@@ -18,6 +18,11 @@ jobs:
         working-directory: ./API
         run: npm ci
 
+      - name: Lint le code
+        working-directory: ./API
+        run: npm run lint
+        continue-on-error: true
+
       - name: Build du projet
         working-directory: ./API
         run: npm run build

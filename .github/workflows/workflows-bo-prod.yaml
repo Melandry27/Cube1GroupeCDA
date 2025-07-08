@@ -3,7 +3,7 @@ run-name: ${{github.actor}} A lancé le github workflow de production du back-of
 on:
   push:
     paths:
-      - 'back-office/**'
+      - "back-office/**"
 
 # ------------------------------CI------------------------------
 
@@ -17,6 +17,11 @@ jobs:
       - name: Clean install des dépendances
         working-directory: ./back-office
         run: npm ci --legacy-peer-deps
+
+      - name: Lint le code
+        working-directory: ./back-office
+        run: npm run lint
+        continue-on-error: true
 
       - name: Build du projet
         working-directory: ./back-office
