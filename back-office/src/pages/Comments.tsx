@@ -35,7 +35,7 @@ const Comments = () => {
         ]);
 
         if (!commentsRes.ok || !usersRes.ok || !ressourcesRes.ok) {
-          throw new Error("Erreur lors de la récupération des données");
+          throw new Error("Erreurs lors de la récupération des données");
         }
 
         const commentsData = await commentsRes.json();
