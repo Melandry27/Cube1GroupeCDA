@@ -3,7 +3,7 @@ services:
     image: ghcr.io/melandry27/cube1groupecda/back-office:main
     restart: unless-stopped
     ports:
-      - "8080:3000"
+      - "8080:3002"
     environment:
       - NODE_ENV=production
     volumes:
