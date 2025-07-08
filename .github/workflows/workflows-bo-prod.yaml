@@ -59,7 +59,7 @@ jobs:
           target: back-office
           tags: ghcr.io/melandry27/cube1groupecda/back-office:${{ github.ref_name}}
           build-args: |
-            VITE_API_URL=http://ec2-34-224-12-85.compute-1.amazonaws.com:3000/api
+            VITE_API_URL=http://34.224.12.85:3000
 
   audit:
     runs-on: ubuntu-latest
