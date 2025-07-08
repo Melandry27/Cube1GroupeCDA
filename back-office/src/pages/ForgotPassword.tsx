@@ -20,10 +20,15 @@ const ForgotPassword = () => {
         throw new Error("Une erreur est survenue");
       }
 
-      toast.success("Si ce compte existe, un email de réinitialisation a été envoyé.");
+      toast.success(
+        "Si ce compte existe, un email de réinitialisation a été envoyé."
+      );
       setEmail("");
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      toast.error("Impossible d'envoyer la demande. Vérifiez l'email et réessayez.");
+      toast.error(
+        "Impossible d'envoyer la demande. Vérifiez l'email et réessayez."
+      );
     }
   };
 
@@ -34,11 +39,16 @@ const ForgotPassword = () => {
           <div className="fr-card">
             <div className="fr-card__body">
               <h1 className="fr-h2 fr-mt-2w">Mot de passe oublié</h1>
-              <p>Entrez votre adresse email pour recevoir un lien de réinitialisation.</p>
+              <p>
+                Entrez votre adresse email pour recevoir un lien de
+                réinitialisation.
+              </p>
 
               <form onSubmit={handleSubmit}>
                 <div className="fr-input-group">
-                  <label className="fr-label" htmlFor="email">Adresse email</label>
+                  <label className="fr-label" htmlFor="email">
+                    Adresse email
+                  </label>
                   <input
                     className="fr-input"
                     type="email"
@@ -51,7 +61,10 @@ const ForgotPassword = () => {
                   />
                 </div>
 
-                <button type="submit" className="fr-btn fr-btn--primary fr-mt-4w">
+                <button
+                  type="submit"
+                  className="fr-btn fr-btn--primary fr-mt-4w"
+                >
                   Envoyer
                 </button>
 

@@ -31,7 +31,8 @@ const EditRessource = () => {
     const fetchRessource = async () => {
       try {
         const res = await fetch(`/api/ressources/${id}`);
-        if (!res.ok) throw new Error("Erreur lors de la récupération de la ressource");
+        if (!res.ok)
+          throw new Error("Erreur lors de la récupération de la ressource");
         const data = await res.json();
         setRessource(data);
       } catch {
@@ -42,7 +43,8 @@ const EditRessource = () => {
     const fetchCategories = async () => {
       try {
         const res = await fetch("/api/categories");
-        if (!res.ok) throw new Error("Erreur lors de la récupération des catégories");
+        if (!res.ok)
+          throw new Error("Erreur lors de la récupération des catégories");
         const data = await res.json();
         setCategories(data);
       } catch {
@@ -53,7 +55,8 @@ const EditRessource = () => {
     const fetchUsers = async () => {
       try {
         const res = await fetch("/api/users");
-        if (!res.ok) throw new Error("Erreur lors de la récupération des utilisateurs");
+        if (!res.ok)
+          throw new Error("Erreur lors de la récupération des utilisateurs");
         const data = await res.json();
         setUsers(data);
       } catch {
@@ -89,14 +92,19 @@ const EditRessource = () => {
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
   ) => {
     const { name, value } = e.target;
 
     if (name === "createdBy") {
       setRessource((prev) => ({
         ...prev,
-        createdBy: { ...prev.createdBy ?? { _id: "", name: "", email: "" }, _id: value },
+        createdBy: {
+          ...(prev.createdBy ?? { _id: "", name: "", email: "" }),
+          _id: value,
+        },
       }));
     } else {
       setRessource((prev) => ({ ...prev, [name]: value }));
@@ -106,7 +114,7 @@ const EditRessource = () => {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-  
+
     const reader = new FileReader();
     reader.onloadend = () => {
       setRessource((prev) => ({
@@ -123,7 +131,7 @@ const EditRessource = () => {
     try {
       const body = {
         ...ressource,
-        createdBy: ressource.createdBy?.['_id'] ?? "",
+        createdBy: ressource.createdBy?.["_id"] ?? "",
       };
 
       const response = await fetch(`/api/ressources/${id}`, {
@@ -152,9 +160,14 @@ const EditRessource = () => {
       {loading ? (
         <p>Chargement...</p>
       ) : (
-        <form onSubmit={handleSubmit} className="fr-grid-row fr-grid-row--gutters">
+        <form
+          onSubmit={handleSubmit}
+          className="fr-grid-row fr-grid-row--gutters"
+        >
           <div className="fr-col-12 fr-col-md-6">
-            <label className="fr-label" htmlFor="title">Titre</label>
+            <label className="fr-label" htmlFor="title">
+              Titre
+            </label>
             <input
               className="fr-input"
               id="title"
@@ -166,12 +179,14 @@ const EditRessource = () => {
           </div>
 
           <div className="fr-col-12 fr-col-md-6">
-            <label className="fr-label" htmlFor="createdBy">Auteur</label>
+            <label className="fr-label" htmlFor="createdBy">
+              Auteur
+            </label>
             <select
               className="fr-select"
               id="createdBy"
               name="createdBy"
-              value={ressource.createdBy?.['_id'] ?? ""}
+              value={ressource.createdBy?.["_id"] ?? ""}
               onChange={handleChange}
               required
             >
@@ -185,7 +200,9 @@ const EditRessource = () => {
           </div>
 
           <div className="fr-col-12">
-            <label className="fr-label" htmlFor="content">Contenu</label>
+            <label className="fr-label" htmlFor="content">
+              Contenu
+            </label>
             <textarea
               className="fr-input"
               id="content"
@@ -198,7 +215,9 @@ const EditRessource = () => {
           </div>
 
           <div className="fr-col-12 fr-col-md-6">
-            <label className="fr-label" htmlFor="categoryId">Catégorie</label>
+            <label className="fr-label" htmlFor="categoryId">
+              Catégorie
+            </label>
             <select
               className="fr-select"
               id="categoryId"
@@ -217,7 +236,9 @@ const EditRessource = () => {
           </div>
 
           <div className="fr-col-12 fr-col-md-6">
-            <label className="fr-label" htmlFor="type">Type</label>
+            <label className="fr-label" htmlFor="type">
+              Type
+            </label>
             <select
               className="fr-select"
               id="type"
@@ -236,7 +257,9 @@ const EditRessource = () => {
           </div>
 
           <div className="fr-col-12 fr-col-md-6">
-            <label className="fr-label" htmlFor="image">Image</label>
+            <label className="fr-label" htmlFor="image">
+              Image
+            </label>
             <input
               type="file"
               id="image"
@@ -249,7 +272,11 @@ const EditRessource = () => {
                 <img
                   src={ressource.image}
                   alt="Aperçu de l'image"
-                  style={{ maxHeight: "150px", borderRadius: "4px", border: "1px solid #ccc" }}
+                  style={{
+                    maxHeight: "150px",
+                    borderRadius: "4px",
+                    border: "1px solid #ccc",
+                  }}
                 />
               </div>
             )}
@@ -259,7 +286,11 @@ const EditRessource = () => {
             className="fr-col-12 fr-grid-row fr-mt-4w"
             style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}
           >
-            <button type="button" className="fr-btn fr-btn--secondary" onClick={goBack}>
+            <button
+              type="button"
+              className="fr-btn fr-btn--secondary"
+              onClick={goBack}
+            >
               Annuler
             </button>
             <button type="submit" className="fr-btn fr-btn--primary">

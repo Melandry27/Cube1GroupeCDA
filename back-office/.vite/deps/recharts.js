@@ -7995,7 +7995,7 @@ var DefaultLegendContent = function(_PureComponent) {
         warn(
           !(0, import_isFunction2.default)(entry.value),
           `The name property is also required when using a function for the dataKey of a chart's cartesian components. Ex: <Bar name="Name of my Data"/>`
-          // eslint-disable-line max-len
+           
         );
         var color2 = entry.inactive ? inactiveColor : entry.color;
         return import_react6.default.createElement("li", _extends4({
@@ -20447,7 +20447,7 @@ function AnimateGroup(props) {
       enterOptions: enter,
       leaveOptions: leave,
       key: "child-".concat(index2)
-      // eslint-disable-line
+       
     }, child);
   }));
 }

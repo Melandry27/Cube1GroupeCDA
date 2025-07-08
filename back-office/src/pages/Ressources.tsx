@@ -26,6 +26,7 @@ const Ressources = () => {
 
         setRessources(ressourcesData);
         setCategories(categoriesData);
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         toast.error("Impossible de récupérer les données. Veuillez réessayer.");
       }

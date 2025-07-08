@@ -19,12 +19,12 @@ const EditUser = () => {
     phone: "",
     roleId: "",
     adress: "",
-    password: "", 
+    password: "",
   });
 
-  const [originalPassword, setOriginalPassword] = useState(""); 
-  const [confirmPassword, setConfirmPassword] = useState(""); 
-  const [validatePassword, setValidatePassword] = useState(false); 
+  const [originalPassword, setOriginalPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [validatePassword, setValidatePassword] = useState(false);
   const [validateEmail, setValidateEmail] = useState(false);
   const [roles, setRoles] = useState<Role[]>([]);
 
@@ -38,6 +38,7 @@ const EditUser = () => {
         } else {
           throw new Error("Erreur lors de la récupération des rôles");
         }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         toast.error("Impossible de récupérer les rôles. Veuillez réessayer.");
       }
@@ -61,8 +62,11 @@ const EditUser = () => {
         } else {
           throw new Error("Erreur lors de la récupération de l'utilisateur");
         }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
-        toast.error("Impossible de récupérer les informations de l'utilisateur.");
+        toast.error(
+          "Impossible de récupérer les informations de l'utilisateur."
+        );
       }
     };
 
@@ -70,7 +74,9 @@ const EditUser = () => {
     fetchUser();
   }, [id]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setUser((prevUser) => {
       const updatedUser = { ...prevUser, [name]: value };
@@ -78,7 +84,9 @@ const EditUser = () => {
     });
   };
 
-  const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleConfirmPasswordChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const value = e.target.value;
     setConfirmPassword(value);
     setValidatePassword(value === user.password);
@@ -97,7 +105,11 @@ const EditUser = () => {
     try {
       const response = await fetch(`/api/users/${id}`, {
         method: "PUT",
-        body: JSON.stringify({ ...user, password: passwordToSend, validateEmail }),
+        body: JSON.stringify({
+          ...user,
+          password: passwordToSend,
+          validateEmail,
+        }),
         headers: { "Content-Type": "application/json" },
       });
 
@@ -107,8 +119,11 @@ const EditUser = () => {
       } else {
         throw new Error("Erreur lors de la modification de l'utilisateur");
       }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (error) {
-      toast.error("Erreur lors de la modification de l'utilisateur. Veuillez réessayer.");
+      toast.error(
+        "Erreur lors de la modification de l'utilisateur. Veuillez réessayer."
+      );
     }
   };
 
@@ -119,17 +134,26 @@ const EditUser = () => {
   const filteredRoles = roles.filter((role) => {
     const currentRole = currentUser?.role;
     if (currentRole === "Super Admin") return true;
-    if (currentRole === "Administrateur") return !["Administrateur", "Super Admin"].includes(role.name);
-    if (currentRole === "Modérateur") return !["Administrateur", "Super Admin", "Modérateur"].includes(role.name);
+    if (currentRole === "Administrateur")
+      return !["Administrateur", "Super Admin"].includes(role.name);
+    if (currentRole === "Modérateur")
+      return !["Administrateur", "Super Admin", "Modérateur"].includes(
+        role.name
+      );
     return false;
   });
 
   return (
     <>
       <h2 className="fr-h3">Modifier un Utilisateur</h2>
-      <form onSubmit={handleSubmit} className="fr-grid-row fr-grid-row--gutters">
+      <form
+        onSubmit={handleSubmit}
+        className="fr-grid-row fr-grid-row--gutters"
+      >
         <div className="fr-col-12 fr-col-md-6">
-          <label className="fr-label" htmlFor="name">Nom d'utilisateur</label>
+          <label className="fr-label" htmlFor="name">
+            Nom d'utilisateur
+          </label>
           <input
             className="fr-input"
             id="name"
@@ -141,7 +165,9 @@ const EditUser = () => {
         </div>
 
         <div className="fr-col-12 fr-col-md-6">
-          <label className="fr-label" htmlFor="email">Email</label>
+          <label className="fr-label" htmlFor="email">
+            Email
+          </label>
           <input
             className="fr-input"
             id="email"
@@ -154,7 +180,9 @@ const EditUser = () => {
         </div>
 
         <div className="fr-col-12 fr-col-md-6">
-          <label className="fr-label" htmlFor="validateEmail">Validation Email</label>
+          <label className="fr-label" htmlFor="validateEmail">
+            Validation Email
+          </label>
           <select
             className="fr-select"
             id="validateEmail"
@@ -168,7 +196,9 @@ const EditUser = () => {
         </div>
 
         <div className="fr-col-12 fr-col-md-6">
-          <label className="fr-label" htmlFor="phone">Téléphone</label>
+          <label className="fr-label" htmlFor="phone">
+            Téléphone
+          </label>
           <input
             className="fr-input"
             id="phone"
@@ -181,7 +211,9 @@ const EditUser = () => {
         </div>
 
         <div className="fr-col-12 fr-col-md-6">
-          <label className="fr-label" htmlFor="adress">Adresse</label>
+          <label className="fr-label" htmlFor="adress">
+            Adresse
+          </label>
           <input
             className="fr-input"
             id="adress"
@@ -193,7 +225,9 @@ const EditUser = () => {
         </div>
 
         <div className="fr-col-12 fr-col-md-6">
-          <label className="fr-label" htmlFor="roleId">Rôle</label>
+          <label className="fr-label" htmlFor="roleId">
+            Rôle
+          </label>
           <select
             className="fr-select"
             id="roleId"
@@ -212,7 +246,9 @@ const EditUser = () => {
         </div>
 
         <div className="fr-col-12 fr-col-md-6">
-          <label className="fr-label" htmlFor="password">Mot de passe</label>
+          <label className="fr-label" htmlFor="password">
+            Mot de passe
+          </label>
           <input
             className="fr-input"
             id="password"
@@ -224,7 +260,9 @@ const EditUser = () => {
         </div>
 
         <div className="fr-col-12 fr-col-md-6">
-          <label className="fr-label" htmlFor="confirmPassword">Confirmer le mot de passe</label>
+          <label className="fr-label" htmlFor="confirmPassword">
+            Confirmer le mot de passe
+          </label>
           <input
             className="fr-input"
             id="confirmPassword"
@@ -234,13 +272,26 @@ const EditUser = () => {
             onChange={handleConfirmPasswordChange}
           />
           {!validatePassword && confirmPassword && (
-            <p style={{ color: "red" }}>Les mots de passe ne correspondent pas.</p>
+            <p style={{ color: "red" }}>
+              Les mots de passe ne correspondent pas.
+            </p>
           )}
         </div>
 
-        <div className="fr-col-12 fr-grid-row fr-mt-4w" style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
-          <button type="button" className="fr-btn fr-btn--secondary" onClick={goBack}>Annuler</button>
-          <button type="submit" className="fr-btn fr-btn--primary">Modifier</button>
+        <div
+          className="fr-col-12 fr-grid-row fr-mt-4w"
+          style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}
+        >
+          <button
+            type="button"
+            className="fr-btn fr-btn--secondary"
+            onClick={goBack}
+          >
+            Annuler
+          </button>
+          <button type="submit" className="fr-btn fr-btn--primary">
+            Modifier
+          </button>
         </div>
       </form>
 

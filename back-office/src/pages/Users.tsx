@@ -36,6 +36,7 @@ const Users = () => {
 
         setUsers(usersData);
         setRoles(rolesData);
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
         toast.error("Impossible de récupérer les données. Veuillez réessayer.");
       }
@@ -48,7 +49,9 @@ const Users = () => {
   const handleEdit = (id: string) => navigate(`edit/${id}`);
 
   const handleDelete = async (id: string) => {
-    if (window.confirm("Êtes-vous sûr de vouloir supprimer cet utilisateur ?")) {
+    if (
+      window.confirm("Êtes-vous sûr de vouloir supprimer cet utilisateur ?")
+    ) {
       try {
         const response = await fetch(`/api/users/${id}`, { method: "DELETE" });
         if (response.ok) {
@@ -58,7 +61,9 @@ const Users = () => {
           throw new Error();
         }
       } catch {
-        toast.error("Impossible de supprimer l'utilisateur. Veuillez réessayer.");
+        toast.error(
+          "Impossible de supprimer l'utilisateur. Veuillez réessayer."
+        );
       }
     }
   };
@@ -70,15 +75,21 @@ const Users = () => {
 
   const filteredUsers = users.filter((user) => {
     const userRoleName = getRoleName(user.roleId);
-  
-    if (currentRole === "Modérateur" && ["Modérateur", "Administrateur", "Super Admin"].includes(userRoleName)) {
+
+    if (
+      currentRole === "Modérateur" &&
+      ["Modérateur", "Administrateur", "Super Admin"].includes(userRoleName)
+    ) {
       return false;
     }
-  
-    if (currentRole === "Administrateur" && ["Administrateur", "Super Admin"].includes(userRoleName)) {
+
+    if (
+      currentRole === "Administrateur" &&
+      ["Administrateur", "Super Admin"].includes(userRoleName)
+    ) {
       return false;
     }
-  
+
     return (
       user.name.toLowerCase().includes(search.toLowerCase()) ||
       user.email.toLowerCase().includes(search.toLowerCase())
@@ -89,7 +100,13 @@ const Users = () => {
     if (!currentRole) return false;
 
     if (currentRole === "Super Admin") return true;
-    if ((currentRole === "Modérateur" && !["Administrateur", "Super Admin"].includes(targetRoleName)) || (currentRole === "Administrateur" && !["Administrateur", "Super Admin"].includes(targetRoleName))) return true;
+    if (
+      (currentRole === "Modérateur" &&
+        !["Administrateur", "Super Admin"].includes(targetRoleName)) ||
+      (currentRole === "Administrateur" &&
+        !["Administrateur", "Super Admin"].includes(targetRoleName))
+    )
+      return true;
 
     return false;
   };
@@ -98,7 +115,10 @@ const Users = () => {
     <>
       <div className="fr-grid-row fr-grid-row--middle fr-grid-row--between fr-mb-4w">
         <h2 className="fr-h3 fr-mr-auto">Gestion des Utilisateurs</h2>
-        <button className="fr-btn fr-btn--primary fr-ml-auto" onClick={handleCreate}>
+        <button
+          className="fr-btn fr-btn--primary fr-ml-auto"
+          onClick={handleCreate}
+        >
           Ajouter un Utilisateur
         </button>
       </div>

@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
 import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
-  BarChart, Bar
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  BarChart,
+  Bar,
 } from "recharts";
 import { toast } from "react-toastify";
 
@@ -40,17 +47,21 @@ const StatsAvancees = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [usersRes, rolesRes, commentsRes, ressourcesRes, categoriesRes] = await Promise.all([
-          fetch("/api/users"),
-          fetch("/api/roles"),
-          fetch("/api/comments"),
-          fetch("/api/ressources"),
-          fetch("/api/categories"),
-        ]);
+        const [usersRes, rolesRes, commentsRes, ressourcesRes, categoriesRes] =
+          await Promise.all([
+            fetch("/api/users"),
+            fetch("/api/roles"),
+            fetch("/api/comments"),
+            fetch("/api/ressources"),
+            fetch("/api/categories"),
+          ]);
 
         if (
-          !usersRes.ok || !rolesRes.ok || !commentsRes.ok ||
-          !ressourcesRes.ok || !categoriesRes.ok
+          !usersRes.ok ||
+          !rolesRes.ok ||
+          !commentsRes.ok ||
+          !ressourcesRes.ok ||
+          !categoriesRes.ok
         ) {
           throw new Error("Une des requêtes a échoué");
         }
@@ -81,44 +92,66 @@ const StatsAvancees = () => {
         users.forEach((user: User) => {
           const key = getMonthKey(user.createdAt);
           if (!key) return;
-          if (!monthlyStats[key]) monthlyStats[key] = { name: key, utilisateurs: 0, articles: 0, commentaires: 0 };
+          if (!monthlyStats[key])
+            monthlyStats[key] = {
+              name: key,
+              utilisateurs: 0,
+              articles: 0,
+              commentaires: 0,
+            };
           monthlyStats[key].utilisateurs++;
         });
 
         ressources.forEach((ressource: Ressource) => {
           const key = getMonthKey(ressource.createdAt);
           if (!key) return;
-          if (!monthlyStats[key]) monthlyStats[key] = { name: key, utilisateurs: 0, articles: 0, commentaires: 0 };
+          if (!monthlyStats[key])
+            monthlyStats[key] = {
+              name: key,
+              utilisateurs: 0,
+              articles: 0,
+              commentaires: 0,
+            };
           monthlyStats[key].articles++;
         });
 
         comments.forEach((comment: Comment) => {
           const key = getMonthKey(comment.createdAt);
           if (!key) return;
-          if (!monthlyStats[key]) monthlyStats[key] = { name: key, utilisateurs: 0, articles: 0, commentaires: 0 };
+          if (!monthlyStats[key])
+            monthlyStats[key] = {
+              name: key,
+              utilisateurs: 0,
+              articles: 0,
+              commentaires: 0,
+            };
           monthlyStats[key].commentaires++;
         });
 
         const monthMap: Record<string, string> = {
-          "janvier": "January",
-          "février": "February",
-          "mars": "March",
-          "avril": "April",
-          "mai": "May",
-          "juin": "June",
-          "juillet": "July",
-          "août": "August",
-          "septembre": "September",
-          "octobre": "October",
-          "novembre": "November",
-          "décembre": "December",
+          janvier: "January",
+          février: "February",
+          mars: "March",
+          avril: "April",
+          mai: "May",
+          juin: "June",
+          juillet: "July",
+          août: "August",
+          septembre: "September",
+          octobre: "October",
+          novembre: "November",
+          décembre: "December",
         };
 
         const sortedMonthly = Object.values(monthlyStats).sort((a, b) => {
           const [monthA, yearA] = a.name.split("-");
           const [monthB, yearB] = b.name.split("-");
-          const dateA = new Date(`${monthMap[monthA.toLowerCase()]} 1, ${yearA}`);
-          const dateB = new Date(`${monthMap[monthB.toLowerCase()]} 1, ${yearB}`);
+          const dateA = new Date(
+            `${monthMap[monthA.toLowerCase()]} 1, ${yearA}`
+          );
+          const dateB = new Date(
+            `${monthMap[monthB.toLowerCase()]} 1, ${yearB}`
+          );
           return dateA.getTime() - dateB.getTime();
         });
 
@@ -131,7 +164,7 @@ const StatsAvancees = () => {
           catCount[r.category] = (catCount[r.category] || 0) + 1;
         });
       } catch (error) {
-        toast.error("Erreur lors du chargement des statistiques");
+        toast.error("Erreur lors du chargement des statistiques", error);
       }
     };
 
