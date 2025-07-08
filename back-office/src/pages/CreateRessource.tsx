@@ -4,6 +4,8 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "../context/AuthContext";
 
+const API_BASE = import.meta.env.VITE_API_URL ?? "http://34.224.12.85:3000";
+
 const CreateRessource = () => {
   const navigate = useNavigate();
 
@@ -27,7 +29,7 @@ const CreateRessource = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await fetch("/api/categories");
+        const response = await fetch(`${API_BASE}/api/categories`);
         if (!response.ok)
           throw new Error("Erreur lors de la récupération des catégories");
         const categories = await response.json();
@@ -39,7 +41,7 @@ const CreateRessource = () => {
 
     const fetchUsers = async () => {
       try {
-        const response = await fetch("/api/users");
+        const response = await fetch(`${API_BASE}/api/users`);
         if (!response.ok)
           throw new Error("Erreur lors de la récupération des utilisateurs");
         const users = await response.json();
@@ -51,7 +53,7 @@ const CreateRessource = () => {
 
     const fetchResourceTypes = async () => {
       try {
-        const response = await fetch("/api/ressources/types");
+        const response = await fetch(`${API_BASE}/api/ressources/types`);
         if (response.ok) {
           const types = await response.json();
           setResourceTypes(types);
@@ -100,7 +102,7 @@ const CreateRessource = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch(`/api/ressources`, {
+      const response = await fetch(`${API_BASE}/api/ressources`, {
         method: "POST",
         body: JSON.stringify(ressource),
         headers: {

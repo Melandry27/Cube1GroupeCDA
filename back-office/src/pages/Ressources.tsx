@@ -3,6 +3,8 @@ import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import { Category, Ressource } from "../utils/interface";
 
+const API_BASE = import.meta.env.VITE_API_URL ?? "http://34.224.12.85:3000";
+
 const Ressources = () => {
   const navigate = useNavigate();
 
@@ -14,12 +16,12 @@ const Ressources = () => {
   useEffect(() => {
     const fetchRessources = async () => {
       try {
-        const ressourcesResponse = await fetch("/api/ressources");
+        const ressourcesResponse = await fetch(`${API_BASE}/api/ressources`);
         if (!ressourcesResponse.ok)
           throw new Error("Erreur lors de la récupération des ressources");
         const ressourcesData = await ressourcesResponse.json();
 
-        const categoriesResponse = await fetch("/api/categories");
+        const categoriesResponse = await fetch(`${API_BASE}/api/categories`);
         if (!categoriesResponse.ok)
           throw new Error("Erreur lors de la récupération des catégories");
         const categoriesData = await categoriesResponse.json();
@@ -48,7 +50,7 @@ const Ressources = () => {
       window.confirm("Êtes-vous sûr de vouloir supprimer cette ressource ?")
     ) {
       try {
-        const response = await fetch(`/api/ressources/${id}`, {
+        const response = await fetch(`${API_BASE}/api/ressources/${id}`, {
           method: "DELETE",
         });
         if (response.ok) {

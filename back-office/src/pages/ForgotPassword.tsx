@@ -3,6 +3,8 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Link } from "react-router";
 
+const API_BASE = import.meta.env.VITE_API_URL ?? "http://34.224.12.85:3000";
+
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
 
@@ -10,7 +12,7 @@ const ForgotPassword = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch("/api/auth/forgot-password", {
+      const response = await fetch(`${API_BASE}/api/auth/forgot-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),

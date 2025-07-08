@@ -12,6 +12,8 @@ import {
 } from "recharts";
 import { toast } from "react-toastify";
 
+const API_BASE = import.meta.env.VITE_API_URL ?? "http://34.224.12.85:3000";
+
 interface User {
   createdAt: string;
 }
@@ -49,11 +51,11 @@ const StatsAvancees = () => {
       try {
         const [usersRes, rolesRes, commentsRes, ressourcesRes, categoriesRes] =
           await Promise.all([
-            fetch("/api/users"),
-            fetch("/api/roles"),
-            fetch("/api/comments"),
-            fetch("/api/ressources"),
-            fetch("/api/categories"),
+            fetch(`${API_BASE}/api/users`),
+            fetch(`${API_BASE}/api/roles`),
+            fetch(`${API_BASE}/api/comments`),
+            fetch(`${API_BASE}/api/ressources`),
+            fetch(`${API_BASE}/api/categories`),
           ]);
 
         if (

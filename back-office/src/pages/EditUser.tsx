@@ -3,6 +3,8 @@ import { useParams, useNavigate } from "react-router";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "../context/AuthContext";
+
+const API_BASE = import.meta.env.VITE_API_URL ?? "http://34.224.12.85:3000";
 interface Role {
   _id: string;
   name: string;
@@ -31,7 +33,7 @@ const EditUser = () => {
   useEffect(() => {
     const fetchRoles = async () => {
       try {
-        const response = await fetch("/api/roles");
+        const response = await fetch(`${API_BASE}/api/roles`);
         if (response.ok) {
           const data: Role[] = await response.json();
           setRoles(data);
@@ -46,7 +48,7 @@ const EditUser = () => {
 
     const fetchUser = async () => {
       try {
-        const response = await fetch(`/api/users/${id}`);
+        const response = await fetch(`${API_BASE}/api/users/${id}`);
         if (response.ok) {
           const data = await response.json();
           setUser({
@@ -103,7 +105,7 @@ const EditUser = () => {
     }
 
     try {
-      const response = await fetch(`/api/users/${id}`, {
+      const response = await fetch(`${API_BASE}/api/users/${id}`, {
         method: "PUT",
         body: JSON.stringify({
           ...user,

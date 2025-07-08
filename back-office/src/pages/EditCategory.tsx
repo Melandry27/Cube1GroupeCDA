@@ -3,6 +3,8 @@ import { useParams, useNavigate } from "react-router";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+const API_BASE = import.meta.env.VITE_API_URL ?? "http://34.224.12.85:3000";
+
 const EditCategory = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -17,8 +19,9 @@ const EditCategory = () => {
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const response = await fetch(`/api/categories/${id}`);
-        if (!response.ok) throw new Error("Erreur lors de la récupération de la catégorie");
+        const response = await fetch(`${API_BASE}/api/categories/${id}`);
+        if (!response.ok)
+          throw new Error("Erreur lors de la récupération de la catégorie");
         const data = await response.json();
         setCategory({
           name: data.name || "",
@@ -34,7 +37,9 @@ const EditCategory = () => {
     fetchCategory();
   }, [id]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setCategory({ ...category, [e.target.name]: e.target.value });
   };
 
@@ -42,7 +47,7 @@ const EditCategory = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch(`/api/categories/${id}`, {
+      const response = await fetch(`${API_BASE}/api/categories/${id}`, {
         method: "PUT",
         body: JSON.stringify(category),
         headers: { "Content-Type": "application/json" },
@@ -70,9 +75,14 @@ const EditCategory = () => {
       {loading ? (
         <p>Chargement...</p>
       ) : (
-        <form onSubmit={handleSubmit} className="fr-grid-row fr-grid-row--gutters">
+        <form
+          onSubmit={handleSubmit}
+          className="fr-grid-row fr-grid-row--gutters"
+        >
           <div className="fr-col-12 fr-col-md-6">
-            <label className="fr-label" htmlFor="name">Nom de la catégorie</label>
+            <label className="fr-label" htmlFor="name">
+              Nom de la catégorie
+            </label>
             <input
               className="fr-input"
               id="name"
@@ -84,7 +94,9 @@ const EditCategory = () => {
           </div>
 
           <div className="fr-col-12">
-            <label className="fr-label" htmlFor="description">Description</label>
+            <label className="fr-label" htmlFor="description">
+              Description
+            </label>
             <textarea
               className="fr-input"
               id="description"
@@ -96,9 +108,20 @@ const EditCategory = () => {
             />
           </div>
 
-          <div className="fr-col-12 fr-grid-row fr-mt-4w" style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
-            <button type="button" className="fr-btn fr-btn--secondary" onClick={goBack}>Annuler</button>
-            <button type="submit" className="fr-btn fr-btn--primary">Modifier</button>
+          <div
+            className="fr-col-12 fr-grid-row fr-mt-4w"
+            style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}
+          >
+            <button
+              type="button"
+              className="fr-btn fr-btn--secondary"
+              onClick={goBack}
+            >
+              Annuler
+            </button>
+            <button type="submit" className="fr-btn fr-btn--primary">
+              Modifier
+            </button>
           </div>
         </form>
       )}

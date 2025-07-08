@@ -4,6 +4,8 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Ressource } from "../utils/interface";
 
+const API_BASE = import.meta.env.VITE_API_URL ?? "http://34.224.12.85:3000";
+
 const EditRessource = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -30,7 +32,7 @@ const EditRessource = () => {
   useEffect(() => {
     const fetchRessource = async () => {
       try {
-        const res = await fetch(`/api/ressources/${id}`);
+        const res = await fetch(`${API_BASE}/api/ressources/${id}`);
         if (!res.ok)
           throw new Error("Erreur lors de la récupération de la ressource");
         const data = await res.json();
@@ -42,7 +44,7 @@ const EditRessource = () => {
 
     const fetchCategories = async () => {
       try {
-        const res = await fetch("/api/categories");
+        const res = await fetch(`${API_BASE}/api/categories`);
         if (!res.ok)
           throw new Error("Erreur lors de la récupération des catégories");
         const data = await res.json();
@@ -54,7 +56,7 @@ const EditRessource = () => {
 
     const fetchUsers = async () => {
       try {
-        const res = await fetch("/api/users");
+        const res = await fetch(`${API_BASE}/api/users`);
         if (!res.ok)
           throw new Error("Erreur lors de la récupération des utilisateurs");
         const data = await res.json();
@@ -66,7 +68,7 @@ const EditRessource = () => {
 
     const fetchTypes = async () => {
       try {
-        const res = await fetch("/api/ressources/types");
+        const res = await fetch(`${API_BASE}/api/ressources/types`);
         if (!res.ok) throw new Error();
         const types = await res.json();
         setResourceTypes(types);
@@ -134,7 +136,7 @@ const EditRessource = () => {
         createdBy: ressource.createdBy?.["_id"] ?? "",
       };
 
-      const response = await fetch(`/api/ressources/${id}`, {
+      const response = await fetch(`${API_BASE}/api/ressources/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),

@@ -3,6 +3,8 @@ import { useNavigate } from "react-router";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+const API_BASE = import.meta.env.VITE_API_URL ?? "http://34.224.12.85:3000";
+
 const CreateCategory = () => {
   const [category, setCategory] = useState({
     name: "",
@@ -11,7 +13,9 @@ const CreateCategory = () => {
 
   const navigate = useNavigate();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setCategory({ ...category, [e.target.name]: e.target.value });
   };
 
@@ -19,7 +23,7 @@ const CreateCategory = () => {
     e.preventDefault();
 
     try {
-      const categoryResponse = await fetch("/api/categories", {
+      const categoryResponse = await fetch(`${API_BASE}/api/categories`, {
         method: "POST",
         body: JSON.stringify(category),
         headers: { "Content-Type": "application/json" },
@@ -31,7 +35,6 @@ const CreateCategory = () => {
       } else {
         throw new Error("Erreurs lors de la création de la catégorie");
       }
-      
     } catch (error) {
       toast.error("La catégorie n'a pas pu être créée. Veuillez réessayer.");
     }
@@ -44,9 +47,14 @@ const CreateCategory = () => {
   return (
     <>
       <h2 className="fr-h3">Créer une Catégorie</h2>
-      <form onSubmit={handleSubmit} className="fr-grid-row fr-grid-row--gutters">
+      <form
+        onSubmit={handleSubmit}
+        className="fr-grid-row fr-grid-row--gutters"
+      >
         <div className="fr-col-12 fr-col-md-6">
-          <label className="fr-label" htmlFor="name">Nom de la catégorie</label>
+          <label className="fr-label" htmlFor="name">
+            Nom de la catégorie
+          </label>
           <input
             className="fr-input"
             id="name"
@@ -58,7 +66,9 @@ const CreateCategory = () => {
         </div>
 
         <div className="fr-col-12">
-          <label className="fr-label" htmlFor="description">Description</label>
+          <label className="fr-label" htmlFor="description">
+            Description
+          </label>
           <textarea
             className="fr-input"
             id="description"
@@ -70,9 +80,20 @@ const CreateCategory = () => {
           />
         </div>
 
-        <div className="fr-col-12 fr-grid-row fr-mt-4w" style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
-          <button type="button" className="fr-btn fr-btn--secondary" onClick={goBack}>Annuler</button>
-          <button type="submit" className="fr-btn fr-btn--primary">Créer</button>
+        <div
+          className="fr-col-12 fr-grid-row fr-mt-4w"
+          style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}
+        >
+          <button
+            type="button"
+            className="fr-btn fr-btn--secondary"
+            onClick={goBack}
+          >
+            Annuler
+          </button>
+          <button type="submit" className="fr-btn fr-btn--primary">
+            Créer
+          </button>
         </div>
       </form>
 

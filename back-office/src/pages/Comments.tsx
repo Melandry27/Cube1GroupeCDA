@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
+const API_BASE = import.meta.env.VITE_API_URL ?? "http://34.224.12.85:3000";
+
 interface Comment {
   _id: string;
   userId: string;
@@ -29,9 +31,9 @@ const Comments = () => {
     const fetchData = async () => {
       try {
         const [commentsRes, usersRes, ressourcesRes] = await Promise.all([
-          fetch("/api/comments"),
-          fetch("/api/users"),
-          fetch("/api/ressources"),
+          fetch(`${API_BASE}/api/comments`),
+          fetch(`${API_BASE}/api/users`),
+          fetch(`${API_BASE}/api/ressources`),
         ]);
 
         if (!commentsRes.ok || !usersRes.ok || !ressourcesRes.ok) {
@@ -67,7 +69,9 @@ const Comments = () => {
   const handleDelete = async (id: string) => {
     if (window.confirm("Êtes-vous sûr de vouloir supprimer ce commentaire ?")) {
       try {
-        const response = await fetch(`/api/comments/${id}`, { method: "DELETE" });
+        const response = await fetch(`${API_BASE}/api/comments/${id}`, {
+          method: "DELETE",
+        });
         if (response.ok) {
           setComments((prev) => prev.filter((c) => c._id !== id));
           toast.success("Commentaire supprimé avec succès.");
@@ -83,19 +87,21 @@ const Comments = () => {
 
   const handleApprove = async (id: string) => {
     try {
-      const response = await fetch(`/api/comments/status/${id}`, {
+      const response = await fetch(`${API_BASE}/api/comments/status/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ commentStatus: "Approved" }),
       });
-      
+
       if (response.ok) {
         const updatedComment = await response.json();
-        setComments(prev => 
-          prev.map(comment => 
-            comment._id === id ? { ...comment, commentStatus: updatedComment.commentStatus } : comment
+        setComments((prev) =>
+          prev.map((comment) =>
+            comment._id === id
+              ? { ...comment, commentStatus: updatedComment.commentStatus }
+              : comment
           )
         );
         toast.success("Commentaire approuvé avec succès.");
@@ -129,12 +135,12 @@ const Comments = () => {
         <table className="fr-table">
           <thead>
             <tr>
-              <th style={{ width: '15%' }}>Auteur</th>
-              <th style={{ width: '30%' }}>Commentaire</th>
-              <th style={{ width: '15%' }}>Article associé</th>
-              <th style={{ width: '10%' }}>Date</th>
-              <th style={{ width: '17%' }}>Statut</th>
-              <th style={{ width: '20%' }}>Actions</th>
+              <th style={{ width: "15%" }}>Auteur</th>
+              <th style={{ width: "30%" }}>Commentaire</th>
+              <th style={{ width: "15%" }}>Article associé</th>
+              <th style={{ width: "10%" }}>Date</th>
+              <th style={{ width: "17%" }}>Statut</th>
+              <th style={{ width: "20%" }}>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -149,7 +155,7 @@ const Comments = () => {
                   <td>
                     <div className="fr-btns-group fr-btns-group--inline">
                       {comment.commentStatus !== "Approved" && (
-                        <button 
+                        <button
                           className="fr-btn fr-btn--secondary fr-btn--sm fr-mr-2w"
                           onClick={() => handleApprove(comment._id)}
                         >

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+const API_BASE = import.meta.env.VITE_API_URL ?? "http://34.224.12.85:3000";
 interface Role {
   _id: string;
   name: string;
@@ -11,8 +12,9 @@ const Roles = () => {
   useEffect(() => {
     const fetchRoles = async () => {
       try {
-        const response = await fetch("/api/roles");
-        if (!response.ok) throw new Error("Erreur lors de la récupération des rôles");
+        const response = await fetch(`${API_BASE}/api/roles`);
+        if (!response.ok)
+          throw new Error("Erreur lors de la récupération des rôles");
         const data: Role[] = await response.json();
         setRoles(data);
       } catch (error) {
@@ -30,16 +32,16 @@ const Roles = () => {
       <div className="fr-table fr-table--full fr-mt-2w">
         <table className="fr-table">
           <thead>
-          <tr>
-            <th style={{ width: '1%' }}>Nom du Rôle</th>
-          </tr>
+            <tr>
+              <th style={{ width: "1%" }}>Nom du Rôle</th>
+            </tr>
           </thead>
           <tbody>
-          {roles.map((role: Role) => (
-            <tr key={role._id}>
-              <td>{role.name}</td>
-            </tr>
-          ))}
+            {roles.map((role: Role) => (
+              <tr key={role._id}>
+                <td>{role.name}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>

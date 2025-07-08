@@ -4,6 +4,8 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuth } from "../context/AuthContext";
 
+const API_BASE = import.meta.env.VITE_API_URL ?? "http://34.224.12.85:3000";
+
 interface Role {
   _id: string;
   name: string;
@@ -21,8 +23,8 @@ const CreateUser = () => {
     validatePassword: false,
   });
 
-  const [confirmPassword, setConfirmPassword] = useState(""); 
-  const [validatePassword, setValidatePassword] = useState(false); 
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [validatePassword, setValidatePassword] = useState(false);
   const [validateEmail, setValidateEmail] = useState(false);
   const [roles, setRoles] = useState<Role[]>([]);
   const { user: currentUser } = useAuth();
@@ -31,7 +33,7 @@ const CreateUser = () => {
   useEffect(() => {
     const fetchRoles = async () => {
       try {
-        const response = await fetch("/api/roles");
+        const response = await fetch(`${API_BASE}/api/roles`);
         if (response.ok) {
           const data: Role[] = await response.json();
           setRoles(data);
@@ -45,7 +47,9 @@ const CreateUser = () => {
     fetchRoles();
   }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
     setUser((prevUser) => {
       const updatedUser = { ...prevUser, [name]: value };
@@ -53,7 +57,9 @@ const CreateUser = () => {
     });
   };
 
-  const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleConfirmPasswordChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const value = e.target.value;
     setConfirmPassword(value);
     setValidatePassword(value === user.password);
@@ -68,7 +74,7 @@ const CreateUser = () => {
     }
 
     try {
-      const response = await fetch("/api/users", {
+      const response = await fetch(`${API_BASE}/api/users`, {
         method: "POST",
         body: JSON.stringify({ ...user, validateEmail, validatePassword }),
         headers: { "Content-Type": "application/json" },
@@ -81,7 +87,9 @@ const CreateUser = () => {
         throw new Error("Erreur lors de la création de l'utilisateur");
       }
     } catch (error) {
-      toast.error("Erreur lors de la création de l'utilisateur. Veuillez réessayer.");
+      toast.error(
+        "Erreur lors de la création de l'utilisateur. Veuillez réessayer."
+      );
     }
   };
 
@@ -92,17 +100,26 @@ const CreateUser = () => {
   const filteredRoles = roles.filter((role) => {
     const currentRole = currentUser?.role;
     if (currentRole === "Super Admin") return true;
-    if (currentRole === "Administrateur") return !["Administrateur", "Super Admin"].includes(role.name);
-    if (currentRole === "Modérateur") return !["Administrateur", "Super Admin", "Modérateur"].includes(role.name);
+    if (currentRole === "Administrateur")
+      return !["Administrateur", "Super Admin"].includes(role.name);
+    if (currentRole === "Modérateur")
+      return !["Administrateur", "Super Admin", "Modérateur"].includes(
+        role.name
+      );
     return false;
   });
 
   return (
     <>
       <h2 className="fr-h3">Créer un Utilisateur</h2>
-      <form onSubmit={handleSubmit} className="fr-grid-row fr-grid-row--gutters">
+      <form
+        onSubmit={handleSubmit}
+        className="fr-grid-row fr-grid-row--gutters"
+      >
         <div className="fr-col-12 fr-col-md-6">
-          <label className="fr-label" htmlFor="name">Nom d'utilisateur</label>
+          <label className="fr-label" htmlFor="name">
+            Nom d'utilisateur
+          </label>
           <input
             className="fr-input"
             id="name"
@@ -114,7 +131,9 @@ const CreateUser = () => {
         </div>
 
         <div className="fr-col-12 fr-col-md-6">
-          <label className="fr-label" htmlFor="email">Email</label>
+          <label className="fr-label" htmlFor="email">
+            Email
+          </label>
           <input
             className="fr-input"
             id="email"
@@ -127,7 +146,9 @@ const CreateUser = () => {
         </div>
 
         <div className="fr-col-12 fr-col-md-6">
-          <label className="fr-label" htmlFor="validateEmail">Email validé</label>
+          <label className="fr-label" htmlFor="validateEmail">
+            Email validé
+          </label>
           <select
             className="fr-select"
             id="validateEmail"
@@ -141,7 +162,9 @@ const CreateUser = () => {
         </div>
 
         <div className="fr-col-12 fr-col-md-6">
-          <label className="fr-label" htmlFor="phone">Téléphone</label>
+          <label className="fr-label" htmlFor="phone">
+            Téléphone
+          </label>
           <input
             className="fr-input"
             id="phone"
@@ -154,7 +177,9 @@ const CreateUser = () => {
         </div>
 
         <div className="fr-col-12 fr-col-md-6">
-          <label className="fr-label" htmlFor="adress">Adresse</label>
+          <label className="fr-label" htmlFor="adress">
+            Adresse
+          </label>
           <input
             className="fr-input"
             id="adress"
@@ -166,7 +191,9 @@ const CreateUser = () => {
         </div>
 
         <div className="fr-col-12 fr-col-md-6">
-          <label className="fr-label" htmlFor="roleId">Rôle</label>
+          <label className="fr-label" htmlFor="roleId">
+            Rôle
+          </label>
           <select
             className="fr-select"
             id="roleId"
@@ -185,7 +212,9 @@ const CreateUser = () => {
         </div>
 
         <div className="fr-col-12 fr-col-md-6">
-          <label className="fr-label" htmlFor="password">Mot de passe</label>
+          <label className="fr-label" htmlFor="password">
+            Mot de passe
+          </label>
           <input
             className="fr-input"
             id="password"
@@ -198,7 +227,9 @@ const CreateUser = () => {
         </div>
 
         <div className="fr-col-12 fr-col-md-6">
-          <label className="fr-label" htmlFor="confirmPassword">Confirmer le mot de passe</label>
+          <label className="fr-label" htmlFor="confirmPassword">
+            Confirmer le mot de passe
+          </label>
           <input
             className="fr-input"
             id="confirmPassword"
@@ -209,13 +240,26 @@ const CreateUser = () => {
             required
           />
           {!validatePassword && confirmPassword && (
-            <p style={{ color: "red" }}>Les mots de passe ne correspondent pas.</p>
+            <p style={{ color: "red" }}>
+              Les mots de passe ne correspondent pas.
+            </p>
           )}
         </div>
 
-        <div className="fr-col-12 fr-grid-row fr-mt-4w" style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}>
-          <button type="button" className="fr-btn fr-btn--secondary" onClick={goBack}>Annuler</button>
-          <button type="submit" className="fr-btn fr-btn--primary">Créer</button>
+        <div
+          className="fr-col-12 fr-grid-row fr-mt-4w"
+          style={{ display: "flex", justifyContent: "flex-end", gap: "1rem" }}
+        >
+          <button
+            type="button"
+            className="fr-btn fr-btn--secondary"
+            onClick={goBack}
+          >
+            Annuler
+          </button>
+          <button type="submit" className="fr-btn fr-btn--primary">
+            Créer
+          </button>
         </div>
       </form>
 

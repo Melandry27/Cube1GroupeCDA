@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
+const API_BASE = import.meta.env.VITE_API_URL ?? "http://34.224.12.85:3000";
+
 const Dashboard = () => {
   interface User {
     _id: string;
@@ -14,7 +16,7 @@ const Dashboard = () => {
     content: string;
     userId: string;
   }
-  
+
   const [comments, setComments] = useState<Comment[]>([]);
   const [articlesCount, setArticlesCount] = useState(0);
   const [usersCount, setUsersCount] = useState(0);
@@ -25,13 +27,15 @@ const Dashboard = () => {
     const fetchDashboardData = async () => {
       try {
         const [usersRes, commentsRes, articlesRes] = await Promise.all([
-          fetch("/api/users"),
-          fetch("/api/comments"),
-          fetch("/api/ressources"),
+          fetch(`${API_BASE}/api/users`),
+          fetch(`${API_BASE}/api/comments`),
+          fetch(`${API_BASE}/api/ressources`),
         ]);
 
         if (!usersRes.ok || !commentsRes.ok || !articlesRes.ok) {
-          throw new Error("Erreur lors de la récupération des données du dashboard");
+          throw new Error(
+            "Erreur lors de la récupération des données du dashboard"
+          );
         }
         const usersData = await usersRes.json();
         const commentsData = await commentsRes.json();
@@ -44,10 +48,10 @@ const Dashboard = () => {
         console.log(usersByIdMap);
         setUsersMap(usersByIdMap);
 
-        setUsers(usersData.slice(-3).reverse()); 
+        setUsers(usersData.slice(-3).reverse());
         setUsersCount(usersData.length);
 
-        setComments(commentsData.slice(-3).reverse()); 
+        setComments(commentsData.slice(-3).reverse());
         setCommentsCount(commentsData.length);
 
         setArticlesCount(articlesData.length);
@@ -89,7 +93,8 @@ const Dashboard = () => {
               <ul>
                 {users.map((user) => (
                   <li key={user._id}>
-                    {user.name} - Inscrit le {new Date(user.createdAt).toLocaleDateString()}
+                    {user.name} - Inscrit le{" "}
+                    {new Date(user.createdAt).toLocaleDateString()}
                   </li>
                 ))}
               </ul>
@@ -104,7 +109,8 @@ const Dashboard = () => {
               <ul>
                 {comments.map((comment) => (
                   <li key={comment._id}>
-                    "{comment.content}" - par {getUserName(comment.userId) || "Anonyme"}
+                    "{comment.content}" - par{" "}
+                    {getUserName(comment.userId) || "Anonyme"}
                   </li>
                 ))}
               </ul>

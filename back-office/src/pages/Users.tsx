@@ -3,6 +3,8 @@ import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import { useAuth } from "../context/AuthContext";
 
+const API_BASE = import.meta.env.VITE_API_URL ?? "http://34.224.12.85:3000";
+
 interface User {
   _id: string;
   name: string;
@@ -26,11 +28,11 @@ const Users = () => {
   useEffect(() => {
     const fetchUsersAndRoles = async () => {
       try {
-        const usersResponse = await fetch("/api/users");
+        const usersResponse = await fetch(`${API_BASE}/api/users`);
         if (!usersResponse.ok) throw new Error();
         const usersData = await usersResponse.json();
 
-        const rolesResponse = await fetch("/api/roles");
+        const rolesResponse = await fetch(`${API_BASE}/api/roles`);
         if (!rolesResponse.ok) throw new Error();
         const rolesData = await rolesResponse.json();
 
@@ -53,7 +55,9 @@ const Users = () => {
       window.confirm("Êtes-vous sûr de vouloir supprimer cet utilisateur ?")
     ) {
       try {
-        const response = await fetch(`/api/users/${id}`, { method: "DELETE" });
+        const response = await fetch(`${API_BASE}/api/users/${id}`, {
+          method: "DELETE",
+        });
         if (response.ok) {
           toast.success("Utilisateur supprimé avec succès !");
           setUsers((prev) => prev.filter((u) => u._id !== id));
