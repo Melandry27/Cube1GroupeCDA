@@ -106,7 +106,7 @@ export const login: RequestHandler = async (req, res) => {
     });
     return;
   } catch (error) {
-    console.log("Login ERROR: ", error);
+    console.log("Login ERROR:", error);
     res.status(500).json({ message: "Erreur lors de la connexion.", error });
     return;
   }
