@@ -38,7 +38,7 @@ export const register = async (req: Request, res: Response) => {
       roleId: role._id as string,
       adress,
       phone,
-      isVerified: false,
+      isVerified: true,
     });
 
     if (!user) {
