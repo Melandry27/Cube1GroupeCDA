@@ -50,6 +50,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   });
 
+  console.log("Initial token:", token);
+  console.log("Initial user:", user);
+
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
     return !!token && user !== null && user.isVerified;
   });
@@ -59,6 +62,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     onSuccess: (data) => {
       try {
         const decoded = jwtDecode<DecodedUser>(data.token);
+
+        console.log("Decoded token:", decoded);
 
         if (allowedRoles.includes(decoded.role) && decoded.isVerified) {
           localStorage.setItem("token", data.token);
