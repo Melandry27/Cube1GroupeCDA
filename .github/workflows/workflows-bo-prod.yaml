@@ -16,7 +16,7 @@ jobs:
 
       - name: Clean install des dépendances
         working-directory: ./back-office
-        run: npm ci
+        run: npm ci --legacy-peer-deps
 
       - name: Build du projet
         working-directory: ./back-office
