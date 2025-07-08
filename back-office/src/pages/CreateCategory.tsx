@@ -29,7 +29,7 @@ const CreateCategory = () => {
         toast.success("Catégorie créée avec succès !");
         setTimeout(() => navigate("/categories"), 5000);
       } else {
-        throw new Error("Erreur lors de la création de la catégorie");
+        throw new Error("Erreurs lors de la création de la catégorie");
       }
       
     } catch (error) {

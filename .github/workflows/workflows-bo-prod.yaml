@@ -1,4 +1,4 @@
-name: "Construction du workflow de production"
+name: "Construction du workflow du backoffice en production"
 run-name: ${{github.actor}} A lancé le github workflow de production du back-office
 on:
   push:
