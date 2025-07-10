@@ -24,6 +24,8 @@ const queryClient = new QueryClient();
 
 import "./App.css";
 
+console.log("Backoffice is running...");
+
 const App = () => {
   return (
     <QueryClientProvider client={queryClient}>

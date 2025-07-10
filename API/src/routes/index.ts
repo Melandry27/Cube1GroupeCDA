@@ -15,6 +15,8 @@ const router = Router();
 
 router.use(protect as express.RequestHandler);
 
+console.log("Routes are being set up...");
+
 router.use("/auth", authRoutes);
 
 router.use("/files", fileRoutes);
